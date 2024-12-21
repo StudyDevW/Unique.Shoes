@@ -3,25 +3,107 @@
   margin: 0 0
   padding: 0 0
 
+@font-face 
+  font-family: "OCEANIC"
+  src: url(../fonts/TRIAL_Oceanic-Regular.woff) format("woff")
+
+
 .header 
   position: absolute
   margin: 15px 11px
   width: calc(100% - 22px) 
-  height: 93px
+  height: 73px
   background-color: rgb(0, 0, 0)
   border-radius: 10px
+  z-index: 15
 
 .logo 
   position: absolute
   display: inline
   margin-left: calc(82px - 31px)
-  margin-top: calc(34px - 18px)
+  margin-top: calc(34px - 25px)
   width: 389px
-  height: 69px
+  height: 59px
   // background-color: rgb(60, 60, 60)
   background-image: url(../images/logo_main_white.png)
   background-size: contain
   background-repeat: no-repeat
+
+.info_items 
+  position: absolute
+  margin-left: calc(82px - 31px)
+  margin-top: 75px
+  width: calc(100% - (51px * 2))  
+  height: 90vh
+  // background-color: pink 
+
+.new_assortment 
+  position: relative
+  margin-top: 50px
+  width: 100%  
+  height: 360px
+  background-color: transparent
+  border: solid black
+  border-radius: 10px
+  z-index: 3
+
+.left_title_assortment
+  position: absolute
+  margin-left: 74px
+  margin-top: 35px
+  font-size: 70px
+  font-family: OCEANIC
+  z-index: 2
+
+  
+.background_decoration 
+  position: absolute
+  margin-left: -25px
+  margin-top: 25px
+  width: 632px
+  height: 410px
+  background-image: url(../images/curve_assort.png)
+  background-size: contain
+  background-repeat: no-repeat
+  z-index: 1
+
+.star 
+  position: absolute
+  width: 60px
+  height: 60px
+  background-size: contain
+  background-repeat: no-repeat
+
+.star.first 
+  margin-left: calc(100% - 120px) 
+  margin-top: 70px
+  background-image: url(../images/stars_handdraw/star_5.png)
+
+.star.second 
+  margin-left: calc(100% - 90px) 
+  margin-top: 300px
+  background-image: url(../images/stars_handdraw/star_1.png)
+
+.star.third 
+  margin-left: calc(100% - 210px) 
+  margin-top: 270px
+  background-image: url(../images/stars_handdraw/star_2.png)
+  width: 40px
+  height: 40px
+
+.star.four 
+  margin-left: calc(100% - 280px) 
+  margin-top: 325px
+  background-image: url(../images/stars_handdraw/star_3.png)
+  width: 45px
+  height: 45px
+
+.star.five 
+  margin-left: 210px
+  margin-top: 235px
+  background-image: url(../images/stars_handdraw/star_4.png)
+  width: 45px
+  height: 45px
 
 // @keyframes logo-spin 
 //   from 
