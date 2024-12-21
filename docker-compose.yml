@@ -1,0 +1,9 @@
+services:
+  unique.shoes.frontend:
+    container_name: Unique.Shoes.Frontend
+    build:
+      context: ./unique.shoes.frontend
+      dockerfile: Dockerfile
+    ports:
+      - "4000:4000"
+  
