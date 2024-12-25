@@ -1,5 +1,5 @@
 #root 
-  max-width: 1280px
+  max-width: 1950px
   margin: 0 0
   padding: 0 0
 
@@ -13,7 +13,7 @@
 
 
 .header 
-  position: absolute
+  position: fixed
   margin: 15px 11px
   width: calc(100% - 22px) 
   height: 73px
@@ -34,12 +34,12 @@
   background-repeat: no-repeat
 
 .info_items 
-  position: absolute
-  margin-left: calc(82px - 31px)
+  display: inline-block
+  position: relative
+  margin-left: calc(82px - 41px)
   margin-top: 75px
-  width: calc(100% - (51px * 2))  
-  height: 90vh
-  // background-color: pink 
+  width: calc(100% - (46px * 2))  
+  height: calc(1080px - 250px)
 
 .new_assortment 
   position: relative
@@ -59,6 +59,15 @@
   font-family: OCEANIC
   z-index: 2
 
+.right_title_assortment
+  text-align: right
+  position: absolute
+  margin-left: calc(100% - 334px)
+  margin-top: 35px
+  font-size: 70px
+  font-family: OCEANIC
+  z-index: 2
+
   
 .background_decoration 
   position: absolute
@@ -70,6 +79,18 @@
   background-size: contain
   background-repeat: no-repeat
   z-index: 1
+
+.background_decoration.second
+  margin-left: calc(100% - 455px)
+  width: 450px
+  background-image: url(../images/curve_demand.png)
+  background-size: contain
+  background-repeat: no-repeat
+
+.background_decoration.second.area 
+  background-image: none
+  width: 650px
+  margin-left: calc(100% - 655px)
 
 .star 
   position: absolute
@@ -109,6 +130,50 @@
   width: 45px
   height: 45px
 
+.a_dog 
+  position: absolute
+  width: 60px
+  height: 60px
+  background-size: contain
+  background-repeat: no-repeat
+
+.a_dog.first 
+  margin-left: calc(100% - 120px) 
+  margin-top: 240px
+  width: 45px
+  height: 45px
+  background-image: url(../images/a_handdraw/a_1.png)
+
+.a_dog.second 
+  margin-left: calc(100% - 450px) 
+  margin-top: 240px
+  width: 47px
+  height: 47px
+  background-image: url(../images/a_handdraw/a_2.png)
+
+.a_dog.third 
+  margin-left: calc(100% - 565px) 
+  margin-top: 310px
+  width: 47px
+  height: 47px
+  background-image: url(../images/a_handdraw/a_3.png)
+
+.a_dog.four 
+  margin-left: calc(100% - 550px) 
+  margin-top: 140px
+  width: 75px
+  height: 75px
+  background-image: url(../images/a_handdraw/a_4.png)
+
+.a_dog.five 
+  margin-left: calc(100% - 350px) 
+  margin-top: 70px
+  width: 59px
+  height: 59px
+  background-image: url(../images/a_handdraw/a_5.png)
+
+
+
 .item_area 
   display: flexbox
   flex-direction: row
@@ -118,6 +183,9 @@
   width: calc(100% - 540px)
   height: 320px
   overflow: hidden
+
+.item_area.left 
+  margin-left: -40px
 
 .item_release 
   display: inline-flex
@@ -172,6 +240,17 @@
   text-align: center
   align-content: center
 
+.item_mark_demand
+  position: absolute
+  margin-left: 10px
+  margin-top: 10px
+  width: 100px
+  height: 30px
+  background-color: #ffb535
+  border-radius: 10px
+  text-align: center
+  align-content: center
+
 .item_mark_text
   font-size: 22px
   font-family: MUSEOSANS
@@ -185,6 +264,9 @@
   height: 60px
   background: black
   border-radius: 10px
+
+.button_for_more.right 
+  margin-left: calc(100% - 300px)
 
 .upper_text_more_button
   position: absolute

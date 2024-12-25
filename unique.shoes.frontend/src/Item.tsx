@@ -45,6 +45,15 @@ function ItemShoes(name_item: string, item_image: string, type_item: string, ani
             </>
             )
     }
+    else if (type_item === 'demand_mark') {
+      return (
+          <>
+              <div className="item_mark_demand">
+                  <div className="item_mark_text">Хит</div>
+              </div>
+          </>
+          )
+    }
     else  {
         return (<></>)
     }
