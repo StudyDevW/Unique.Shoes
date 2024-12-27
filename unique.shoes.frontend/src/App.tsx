@@ -1,6 +1,12 @@
 import { useState, useRef, useEffect } from 'react'
 import './preprocessor/App.sass'
 import ItemShoes from './Item.tsx'
+import Miniprofile from './Miniprofile.tsx'
+import { SetOpenLogin, GetOpenLogin } from './components/Components.tsx'
+import LoginPage from './LoginPage.tsx'
+
+
+let animClosedHeader: boolean = false;
 
 function App() {
 
@@ -124,14 +130,58 @@ function App() {
   //   return width_assort
   // }
 
+
+
+
+  const HeaderProp = () => {
+
+    if (GetOpenLogin() === true) {
+
+      animClosedHeader = true
+
+      return (<>
+        <div className="header small">
+              <div className="logo"> </div>
+
+              {Miniprofile(true)}
+
+        </div>
+
+        {LoginPage()}
+
+      </>)
+    }
+    else {
+
+      if (animClosedHeader === true) {
+        return (<>
+          <div className="header normal">
+                <div className="logo"> </div>
+  
+                {Miniprofile(false)}
+  
+          </div>
+        </>)
+      }
+      else {
+        return (<>
+          <div className="header">
+                <div className="logo"> </div>
+  
+                {Miniprofile(false)}
+  
+          </div>
+        </>)
+      }
+
+      
+    }
+  }
+
   return (
     <>
 
-      <div className="header">
-        <div className="logo"> </div>
-
-      </div>
-
+      {HeaderProp()}
 
       <div className="info_items">
         <div className="background_decoration">

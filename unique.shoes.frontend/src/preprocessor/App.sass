@@ -21,6 +21,51 @@
   border-radius: 10px
   z-index: 15
 
+.blurred_background 
+  animation: blur_exchange_open 0.5s forwards
+  position: absolute
+  backdrop-filter: blur(10px)
+  width: 100%
+  height: 100%
+  z-index: 13
+
+.header.small 
+  animation: header_res_close 0.5s forwards
+  margin: 15px calc(50% - 900px / 2)
+  width: 900px
+
+
+.header.normal 
+  animation: header_res_open 0.5s forwards
+  margin: 15px 11px
+  width: calc(100% - 22px) 
+
+@keyframes blur_exchange_open
+  0%
+    backdrop-filter: blur(0px)
+  100%
+    backdrop-filter: blur(10px)
+
+@keyframes header_res_close
+  0%
+    margin: 15px 11px
+    width: calc(100% - 22px) 
+  100%
+    margin: 15px calc(50% - 900px / 2)
+    width: 900px
+
+
+@keyframes header_res_open
+  0%
+    margin: 15px calc(50% - 900px / 2)
+    width: 900px
+  100%
+    margin: 15px 11px
+    width: calc(100% - 22px) 
+   
+
+
+
 .logo 
   position: absolute
   display: inline
@@ -284,6 +329,111 @@
   font-family: OCEANIC
   color: white
 
+.profile_area 
+  position: absolute
+  align-content: center
+  text-align: center
+  margin-left: calc(100% - 160px)
+  width: 100px
+  height: 70px
+  cursor: pointer
+  user-select: none
+
+.text_login
+  font-size: 20px
+  font-family: MUSEOSANS
+  color: white
+
+.login_area 
+  position: absolute
+  z-index: 14
+  width: 100%
+  height: 100%
+  background-color: pink
+
+.miniProfile 
+  transform: translateY(-250%)
+  animation: up_to_down_anim_next 1s forwards
+  display: flex
+  flex-direction: column
+  position: absolute
+  margin-left: calc(100% - 310px)
+  width: 300px
+  height: 240px
+  background-color: black
+  border-radius: 10px
+  border: solid rgb(255, 255, 255) 2px
+  box-shadow: 0px 0px 35px -4px #000000
+
+.miniProfile.closed
+  animation: opacity_anim_closed 0.9s forwards
+
+.button_profile
+  margin-top: 20px
+  margin-left: 10px
+  position: relative
+  width: calc(100% - 25px)
+  height: 70px
+  background-color: black
+  border-radius: 10px
+  border: solid white 2px
+  cursor: pointer
+  animation: scale_anim_close 0.5s forwards
+  &:hover
+    animation: scale_anim 0.5s forwards
+
+.button_profile.closed
+  animation: none
+
+@keyframes up_to_down_anim_next
+  0%
+    transform: translateY(-250%)
+  100%
+    transform: translateY(0)
+
+@keyframes opacity_anim_closed
+  0%
+    transform: translateY(0)
+  100%
+    transform: translateY(-250%)
+
+@keyframes up_to_down_anim
+  0%
+    transform: translateY(-50%)
+  100%
+    transform: translateY(0)
+
+@keyframes scale_anim
+  from
+    transform: scale(1)
+  to
+    transform: scale(1.2)
+
+@keyframes scale_anim_close
+  from
+    transform: scale(1.2)
+  to
+    transform: scale(1)
+
+.text_button_profile
+  margin-left: 20px
+  margin-top: 12px
+  font-size: 20px
+  font-family: MUSEOSANS
+  color: white
+  user-select: none
+
+
+.text_button_profile.title
+  text-align: center
+  margin-top: 20px
+  margin-right: 25px
+
+.text_button_profile.down
+  margin-top: 0px
+  font-family: OCEANIC
+  font-size: 20px
+  color: rgba(220, 220, 220)
 
 // @keyframes logo-spin 
 //   from 
