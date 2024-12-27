@@ -3,7 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.7.34031.279
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "unique.shoes.backend", "unique.shoes.backend\unique.shoes.backend.csproj", "{1CA492D9-B31E-4B50-A151-5DF3C324C529}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Unique.Shoes.AccountAPI", "Unique.Shoes.AccountAPI\Unique.Shoes.AccountAPI.csproj", "{1CA492D9-B31E-4B50-A151-5DF3C324C529}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Unique.Shoes.Middleware", "unique.shoes.middleware\Unique.Shoes.Middleware.csproj", "{BBA97C20-3E30-4AC9-AB66-D97601B30994}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{1CA492D9-B31E-4B50-A151-5DF3C324C529}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1CA492D9-B31E-4B50-A151-5DF3C324C529}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1CA492D9-B31E-4B50-A151-5DF3C324C529}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BBA97C20-3E30-4AC9-AB66-D97601B30994}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BBA97C20-3E30-4AC9-AB66-D97601B30994}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BBA97C20-3E30-4AC9-AB66-D97601B30994}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BBA97C20-3E30-4AC9-AB66-D97601B30994}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
