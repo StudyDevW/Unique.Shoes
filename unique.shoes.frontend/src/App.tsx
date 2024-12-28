@@ -6,6 +6,7 @@ import { SetOpenLogin, GetOpenLogin } from './components/Components.tsx'
 import LoginPage from './LoginPage.tsx'
 import { handleAccessTokenCheck, CheckErrorAccessToken, handleRefreshTokenUpdate } from './components/API/LoginAuth.tsx'
 import Cookies from 'js-cookie';
+import { profileLoadingSet, profileLoadingGet } from './components/LoadingComponent.tsx'
 
 let animClosedHeader: boolean = false;
 
@@ -164,6 +165,8 @@ function App() {
 
 
   const HeaderProp = () => {
+
+
 
     if (GetOpenLogin() === true) {
 

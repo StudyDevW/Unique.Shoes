@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import './preprocessor/App.sass'
 import { SetOpenLogin, GetOpenLogin } from './components/Components.tsx'
 import { CheckLoginSuccess, LoginSignOut } from './components/API/LoginAuth.tsx';
+import { profileLoadingSet, profileLoadingGet } from './components/LoadingComponent.tsx'
 
 function Miniprofile(user_authed: boolean) {
 
@@ -36,6 +37,15 @@ function Miniprofile(user_authed: boolean) {
   }
 
   const button_profile = () => {
+
+    if (profileLoadingGet()) {
+        return (
+            <>
+                <div className="text_login">Загрузка...</div>
+            </>
+        )
+    }
+    
     if (!user_authed) {
         if (CheckLoginSuccess()) {
             return (
@@ -68,6 +78,9 @@ function Miniprofile(user_authed: boolean) {
   }
 
   const MiniprofileInAuthed = (closed: boolean) => {
+
+
+
     if (CheckLoginSuccess()) {
 
         if (closed) {

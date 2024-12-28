@@ -2,7 +2,7 @@ import { useState } from 'react'
 import './preprocessor/App.sass'
 import { handleLogin } from './components/API/LoginAuth.tsx';
 
-const LoginPage: React.FC = () =>{
+const LoginPage: React.FC = () => {
 
   const [loginValue, setLogin] = useState('');
   const [passwordValue, setPassword] = useState('');

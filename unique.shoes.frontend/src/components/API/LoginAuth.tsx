@@ -1,8 +1,11 @@
 import axios from 'axios';
 import Cookies from 'js-cookie';
+import { profileLoadingSet, profileLoadingGet } from '../LoadingComponent.tsx'
+
 
 let loginSuccess: boolean = false;
 let errAccessToken: boolean = false;
+let errRefreshToken: boolean = false;
 
 const handleLogin = async (username: string, password: string) => {
     try {
@@ -20,9 +23,11 @@ const handleLogin = async (username: string, password: string) => {
         Cookies.set('AccessToken', accessToken, { expires: 1 });
         Cookies.set('RefreshToken', refreshToken, { expires: 7 });
 
+       
+
     } catch (err) {
         // Обработайте ошибку
-    }
+    } 
 }
 
 const handleAccessTokenCheck = async (accessToken: string) => {
@@ -37,6 +42,8 @@ const handleAccessTokenCheck = async (accessToken: string) => {
         loginSuccess = true
 
         console.log('Токен валид!');
+
+        profileLoadingSet(false);
 
     } catch (err) {
         errAccessToken = true
@@ -62,7 +69,9 @@ const handleRefreshTokenUpdate = async (refreshTokenIn: string) => {
         Cookies.set('RefreshToken', refreshToken, { expires: 7 });
         
     } catch (err) {
-        // Обработайте ошибку
+        profileLoadingSet(false);
+    } finally {
+        profileLoadingSet(false);
     }
 }
 
@@ -73,6 +82,7 @@ const CheckLoginSuccess = () => {
 const CheckErrorAccessToken = () => {
     return errAccessToken
 }
+
 
 const LoginSignOut = () => {
     loginSuccess = false
