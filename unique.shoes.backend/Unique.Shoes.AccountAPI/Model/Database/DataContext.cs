@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using unique.shoes.middleware.Database.DBO;
 
-namespace unique.shoes.backend.Model.Database
+namespace Unique.Shoes.AccountAPI.Model.Database
 {
     public class DataContext : DbContext
     {

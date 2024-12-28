@@ -4,7 +4,8 @@ import ItemShoes from './Item.tsx'
 import Miniprofile from './Miniprofile.tsx'
 import { SetOpenLogin, GetOpenLogin } from './components/Components.tsx'
 import LoginPage from './LoginPage.tsx'
-
+import { handleAccessTokenCheck, CheckErrorAccessToken, handleRefreshTokenUpdate } from './components/API/LoginAuth.tsx'
+import Cookies from 'js-cookie';
 
 let animClosedHeader: boolean = false;
 
@@ -14,8 +15,12 @@ function App() {
 
   const [adogImages, setAdogImages] = useState<string[]>([]);
 
+  const refScrollUp = useRef<HTMLDivElement>(null);
+
+  const [checkUpdToken, setCheckedToken] = useState<boolean>(false);
 
   const ref = useRef<HTMLDivElement>(null);
+
   const [size, setSize] = useState<{ width: number; height: number }>({ width: 0, height: 0 });
 
   // const [dynamicWidthAssort, setDWidth] = useState<number>(0);
@@ -83,6 +88,29 @@ function App() {
     return () => clearInterval(interval);
   }, []);
 
+  const TokensUpdate = () => {
+    const refreshTokens: string = Cookies.get('RefreshToken') as string;
+
+    handleRefreshTokenUpdate(refreshTokens)
+  }
+
+
+  const TokenCheck = () => {
+
+    const accessTokens: string = Cookies.get('AccessToken') as string;
+
+    handleAccessTokenCheck(accessTokens)
+  }
+
+  useEffect(() => {
+    TokenCheck();
+  }, []);
+
+  useEffect(() => {
+    if (CheckErrorAccessToken() === true)
+      TokensUpdate();
+  }, [CheckErrorAccessToken()]);
+
   useEffect(() => {
     const updateSize = () => {
       if (ref.current) {
@@ -130,7 +158,9 @@ function App() {
   //   return width_assort
   // }
 
-
+  const handleScrollUp = () => {
+    refScrollUp.current?.scrollIntoView({ behavior: "smooth" });
+  };
 
 
   const HeaderProp = () => {
@@ -139,7 +169,14 @@ function App() {
 
       animClosedHeader = true
 
+      document.body.style.overflow = "hidden";
+
+      handleScrollUp();
+
       return (<>
+
+        <div ref={refScrollUp}> </div>
+
         <div className="header small">
               <div className="logo"> </div>
 
@@ -147,11 +184,14 @@ function App() {
 
         </div>
 
-        {LoginPage()}
+        <LoginPage/>
 
       </>)
     }
     else {
+
+       
+      document.body.style.overflow = "auto";
 
       if (animClosedHeader === true) {
         return (<>

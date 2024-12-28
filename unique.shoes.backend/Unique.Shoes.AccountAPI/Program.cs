@@ -4,11 +4,12 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Npgsql;
 using System.Security.Cryptography;
-using unique.shoes.backend.Model.Database;
 using unique.shoes.middleware.Cache;
 using unique.shoes.middleware.Database;
 using unique.shoes.middleware.JWT;
 using unique.shoes.middleware.Services;
+using Unique.Shoes.AccountAPI.Model.Database;
+using Unique.Shoes.AccountAPI.Model.Services;
 
 namespace unique.shoes.backend
 {
@@ -110,7 +111,7 @@ namespace unique.shoes.backend
                 options.UseNpgsql(builder.Configuration.GetConnectionString("ServerConn"));
             });
 
-            //builder.Services.AddSingleton<IDatabaseService, DatabaseSDK>();
+            builder.Services.AddSingleton<IDatabaseService, DatabaseSDK>();
 
             builder.Services.AddSingleton<IJwtService, JwtSDK>();
 
@@ -123,13 +124,19 @@ namespace unique.shoes.backend
                 ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto;
             });
 
+            builder.Services.AddCors(options =>
+            {
+                options.AddPolicy("AllowOrigin",
+                    builder => builder.WithOrigins("http://localhost:4000")
+                                      .AllowAnyMethod()
+                                      .AllowAnyHeader());
+            });
+
             var app = builder.Build();
 
             await EnsureDatabaseInitializedAsync(app);
 
-    
-
-     
+            app.UseCors("AllowOrigin");
 
             app.UseRouting();
 

@@ -34,6 +34,146 @@
   margin: 15px calc(50% - 900px / 2)
   width: 900px
 
+.main_content_login 
+  position: absolute
+  transform: translateY(-250%)
+  animation: up_to_down_anim_next 1s forwards
+  margin: 105px calc(50% - 900px / 2)
+  width: 900px
+  height: 473px
+  background-color: rgb(255, 255, 255)
+  background-image: url(../images/curve_login.png)
+  background-size: contain
+  background-position: center
+  background-repeat: no-repeat
+  border-radius: 10px
+  z-index: 15
+  box-shadow: 0px 0px 35px -4px #000000
+
+.left_area_login_decor
+  display: flexbox
+  flex-direction: row
+  position: absolute
+  margin-left: 25px
+  margin-top: 25px
+  width: 420px
+  height: 400px
+
+
+.right_area_login
+  position: absolute
+  margin-left: calc(100% - 382px - 40px)
+  margin-top: 55px
+  width: 382px
+  height: 370px
+
+
+.title_login 
+  position: absolute
+  margin-left: calc(100% - 150px)
+  font-family: OCEANIC
+  font-size: 65px
+
+.input_login_area 
+  display: flexbox
+  flex-direction: column
+  position: absolute
+  margin-top: 90px
+  width: 99%
+  height: 276px
+  border: solid black 2px
+  border-radius: 10px
+  backdrop-filter: blur(15px)
+  animation: scale_anim_close_login 0.5s forwards
+  &:hover
+    animation: scale_anim_login 0.5s forwards
+
+.login_button
+  position: relative
+  margin-left: 207px
+  margin-top: 5px
+  width: 137px
+  height: 41px
+  background-color: black
+  border-radius: 10px
+  text-align: center
+  align-content: center
+  cursor: pointer
+  
+.input_sideline
+  position: relative
+  margin-left: 30px
+  margin-top: 20px
+  width: calc(100% - 60px)
+  height: 100px
+
+.input_sideline.smallspace
+  margin-top: -10px
+
+.title_input
+  margin-left: 5px
+  margin-top: 8px
+  position: absolute
+  font-family: OCEANIC
+  font-size: 25px
+
+.button_text_login
+  user-select: none
+  font-family: OCEANIC
+  margin-left: -2px
+  font-size: 23px
+  color: white
+
+
+.input_text 
+  font-family: MUSEOSANS
+  font-size: 24px
+  margin-top: 40px
+  position: absolute
+  padding: 0px 10px
+  width: calc(97% - 20px)
+  height: 45px
+  background-color: rgb(233, 233, 233)
+  border: solid black 2px
+  border-radius: 10px
+
+.left_area_block 
+  display: inline-flex
+  position: relative
+  margin-left: 30px
+  margin-top: 30px
+  width: 163px
+  height: 163px
+  background-color: white
+  border: solid black 2px
+  border-radius: 10px
+  animation: scale_anim_close_login 0.5s forwards
+  &:hover
+    animation: scale_anim_login 0.5s forwards
+
+.left_area_block.first
+  background-image: url(../images/login_icons/icon_cart.png)
+  background-size: 100px
+  background-position: 25px
+  background-repeat: no-repeat
+
+.left_area_block.second
+  background-image: url(../images/login_icons/icon_lock.png)
+  background-size: 100px
+  background-position: center
+  background-repeat: no-repeat
+
+.left_area_block.third
+  background-image: url(../images/login_icons/sneakers.png)
+  background-size: 120px
+  background-position: center
+  background-repeat: no-repeat
+
+.left_area_block.four
+  background-image: url(../images/login_icons/icon_pay.png)
+  background-size: 120px
+  background-position: 25px
+  background-repeat: no-repeat
 
 .header.normal 
   animation: header_res_open 0.5s forwards
@@ -412,6 +552,18 @@
 @keyframes scale_anim_close
   from
     transform: scale(1.2)
+  to
+    transform: scale(1)
+
+@keyframes scale_anim_login
+  from
+    transform: scale(1)
+  to
+    transform: scale(1.05)
+
+@keyframes scale_anim_close_login
+  from
+    transform: scale(1.05)
   to
     transform: scale(1)
 
