@@ -8,7 +8,7 @@ using Unique.Shoes.AccountAPI.Model.Database;
 
 #nullable disable
 
-namespace unique.shoes.backend.Migrations
+namespace Unique.Shoes.AccountAPI.Migrations
 {
     [DbContext(typeof(DataContext))]
     partial class DataContextModelSnapshot : ModelSnapshot
@@ -21,6 +21,31 @@ namespace unique.shoes.backend.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
+
+            modelBuilder.Entity("Unique.Shoes.Middleware.Database.DBO.UsersMoreTable", b =>
+                {
+                    b.Property<int>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("id"));
+
+                    b.Property<string>("avatarLink")
+                        .HasColumnType("text");
+
+                    b.Property<int>("countOrders")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("phoneNumber")
+                        .HasColumnType("text");
+
+                    b.Property<int>("userId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("id");
+
+                    b.ToTable("userMoreTableObj");
+                });
 
             modelBuilder.Entity("unique.shoes.middleware.Database.DBO.UsersTable", b =>
                 {

@@ -9,10 +9,10 @@ using Unique.Shoes.AccountAPI.Model.Database;
 
 #nullable disable
 
-namespace unique.shoes.backend.Migrations
+namespace Unique.Shoes.AccountAPI.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20241226165122_Init")]
+    [Migration("20241229222153_Init")]
     partial class Init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -23,6 +23,31 @@ namespace unique.shoes.backend.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
+
+            modelBuilder.Entity("Unique.Shoes.Middleware.Database.DBO.UsersMoreTable", b =>
+                {
+                    b.Property<int>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("id"));
+
+                    b.Property<string>("avatarLink")
+                        .HasColumnType("text");
+
+                    b.Property<int>("countOrders")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("phoneNumber")
+                        .HasColumnType("text");
+
+                    b.Property<int>("userId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("id");
+
+                    b.ToTable("userMoreTableObj");
+                });
 
             modelBuilder.Entity("unique.shoes.middleware.Database.DBO.UsersTable", b =>
                 {

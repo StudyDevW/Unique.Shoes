@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using unique.shoes.middleware.Database.DBO;
+using Unique.Shoes.Middleware.Database.DBO;
 
 namespace Unique.Shoes.AccountAPI.Model.Database
 {
@@ -24,6 +25,8 @@ namespace Unique.Shoes.AccountAPI.Model.Database
         }
 
         public DbSet<UsersTable> userTableObj { get; set; }
+
+        public DbSet<UsersMoreTable> userMoreTableObj { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

@@ -1,24 +1,14 @@
 import { useState, useRef, useEffect } from 'react'
 import './preprocessor/App.sass'
 import ItemShoes from './Item.tsx'
-import Miniprofile from './Miniprofile.tsx'
-import { SetOpenLogin, GetOpenLogin } from './components/Components.tsx'
-import LoginPage from './LoginPage.tsx'
-import { handleAccessTokenCheck, CheckErrorAccessToken, handleRefreshTokenUpdate } from './components/API/LoginAuth.tsx'
-import Cookies from 'js-cookie';
-import { profileLoadingSet, profileLoadingGet } from './components/LoadingComponent.tsx'
-
-let animClosedHeader: boolean = false;
+import Header from './Header.tsx'
+import CheckTokensValidate from './TokenCheckMain.tsx'
 
 function App() {
 
   const [starImages, setStarImages] = useState<string[]>([]);
 
   const [adogImages, setAdogImages] = useState<string[]>([]);
-
-  const refScrollUp = useRef<HTMLDivElement>(null);
-
-  const [checkUpdToken, setCheckedToken] = useState<boolean>(false);
 
   const ref = useRef<HTMLDivElement>(null);
 
@@ -89,28 +79,7 @@ function App() {
     return () => clearInterval(interval);
   }, []);
 
-  const TokensUpdate = () => {
-    const refreshTokens: string = Cookies.get('RefreshToken') as string;
-
-    handleRefreshTokenUpdate(refreshTokens)
-  }
-
-
-  const TokenCheck = () => {
-
-    const accessTokens: string = Cookies.get('AccessToken') as string;
-
-    handleAccessTokenCheck(accessTokens)
-  }
-
-  useEffect(() => {
-    TokenCheck();
-  }, []);
-
-  useEffect(() => {
-    if (CheckErrorAccessToken() === true)
-      TokensUpdate();
-  }, [CheckErrorAccessToken()]);
+  CheckTokensValidate();
 
   useEffect(() => {
     const updateSize = () => {
@@ -159,72 +128,14 @@ function App() {
   //   return width_assort
   // }
 
-  const handleScrollUp = () => {
-    refScrollUp.current?.scrollIntoView({ behavior: "smooth" });
-  };
-
-
-  const HeaderProp = () => {
 
 
 
-    if (GetOpenLogin() === true) {
-
-      animClosedHeader = true
-
-      document.body.style.overflow = "hidden";
-
-      handleScrollUp();
-
-      return (<>
-
-        <div ref={refScrollUp}> </div>
-
-        <div className="header small">
-              <div className="logo"> </div>
-
-              {Miniprofile(true)}
-
-        </div>
-
-        <LoginPage/>
-
-      </>)
-    }
-    else {
-
-       
-      document.body.style.overflow = "auto";
-
-      if (animClosedHeader === true) {
-        return (<>
-          <div className="header normal">
-                <div className="logo"> </div>
-  
-                {Miniprofile(false)}
-  
-          </div>
-        </>)
-      }
-      else {
-        return (<>
-          <div className="header">
-                <div className="logo"> </div>
-  
-                {Miniprofile(false)}
-  
-          </div>
-        </>)
-      }
-
-      
-    }
-  }
 
   return (
     <>
 
-      {HeaderProp()}
+      <Header/>
 
       <div className="info_items">
         <div className="background_decoration">

@@ -1,14 +1,19 @@
 import { useState, useEffect } from 'react'
 import './preprocessor/App.sass'
 import { SetOpenLogin, GetOpenLogin } from './components/Components.tsx'
-import { CheckLoginSuccess, LoginSignOut } from './components/API/LoginAuth.tsx';
-import { profileLoadingSet, profileLoadingGet } from './components/LoadingComponent.tsx'
+import {  LoginSignOut } from './components/API/LoginAuth.tsx';
+import useLoginSuccessVariable from './components/Variables/LoginSuccessVariable.ts';
+import { GetInfoUser_Name, GetInfoUser_FullName } from './components/API/AccountInfo.tsx';
+import useLoadingProfile from './components/Variables/LoadingProfileVariable.ts';
+import useGetInfoUserVariable from './components/Variables/GetInfoUserVariable.ts';
 
-function Miniprofile(user_authed: boolean) {
-
+const Miniprofile = (user_authed: boolean) => {
   const [miniProfile, setminiProfile] = useState<boolean>();
   const [closedAnim, setclosedAnim] = useState<boolean>();
-
+  const { loginSuccessGet, loginSuccessSet } = useLoginSuccessVariable();
+  const { profileloadingGet } = useLoadingProfile();
+  const { userCheckGet } = useGetInfoUserVariable();
+  
   const login_clicked = () => {
     setminiProfile(prev => !prev)
   }
@@ -23,6 +28,7 @@ function Miniprofile(user_authed: boolean) {
     setminiProfile(false)
     //OpenLoginPage
     SetOpenLogin(true)
+
   }
 
   const close_login_page = () => {
@@ -34,54 +40,66 @@ function Miniprofile(user_authed: boolean) {
     setclosedAnim(true)
     setminiProfile(false)
     LoginSignOut()
+    loginSuccessSet(false)
   }
 
-  const button_profile = () => {
+  const button_profile_no_clicked = () => {
 
-    if (profileLoadingGet()) {
+    if (profileloadingGet) {
         return (
             <>
                 <div className="text_login">Загрузка...</div>
             </>
         )
     }
-    
-    if (!user_authed) {
-        if (CheckLoginSuccess()) {
-            return (
-                <>
-                    <div className="text_login" onClick={login_clicked}>Успех</div>
-                </>
-            )
-        }
-        else {
-            return (
-            <>
-                <div className="text_login" onClick={login_clicked}>Войти</div>
-            </>
-            )
-        }
-    }  
-    else {
-
-        if (CheckLoginSuccess()) {
-            close_login_page();
-        }
-   
+  
+    if (loginSuccessGet && userCheckGet) {
         return (
             <>
-                <div className="text_login" onClick={close_login_page}>Вернуться</div>
+                <div className="text_login margined" onClick={login_clicked}>{GetInfoUser_Name()}</div>
+
             </>
         )
-    
     }
+    else {
+        return (
+        <>
+            <div className="text_login" onClick={login_clicked}>Войти</div>
+        </>
+        )
+    }
+
   }
+
+  const button_profile_clicked = () => {
+
+    if (profileloadingGet) {
+        return (
+            <>
+                <div className="text_login">Загрузка...</div>
+            </>
+        )
+    }
+
+    if (loginSuccessGet) {
+        close_login_page();
+    }
+
+    return (
+        <>
+            <div className="text_login" onClick={close_login_page}>Вернуться</div>
+        </>
+    )
+
+        
+    
+  }
+
 
   const MiniprofileInAuthed = (closed: boolean) => {
 
 
-
-    if (CheckLoginSuccess()) {
+    if (loginSuccessGet) {
 
         if (closed) {
             return (
@@ -190,36 +208,82 @@ function Miniprofile(user_authed: boolean) {
 
   const MiniprofileInit = () => {
     if (miniProfile === true) {
-        return (
-        <>
-            <div className="miniProfile" onMouseLeave={closed_wnd}>
-
-                <div className="text_button_profile title">
-                    Выберите вариант
-                </div>
-
-                {MiniprofileInAuthed(false)}
-                
-            </div>
-        </>
-        )
-    }
-    else if (closedAnim) {
-        return (
+        if (loginSuccessGet && userCheckGet) { 
+            return (
             <>
-                <div className="miniProfile closed">
+                <div className="miniProfile" onMouseLeave={closed_wnd}>
+
+                    <div className="text_button_profile title">
+                        {GetInfoUser_FullName()}
+                    </div>
+
+                    {MiniprofileInAuthed(false)}
+                    
+                </div>
+            </>
+            )
+        }
+        else {
+            return (
+            <>
+                <div className="miniProfile" onMouseLeave={closed_wnd}>
 
                     <div className="text_button_profile title">
                         Выберите вариант
                     </div>
 
-                    {MiniprofileInAuthed(true)}
+                    {MiniprofileInAuthed(false)}
+                    
                 </div>
             </>
-        )
+            )
+        }
+    }
+    else if (closedAnim) {
+        if (loginSuccessGet && userCheckGet) { 
+            return (
+            <>
+                <div className="miniProfile closed">
+
+                    <div className="text_button_profile title">
+                        {GetInfoUser_FullName()}
+                    </div>
+
+                    {MiniprofileInAuthed(false)}
+                    
+                </div>
+            </>
+            )
+        }
+        else {
+            return (
+                <>
+                    <div className="miniProfile closed">
+
+                        <div className="text_button_profile title">
+                            Выберите вариант
+                        </div>
+
+                        {MiniprofileInAuthed(true)}
+                    </div>
+                </>
+            )
+        }
     }
   }
   
+  const profileAvatar = () => {
+    if (loginSuccessGet && userCheckGet && !profileloadingGet) { 
+        return (
+        <>
+            <div className="avatar_mini" onClick={login_clicked}>
+
+            </div>
+        </>
+        )
+    }
+  }
+
 //   const window_of_login = () => {
 //     if (loginWnd === true){ 
 //         return (
@@ -231,12 +295,23 @@ function Miniprofile(user_authed: boolean) {
 //         )
 //     }}
 
+  const moreFuncs = () => {
+    if (user_authed)
+        return button_profile_clicked()
+    else 
+        return button_profile_no_clicked()
+  }
 
   return (
     <>
         <div className="profile_area">
-            {button_profile()}
+
+            {moreFuncs()}
+
+          
         </div>
+
+        {profileAvatar()}
 
         {/* {window_of_login()} */}
 

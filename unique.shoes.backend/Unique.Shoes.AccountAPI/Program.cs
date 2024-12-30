@@ -127,7 +127,7 @@ namespace unique.shoes.backend
             builder.Services.AddCors(options =>
             {
                 options.AddPolicy("AllowOrigin",
-                    builder => builder.WithOrigins("http://localhost:4000")
+                    builder => builder.WithOrigins("http://localhost:8081", "http://localhost:4000", "http://localhost")
                                       .AllowAnyMethod()
                                       .AllowAnyHeader());
             });
@@ -193,10 +193,15 @@ namespace unique.shoes.backend
             using var scope = app.Services.CreateScope();
             var context = scope.ServiceProvider.GetRequiredService<DataContext>();
 
-            var tableName = "userTableObj";
-            var tableExists = await CheckIfTableExistsAsync(context, tableName);
+            var tableNameFirst = "userTableObj";
+            var tableNameSecond = "usersMoreTableObj";
 
-            if (!tableExists)
+
+            var tableExistsFirst = await CheckIfTableExistsAsync(context, tableNameFirst);
+
+            var tableExistsSecond = await CheckIfTableExistsAsync(context, tableNameSecond);
+
+            if (!tableExistsFirst && !tableExistsSecond)
             {
                 await context.Database.MigrateAsync();
             }

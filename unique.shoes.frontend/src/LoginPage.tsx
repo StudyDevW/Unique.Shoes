@@ -1,14 +1,23 @@
 import { useState } from 'react'
+import useLoadingProfile from './components/Variables/LoadingProfileVariable.ts';
 import './preprocessor/App.sass'
 import { handleLogin } from './components/API/LoginAuth.tsx';
+import useLoginSuccessVariable from './components/Variables/LoginSuccessVariable.ts';
+
 
 const LoginPage: React.FC = () => {
-
+  const { profileloadingSet } = useLoadingProfile();
+  const { loginSuccessSet } = useLoginSuccessVariable();
   const [loginValue, setLogin] = useState('');
   const [passwordValue, setPassword] = useState('');
 
-  const ButtonClicked = () => {
-    handleLogin(loginValue, passwordValue)
+  const ButtonClicked = async () => {
+
+    if (await handleLogin(loginValue, passwordValue) === true) {
+      loginSuccessSet(true)
+    }
+    
+    profileloadingSet(true)
   }
 
   return (

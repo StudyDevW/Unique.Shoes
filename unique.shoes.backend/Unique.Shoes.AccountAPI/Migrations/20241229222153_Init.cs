@@ -4,12 +4,28 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
 
-namespace unique.shoes.backend.Migrations
+namespace Unique.Shoes.AccountAPI.Migrations
 {
     public partial class Init : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.CreateTable(
+                name: "userMoreTableObj",
+                columns: table => new
+                {
+                    id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    userId = table.Column<int>(type: "integer", nullable: false),
+                    avatarLink = table.Column<string>(type: "text", nullable: true),
+                    countOrders = table.Column<int>(type: "integer", nullable: false),
+                    phoneNumber = table.Column<string>(type: "text", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_userMoreTableObj", x => x.id);
+                });
+
             migrationBuilder.CreateTable(
                 name: "userTableObj",
                 columns: table => new
@@ -40,6 +56,9 @@ namespace unique.shoes.backend.Migrations
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropTable(
+                name: "userMoreTableObj");
+
             migrationBuilder.DropTable(
                 name: "userTableObj");
         }

@@ -1,20 +1,19 @@
 import axios from 'axios';
 import Cookies from 'js-cookie';
-import { profileLoadingSet, profileLoadingGet } from '../LoadingComponent.tsx'
+import useLoginSuccessVariable from '../Variables/LoginSuccessVariable.ts';
 
 
-let loginSuccess: boolean = false;
 let errAccessToken: boolean = false;
 let errRefreshToken: boolean = false;
 
 const handleLogin = async (username: string, password: string) => {
+
     try {
+      
         const response = await axios.post('http://localhost:8081/api/Authentication/SignIn', {
             username: username,
             password: password
         });
-
-        loginSuccess = true
 
         console.log('Успех:', response.data);
 
@@ -23,10 +22,11 @@ const handleLogin = async (username: string, password: string) => {
         Cookies.set('AccessToken', accessToken, { expires: 1 });
         Cookies.set('RefreshToken', refreshToken, { expires: 7 });
 
-       
+        return true
 
     } catch (err) {
         // Обработайте ошибку
+        return false
     } 
 }
 
@@ -39,19 +39,19 @@ const handleAccessTokenCheck = async (accessToken: string) => {
             },
         });
 
-        loginSuccess = true
-
         console.log('Токен валид!');
 
-        profileLoadingSet(false);
+        return true
 
     } catch (err) {
-        errAccessToken = true
+        return false
     }
 }
 
 const handleRefreshTokenUpdate = async (refreshTokenIn: string) => {
     try {
+        const { loginSuccessSet } = useLoginSuccessVariable();
+
         Cookies.remove('AccessToken');
         Cookies.remove('RefreshToken');
 
@@ -59,7 +59,7 @@ const handleRefreshTokenUpdate = async (refreshTokenIn: string) => {
             refreshToken: refreshTokenIn
         });
 
-        loginSuccess = true
+        loginSuccessSet(true);
 
         console.log('Токены обновлены!:', response.data);
 
@@ -69,14 +69,10 @@ const handleRefreshTokenUpdate = async (refreshTokenIn: string) => {
         Cookies.set('RefreshToken', refreshToken, { expires: 7 });
         
     } catch (err) {
-        profileLoadingSet(false);
+ 
     } finally {
-        profileLoadingSet(false);
-    }
-}
 
-const CheckLoginSuccess = () => {
-    return loginSuccess
+    }
 }
 
 const CheckErrorAccessToken = () => {
@@ -85,7 +81,7 @@ const CheckErrorAccessToken = () => {
 
 
 const LoginSignOut = () => {
-    loginSuccess = false
+
     
     Cookies.remove('AccessToken');
     Cookies.remove('RefreshToken');
@@ -97,7 +93,6 @@ export {
     handleLogin, 
     handleAccessTokenCheck, 
     handleRefreshTokenUpdate, 
-    CheckLoginSuccess, 
     LoginSignOut, 
     CheckErrorAccessToken 
 }

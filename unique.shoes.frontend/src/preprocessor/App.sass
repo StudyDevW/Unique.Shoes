@@ -472,17 +472,34 @@
 .profile_area 
   position: absolute
   align-content: center
-  text-align: center
-  margin-left: calc(100% - 160px)
-  width: 100px
+  text-align: right
+  margin-left: calc(100% - 300px)
+  width: 240px
   height: 70px
   cursor: pointer
   user-select: none
-
+  
 .text_login
+  margin-right: 10px
   font-size: 20px
   font-family: MUSEOSANS
   color: white
+
+.text_login.margined
+  margin-right: 70px
+
+.avatar_mini 
+  position: absolute
+  margin-left: calc(100% - 120px)
+  margin-top: 12px
+  width: 45px
+  height: 45px
+  border-radius: 50px
+  z-index: 0
+  cursor: pointer
+  background-image: url(../images/def_user.png)
+  background-size: contain
+  background-repeat: no-repeat
 
 .login_area 
   position: absolute

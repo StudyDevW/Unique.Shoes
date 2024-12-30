@@ -10,6 +10,7 @@ using Unique.Shoes.Middleware.Database.DTO.AccountSelect;
 using Unique.Shoes.Middleware.Database.DTO;
 using unique.shoes.middleware.JWT.DTO.CheckUsers;
 using Unique.Shoes.AccountAPI.Model.Services;
+using Unique.Shoes.Middleware.Database.DBO;
 
 namespace Unique.Shoes.AccountAPI.Model.Database
 {
@@ -23,6 +24,33 @@ namespace Unique.Shoes.AccountAPI.Model.Database
             _logger = LoggerFactory.Create(builder => builder.AddConsole()).CreateLogger(string.Empty);
             _conf = configuration;
 
+        }
+
+        private int GetIdFromUsername(string? userName, DataContext _db)
+        {
+
+            var userCheck = _db.userTableObj.Where(c => c.username == userName).FirstOrDefault();
+
+            if (userCheck != null)
+            {
+                return userCheck.id;
+            }
+
+            return -1;
+        }
+
+        public async Task RegisterWithMore(int userId, DataContext _db)
+        {
+            UsersMoreTable usersMoreTable = new UsersMoreTable()
+            {
+                userId = userId,
+                avatarLink = "../images/def_user.png",
+                countOrders = 0,
+                phoneNumber = ""
+            };
+
+            _db.userMoreTableObj.Add(usersMoreTable);
+            await _db.SaveChangesAsync();
         }
 
         public async Task RegisterUser(Auth_SignUp dto)
@@ -49,9 +77,13 @@ namespace Unique.Shoes.AccountAPI.Model.Database
                 db.userTableObj.Add(usersTable);
                 await db.SaveChangesAsync();
 
+                var idRegisteredUser = GetIdFromUsername(dto.username, db);
+
+                await RegisterWithMore(idRegisteredUser, db);
+
                 _logger.LogInformation($"RegisterUser: {dto.firstName}, created");
             }
-
+            
             return;
         }
 
