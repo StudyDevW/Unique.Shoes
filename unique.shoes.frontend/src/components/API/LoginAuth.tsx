@@ -2,19 +2,17 @@ import axios from 'axios';
 import Cookies from 'js-cookie';
 import useLoginSuccessVariable from '../Variables/LoginSuccessVariable.ts';
 
-
-let errAccessToken: boolean = false;
-let errRefreshToken: boolean = false;
-
 const handleLogin = async (username: string, password: string) => {
 
-    try {
-      
-        const response = await axios.post('http://localhost:8081/api/Authentication/SignIn', {
-            username: username,
-            password: password
-        });
 
+
+
+    const response = await axios.post('http://localhost:8081/api/Authentication/SignIn', {
+        username: username,
+        password: password
+    });
+
+    if (response.status === 200) {
         console.log('Успех:', response.data);
 
         const { accessToken, refreshToken } = response.data;
@@ -23,62 +21,56 @@ const handleLogin = async (username: string, password: string) => {
         Cookies.set('RefreshToken', refreshToken, { expires: 7 });
 
         return true
+    }
+    
 
-    } catch (err) {
-        // Обработайте ошибку
-        return false
-    } 
+    return false
+  
+
 }
 
 const handleAccessTokenCheck = async (accessToken: string) => {
-    try {
 
-        const response = await axios.get('http://localhost:8081/api/Authentication/Validate', {
-            headers: {
-                accessToken: accessToken,
-            },
-        });
+    const response = await axios.get('http://localhost:8081/api/Authentication/Validate', {
+        headers: {
+            accessToken: accessToken,
+        },
+    });
 
+
+    if (response.status === 200) {
         console.log('Токен валид!');
-
         return true
-
-    } catch (err) {
-        return false
     }
+
+    console.log('Токен не действительный!');
+    return false
 }
 
 const handleRefreshTokenUpdate = async (refreshTokenIn: string) => {
-    try {
-        const { loginSuccessSet } = useLoginSuccessVariable();
 
-        Cookies.remove('AccessToken');
-        Cookies.remove('RefreshToken');
+    Cookies.remove('AccessToken');
+    Cookies.remove('RefreshToken');
 
-        const response = await axios.post('http://localhost:8081/api/Authentication/Refresh', {
-            refreshToken: refreshTokenIn
-        });
+    const response = await axios.post('http://localhost:8081/api/Authentication/Refresh', {
+        refreshToken: refreshTokenIn
+    });
 
-        loginSuccessSet(true);
-
+    if (response.status === 200) {
         console.log('Токены обновлены!:', response.data);
 
         const { accessToken, refreshToken } = response.data;
 
         Cookies.set('AccessToken', accessToken, { expires: 1 });
         Cookies.set('RefreshToken', refreshToken, { expires: 7 });
-        
-    } catch (err) {
- 
-    } finally {
 
+        return true
     }
-}
 
-const CheckErrorAccessToken = () => {
-    return errAccessToken
-}
+    console.log('Ошибка обновления токенов!');
+    return false;
 
+}
 
 const LoginSignOut = () => {
 
@@ -94,5 +86,5 @@ export {
     handleAccessTokenCheck, 
     handleRefreshTokenUpdate, 
     LoginSignOut, 
-    CheckErrorAccessToken 
+
 }

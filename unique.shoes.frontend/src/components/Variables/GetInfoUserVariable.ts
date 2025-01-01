@@ -10,7 +10,7 @@ const useGetInfoUserVariable = create<GetUserStates>()(
   devtools(
     persist(
       (set) => ({
-        userCheckGet: true,
+        userCheckGet: false,
         userCheckSet: (value: boolean) => set({userCheckGet: value}),
       }),
       {

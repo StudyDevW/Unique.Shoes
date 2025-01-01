@@ -20,7 +20,7 @@ const handleGetUserInfo = async (accessToken: string) => {
 
         return true
 
-    } catch (err) {
+    } catch (error) {
         console.log("Внутренняя ошибка получения информации о пользователе!")
         return false
     } finally {

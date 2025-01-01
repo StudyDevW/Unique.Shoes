@@ -1,12 +1,13 @@
 import { useState, useRef, useEffect } from 'react'
 import Miniprofile from './Miniprofile.tsx'
-import { SetOpenLogin, GetOpenLogin } from './components/Components.tsx'
+import useloginPageOpenedVariable from './components/Variables/OpenLoginPageVariable.ts';
 import LoginPage from './LoginPage.tsx'
 import useLoadingProfile from './components/Variables/LoadingProfileVariable.ts';
 let animClosedHeader: boolean = false;
 
 const Header: React.FC = () => {
     
+    const { loginPageOpenedGet } = useloginPageOpenedVariable();
 
     const refScrollUp = useRef<HTMLDivElement>(null);
 
@@ -15,7 +16,7 @@ const Header: React.FC = () => {
     };
     
 
-    if (GetOpenLogin() === true) {
+    if (loginPageOpenedGet) {
 
         animClosedHeader = true
   

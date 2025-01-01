@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import './preprocessor/App.sass'
-import { SetOpenLogin, GetOpenLogin } from './components/Components.tsx'
+import useloginPageOpenedVariable from './components/Variables/OpenLoginPageVariable.ts';
 import {  LoginSignOut } from './components/API/LoginAuth.tsx';
 import useLoginSuccessVariable from './components/Variables/LoginSuccessVariable.ts';
 import { GetInfoUser_Name, GetInfoUser_FullName } from './components/API/AccountInfo.tsx';
@@ -13,6 +13,7 @@ const Miniprofile = (user_authed: boolean) => {
   const { loginSuccessGet, loginSuccessSet } = useLoginSuccessVariable();
   const { profileloadingGet } = useLoadingProfile();
   const { userCheckGet } = useGetInfoUserVariable();
+  const { loginPageOpenedSet } = useloginPageOpenedVariable();
   
   const login_clicked = () => {
     setminiProfile(prev => !prev)
@@ -27,13 +28,14 @@ const Miniprofile = (user_authed: boolean) => {
     setclosedAnim(true)
     setminiProfile(false)
     //OpenLoginPage
-    SetOpenLogin(true)
+    loginPageOpenedSet(true)
 
   }
 
   const close_login_page = () => {
     setclosedAnim(false)
-    SetOpenLogin(false)
+    loginPageOpenedSet(false)
+    
   }
 
   const leave_from_account = () => {
@@ -43,7 +45,10 @@ const Miniprofile = (user_authed: boolean) => {
     loginSuccessSet(false)
   }
 
-  const button_profile_no_clicked = () => {
+
+
+    
+  const button_profile = () => {
 
     if (profileloadingGet) {
         return (
@@ -52,46 +57,34 @@ const Miniprofile = (user_authed: boolean) => {
             </>
         )
     }
-  
-    if (loginSuccessGet && userCheckGet) {
-        return (
-            <>
-                <div className="text_login margined" onClick={login_clicked}>{GetInfoUser_Name()}</div>
 
+    if (!user_authed) {
+         
+        if (loginSuccessGet && userCheckGet) {
+            return (
+                <>
+                    <div className="text_login margined" onClick={login_clicked}>{GetInfoUser_Name()}</div>
+
+                </>
+            )
+        }
+        else {
+            return (
+            <>
+                <div className="text_login" onClick={login_clicked}>Войти</div>
             </>
-        )
+            )
+        }
     }
     else {
-        return (
-        <>
-            <div className="text_login" onClick={login_clicked}>Войти</div>
-        </>
-        )
-    }
 
-  }
-
-  const button_profile_clicked = () => {
-
-    if (profileloadingGet) {
         return (
             <>
-                <div className="text_login">Загрузка...</div>
+                <div className="text_login" onClick={close_login_page}>Вернуться</div>
             </>
         )
+
     }
-
-    if (loginSuccessGet) {
-        close_login_page();
-    }
-
-    return (
-        <>
-            <div className="text_login" onClick={close_login_page}>Вернуться</div>
-        </>
-    )
-
-        
     
   }
 
@@ -295,18 +288,18 @@ const Miniprofile = (user_authed: boolean) => {
 //         )
 //     }}
 
-  const moreFuncs = () => {
-    if (user_authed)
-        return button_profile_clicked()
-    else 
-        return button_profile_no_clicked()
-  }
+  useEffect(() => {
+    if (loginSuccessGet === true)
+        close_login_page();
+  }, [loginSuccessGet]);
+
+
 
   return (
     <>
         <div className="profile_area">
 
-            {moreFuncs()}
+            {button_profile()}
 
           
         </div>

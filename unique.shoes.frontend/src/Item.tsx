@@ -5,6 +5,10 @@ function ItemShoes(name_item: string, item_image: string, type_item: string, ani
 
   const [backgroundImages, setBackgroundImages] = useState<string[]>([]);
 
+  const [infoOfItems, setOpeninfoOfItems] = useState<boolean>(false);
+
+  const [openInfoReady, setOpenInfoReady] = useState<boolean>(false);
+
   const image_background_array: {[key: string]: string } = {
     background_1: 'url(../images/background_handdraw/background_curve.png)',
     background_2: 'url(../images/background_handdraw/background_curve_1.png)',
@@ -59,10 +63,46 @@ function ItemShoes(name_item: string, item_image: string, type_item: string, ani
     }
   }
 
+  const loading_info_bar = () => {
+    return (
+      <>
+        <div className="loading_item_infobar">
+
+        </div>
+      </>
+    )
+  }
+
+ 
+  const infoStart = () => {
+    setOpeninfoOfItems(true);
+  }
+
+  const infoEnd = () => {
+    setOpeninfoOfItems(false);
+    setOpenInfoReady(false);
+  }
+
+  useEffect(() => {
+    if (infoOfItems === true) {
+      const timer = setTimeout(() => {
+        setOpenInfoReady(true);
+      }, 1500);
+  
+      return () => clearTimeout(timer);
+    } 
+  }, [infoOfItems]);
+
+  useEffect(() => {
+    // if (openInfoReady === true)
+    //   alert()
+  }, [openInfoReady]);
+
   return (
     <>
-
-        <div className="item_release">
+       
+        
+        <div className="item_release" onMouseEnter={infoStart} onMouseLeave={infoEnd}>
 
             {marks_complete()}
         
@@ -75,6 +115,7 @@ function ItemShoes(name_item: string, item_image: string, type_item: string, ani
             </div>
 
         </div>
+      
     </>
   )
 }

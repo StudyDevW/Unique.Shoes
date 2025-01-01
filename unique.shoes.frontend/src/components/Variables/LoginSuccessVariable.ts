@@ -10,7 +10,7 @@ const useLoginSuccessVariable = create<LoginSuccessStates>()(
   devtools(
     persist(
       (set) => ({
-        loginSuccessGet: true,
+        loginSuccessGet: false,
         loginSuccessSet: (value: boolean) => set({loginSuccessGet: value}),
       }),
       {
