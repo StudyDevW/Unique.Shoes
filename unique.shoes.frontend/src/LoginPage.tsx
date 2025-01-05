@@ -35,7 +35,7 @@ const LoginPage: React.FC = () => {
   useEffect(() => {
     if (loginHandler)
       handlerChecker();
-
+    
   }, [loginHandler]);
 
   return (

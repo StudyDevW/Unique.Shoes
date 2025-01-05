@@ -1,7 +1,7 @@
 import { createRoot } from 'react-dom/client'
 import './preprocessor/Main.sass'
 import App from './App.tsx'
-import ManagerPanel from './ManagerPanel.tsx';
+import ManagerPanel from './ManagerPanel/ManagerPanel.tsx';
 import {
     createBrowserRouter,
     RouterProvider,
