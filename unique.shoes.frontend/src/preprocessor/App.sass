@@ -100,6 +100,13 @@
   align-content: center
   cursor: pointer
   
+.textarea_sideline
+  position: relative
+  margin-left: 15px
+  margin-top: 0px
+  width: calc(100% - (15px * 2))
+  height: 180px
+
 .input_sideline
   position: relative
   margin-left: 30px
@@ -110,12 +117,31 @@
 .input_sideline.smallspace
   margin-top: -10px
 
+.input_sideline.add_panel
+  margin-left: 15px
+  margin-top: 20px
+  width: calc(100% - (15px * 2))
+  height: 100px
+
+.input_sideline.add_panel.smallspace
+  margin-top: 0px
+
+.input_sideline.add_panel.value.smallspace
+  margin-top: 0px
+  width: calc(100% - (45px * 2))
+
 .title_input
   margin-left: 5px
   margin-top: 8px
   position: absolute
   font-family: OCEANIC
   font-size: 25px
+  user-select: none
+
+.title_input.big
+  margin-left: 0px
+  margin-top: 0px
+  font-size: 30px
 
 .button_text_login
   user-select: none
@@ -136,6 +162,64 @@
   background-color: rgb(233, 233, 233)
   border: solid black 2px
   border-radius: 10px
+
+.input_textarea 
+  font-family: MUSEOSANS
+  font-size: 24px
+  margin-top: 40px
+  position: absolute
+  padding: 10px 10px
+  width: calc(97% - 20px)
+  height: 105px
+  background-color: rgb(255, 255, 255)
+  border: solid black 2px
+  border-radius: 10px
+  resize: none
+
+.input_textarea.sizeopt
+  display: flex
+  flex-direction: row  
+  flex-flow: wrap
+
+.item_sizeopt
+  font-size: 15px
+  flex: none
+  margin-left: 15px
+  margin-top: 6px
+  position: relative
+  width: 62px
+  height: 40px
+  background-color: white
+  border: solid black 1px
+  border-radius: 5px
+  text-align: center
+  align-content: center
+  user-select: none
+  animation: scale_anim_close 0.5s forwards
+  &:hover
+    animation: scale_anim 0.5s forwards
+
+.item_sizeopt.nospace
+  margin-left: 0px
+
+.input_text.whitefull
+  background-color: rgb(255, 255, 255)
+
+.value_money_block
+  margin-top: 40px
+  position: absolute
+  padding: 0px 10px
+  margin-left: calc(100% + 5px) 
+  width: 25px
+  height: 45px
+  background-color: rgb(255, 255, 255)
+  border: solid black 2px
+  border-radius: 10px
+  font-family: MUSEOSANS
+  font-size: 24px
+  text-align: center
+  align-content: center
+  user-select: none
 
 .left_area_block 
   display: inline-flex
@@ -620,18 +704,69 @@
   font-size: 20px
   color: rgba(220, 220, 220)
 
+.title_section_panel
+  position: absolute
+  margin-top: 105px
+  margin-left: 305px
+  width: 400px
+  height: 60px
+  font-family: OCEANIC
+  font-size: 50px
+
 .left_panel_manager
   position: fixed
   margin-left: 11px
   margin-top: 100px
-
   width: 256px
   height: calc(100% - 110px)
   background-color: black
   border-radius: 10px
 
+.add_section_panel_mainblock
+  display: flex
+  flex-direction: column
+  flex: none
+  position: relative
+  width: 364px
+  height: 713px
+  margin-top: 105px
+  border-radius: 10px
+  border: solid black 2px
+
+  
+.add_section_panel_secondblock
+  position: relative
+  flex: none
+  width: calc(100% - 364px - 20px * 2)
+  height: 576px
+  margin-top: 105px
+  margin-left: 20px
+  border-radius: 10px
+  border: solid black 2px
+
+.add_section_panel_thirdblock
+  position: absolute
+  flex: none
+  width: calc(100% - 364px - 20px * 2)
+  height: 105px
+  margin-left: calc(20px + 368px)
+  margin-top: calc(105px + 576px + 30px)
+  border-radius: 10px
+  border: solid black 2px
+
+
+
+.main_area_manager
+  position: absolute 
+  display: flex
+  flex-wrap: wrap
+  margin-left: 290px
+  margin-top: 100px
+  width: calc(100% - 305px) 
+  height: calc(100% - 110px)
+
 .area_of_buttons_panel 
-  display: flexbox
+  display: flex
   flex-direction: column
   position: absolute
   width: 100%
@@ -690,12 +825,12 @@
     transform: scale(1)
     border: solid white 1px
   to
-    transform: scale(1.1)
+    transform: scale(1.05)
     border: solid #0cdda4 1px
 
 @keyframes animation_button_panel_end
   from
-    transform: scale(1.1)
+    transform: scale(1.05)
   to
     transform: scale(1)
 
@@ -706,6 +841,7 @@
   font-size: 18px
   color: white
   font-family: MUSEOSANS
+  user-select: none
 
 .vertical_line_button_panel 
   position: absolute
@@ -714,6 +850,17 @@
   margin-top: 10px
   margin-left: 47px
   background-color: white
+
+.indicator_button_active_panel
+  position: absolute
+  width: 35px
+  height: 35px
+  margin-left: calc(100% - 45px)
+  margin-top: 7px 
+  background-size: 28px
+  background-image: url(../images/stars_handdraw/star_4_white.png)
+  background-position: center
+  background-repeat: no-repeat
 
 .icon_area_button_panel 
   position: absolute
@@ -733,6 +880,17 @@
 .icon_area_button_panel.change_button
   background-image: url(../images/panel_icons/change_icon.png)
 
+.icon_area_button_panel.sale_button
+  background-size: 23px
+  background-image: url(../images/panel_icons/sale_icon.png)
+
+.icon_area_button_panel.garant_button
+  background-size: 33px
+  background-image: url(../images/panel_icons/garant_icon.png)
+
+.icon_area_button_panel.spros_button
+  background-size: 26px
+  background-image: url(../images/panel_icons/spros_icon.png)
 
 // @keyframes logo-spin 
 //   from 
