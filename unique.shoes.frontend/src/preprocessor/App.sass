@@ -106,6 +106,64 @@
   margin-top: 0px
   width: calc(100% - (15px * 2))
   height: 180px
+  animation: scale_anim_close_item 0.5s forwards
+  &:hover
+    animation: scale_anim_item 0.5s forwards
+
+.textarea_sideline.sizeopt
+  height: 145px
+
+.buttonarea_sideline
+  display: flex
+  flex-direction: row
+  position: relative
+  margin-left: 15px
+  margin-top: 5px
+  width: calc(100% - (15px * 2))
+  height: 40px
+  user-select: none
+  animation: scale_anim_close_item 0.5s forwards
+  &:hover
+    animation: scale_anim_item 0.5s forwards
+
+.buttonarea_sideline_text
+  font-family: MUSEOSANS
+  font-size: 22px
+  margin-left: 5px
+  align-content: center
+  width: 280px
+  height: 40px
+
+.buttonarea_sideline_button
+  margin-left: 5px
+  margin-top: 7px
+  width: 20px
+  height: 20px
+  background-color: white
+  border: solid black 3px
+  border-radius: 5px
+
+.buttonarea_complete
+  margin-top: 10px
+  margin-left: 9px
+  width: calc(100% - 20px)
+  height: 60px
+  background-color: black
+  border-radius: 10px
+  color: white
+  font-family: MUSEOSANS
+  font-size: 25px
+  align-content: center
+  text-align: center
+  animation: scale_anim_close_login 0.5s forwards
+  user-select: none
+  &:hover
+    animation: scale_anim_login 0.5s forwards
+
+.buttonarea_sideline_button.clicked
+  background-color: #0cdda5e0
+  animation: scale_anim_close 0.5s forwards
+
 
 .input_sideline
   position: relative
@@ -122,6 +180,9 @@
   margin-top: 20px
   width: calc(100% - (15px * 2))
   height: 100px
+  animation: scale_anim_close_item 0.5s forwards
+  &:hover
+    animation: scale_anim_item 0.5s forwards
 
 .input_sideline.add_panel.smallspace
   margin-top: 0px
@@ -180,17 +241,18 @@
   display: flex
   flex-direction: row  
   flex-flow: wrap
+  height: 80px
 
 .item_sizeopt
   font-size: 15px
   flex: none
   margin-left: 15px
-  margin-top: 6px
+  margin-top: 5px
   position: relative
   width: 62px
-  height: 40px
+  height: 30px
   background-color: white
-  border: solid black 1px
+  // border: solid black 1px
   border-radius: 5px
   text-align: center
   align-content: center
@@ -199,8 +261,18 @@
   &:hover
     animation: scale_anim 0.5s forwards
 
+.item_sizeopt.clicked
+  border: solid black 1px
+  width: 60px
+  height: 28px
+  &:hover
+    animation: scale_anim_close 0.5s forwards
+  
 .item_sizeopt.nospace
   margin-left: 0px
+
+.item_sizeopt.nospace.clicked
+  border: solid black 1px
 
 .input_text.whitefull
   background-color: rgb(255, 255, 255)
@@ -706,8 +778,8 @@
 
 .title_section_panel
   position: absolute
-  margin-top: 105px
-  margin-left: 305px
+  margin-top: 115px
+  margin-left: 295px
   width: 400px
   height: 60px
   font-family: OCEANIC
