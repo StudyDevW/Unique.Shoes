@@ -1,19 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Unique.Shoes.Middleware.Database.DBO
+namespace Unique.Shoes.Middleware.Database.DTO
 {
-    public class ShopItemsTable
+    public class Item_Create
     {
-        [Key]
-        public int id { get; set; }
-
-        public string hashName { get; set; }
-
         public string name { get; set; }
 
         public string description { get; set; }

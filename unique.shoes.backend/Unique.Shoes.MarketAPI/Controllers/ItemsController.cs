@@ -1,0 +1,53 @@
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using unique.shoes.middleware.Services;
+using Unique.Shoes.MarketAPI.Model.Services;
+using Unique.Shoes.Middleware.Database.DTO;
+
+namespace Unique.Shoes.MarketAPI.Controllers
+{
+    [Route("api/Items/")]
+    [ApiController]
+    public class ItemsController : ControllerBase
+    {
+        private readonly IDatabaseService _database;
+        private readonly IJwtService _jwt;
+
+        private readonly ICacheService _cache;
+
+        public ItemsController(IDatabaseService database, IJwtService jwt, ICacheService cache, IConfiguration configuration)
+        {
+            _database = database;
+            _jwt = jwt;
+            _cache = cache;
+        }
+
+        [Authorize(AuthenticationSchemes = "Asymmetric")]
+        [HttpPost("Create")]
+        public async Task<IActionResult> CreateItem([FromBody] Item_Create dtoObj)
+        {
+            string bearer_key = Request.Headers["Authorization"];
+
+            var validation = await _jwt.AccessTokenValidation(bearer_key);
+
+            if (validation.TokenHasError())
+            {
+                return Unauthorized();
+            }
+            else if (validation.TokenHasSuccess())
+            {
+                try
+                {
+                    await _database.CreateItem(dtoObj);
+                    return Ok("item_created");
+                }
+                catch (Exception e)
+                {
+                    return BadRequest();
+                }
+            }
+
+            return BadRequest();
+        }
+    }
+}

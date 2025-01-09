@@ -22,6 +22,21 @@ services:
     ports:
        - "8081:80"
     restart: unless-stopped
+  unique.shoes.backend.marketapi:
+    image: ${DOCKER_REGISTRY-}uniqueshoes_marketservice:1.0
+    container_name: Unique.Shoes.Backend.MarketAPI
+    depends_on:
+      postgres_db:
+        condition: service_healthy
+    build:
+      context: ./unique.shoes.backend
+      dockerfile: Unique.Shoes.MarketAPI/Dockerfile
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:80;http://+:5000
+    ports:
+       - "8082:80"
+    restart: unless-stopped
   postgres_db:
     image: postgres:17.0-bookworm
     container_name: Unique.Shoes.PostgreSQL

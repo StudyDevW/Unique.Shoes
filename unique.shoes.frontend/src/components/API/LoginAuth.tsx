@@ -1,11 +1,9 @@
 import axios from 'axios';
 import Cookies from 'js-cookie';
 import useLoginSuccessVariable from '../Variables/LoginSuccessVariable.ts';
+import { ResetInfoUser } from './AccountInfo.tsx'; 
 
 const handleLogin = async (username: string, password: string) => {
-
-
-
 
     const response = await axios.post('http://localhost:8081/api/Authentication/SignIn', {
         username: username,
@@ -77,6 +75,8 @@ const LoginSignOut = () => {
     
     Cookies.remove('AccessToken');
     Cookies.remove('RefreshToken');
+
+    ResetInfoUser();
 
     console.log('Выход из аккаунта!');
 }

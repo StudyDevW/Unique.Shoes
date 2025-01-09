@@ -1,4 +1,8 @@
 import { useState, useEffect } from "react"
+import { handleItemAdd } from "../components/API/CreateItem.tsx"; 
+import useGetInfoUserVariable from "../components/Variables/GetInfoUserVariable.ts";
+import Cookies from 'js-cookie';
+import CheckTokensValidate from "../TokenCheckMain.tsx"
 
 let sizeMapper = new Map<string, boolean>([
     ['36 RU', false],
@@ -16,10 +20,176 @@ let buttonMapper = new Map<string, boolean>([
     ['secondButton', false]
 ]);
 
+function sortStringsAndExtractNumbers(arr: string[]): { sortedStrings: string[], numbers: number[] } {
+
+    const numbers: number[] = [];
+    
+    // Разделяем строки на пустые и непустые
+    const nonEmptyStrings = arr.filter(str => str.trim() !== '');
+    const emptyStrings = arr.filter(str => str.trim() === '');
+
+    // Сортируем непустые строки
+    const sortedNonEmptyStrings = nonEmptyStrings.map(str => {
+        const num = parseFloat(str.match(/-?\d+(\.\d+)?/)?.[0] || '0');
+        numbers.push(num);
+        return str;
+    }).sort((a, b) => {
+        const numA = parseFloat(a.match(/-?\d+(\.\d+)?/)?.[0] || '0');
+        const numB = parseFloat(b.match(/-?\d+(\.\d+)?/)?.[0] || '0');
+        
+        return numA - numB;
+    });
+
+    // Объединяем пустые строки и отсортированные непустые строки
+    const sortedStrings = [...sortedNonEmptyStrings, ...emptyStrings];
+
+    return { sortedStrings, numbers };
+}
+
 const AddSectionPanel: React.FC = () => {
 
-    // const [selectedSizes, setSelectedSizes] = useState<string[]>(['', '', '', '', '', '', '', '']); 
+    const [selectedSizes, setSelectedSizes] = useState<string[]>(['', '', '', '', '', '', '', '']); 
 
+    const [finalSizeSort, setfinalSizeSort] = useState<string[]>([]); 
+
+    const { userCheckGet } = useGetInfoUserVariable();
+
+
+    const [nameItem, setNameItem] = useState<string>("");
+
+    const [priceItem, setPriceItem] = useState<number>(0);
+ 
+    const [descItem, setDescItem] = useState<string>("");
+
+    const containToArraySizes = (index: number, size_name: string) => {
+        setSelectedSizes(prevSize => {
+            prevSize[index] = (prevSize[index] = size_name);
+            return prevSize;
+        })
+
+        console.log(selectedSizes)
+    };
+
+
+    
+    const sizeInOutputted = (size_name: string) => {
+
+        switch (size_name) {
+            case '36 RU':
+            {
+                if (sizeMapper.get(size_name) === true) {
+                    containToArraySizes(0, size_name);
+                }
+                else {
+                    containToArraySizes(0, '');
+                }
+                break;
+            }
+            case '37 RU': 
+            {
+                if (sizeMapper.get(size_name) === true) {
+                    containToArraySizes(1, size_name);
+                }
+                else {
+                    containToArraySizes(1, '');
+                }
+                break;
+            }
+            case '38 RU': 
+            {
+                if (sizeMapper.get(size_name) === true) {
+                    containToArraySizes(2, size_name);
+                }
+                else {
+                    containToArraySizes(2, '');
+                }
+                break;
+            }
+            case '39 RU': 
+            {
+                if (sizeMapper.get(size_name) === true) {
+                    containToArraySizes(3, size_name);
+                }
+                else {
+                    containToArraySizes(3, '');
+                }
+                break;
+            }
+            case '40 RU': 
+            {
+                if (sizeMapper.get(size_name) === true) {
+                    containToArraySizes(4, size_name);
+                }
+                else {
+                    containToArraySizes(4, '');
+                }
+                break;
+            }
+            case '41 RU': 
+            {
+                if (sizeMapper.get(size_name) === true) {
+                    containToArraySizes(5, size_name);
+                }
+                else {
+                    containToArraySizes(5, '');
+                }
+                break;
+            }
+            case '42 RU': 
+            {
+                if (sizeMapper.get(size_name) === true) {
+                    containToArraySizes(6, size_name);
+                }
+                else {
+                    containToArraySizes(6, '');
+                }
+                break;
+            }
+            case '43 RU': 
+            {
+                if (sizeMapper.get(size_name) === true) {
+                    containToArraySizes(7, size_name);
+                }
+                else {
+                    containToArraySizes(7, '');
+                }
+                break;
+            }
+        }
+
+        // if (selectedSizes.length > 1) {
+        //     const { sortedStrings } = sortStringsAndExtractNumbers(selectedSizes);
+
+        //     setfinalSizeSort(sortedStrings);
+
+        //     console.log(finalSizeSort)
+        // }
+
+    }
+
+    const OnClickedAddItem = async () => {
+
+        //Решить проблему с плавным обновлением токена 
+        //Скорее всего ловить ошибку Axios, обновлять токены и заново
+        //делать запрос в микросервис
+        
+        // CheckTokensValidate();
+
+        if (userCheckGet) {
+        
+            const accessTokens: string = Cookies.get('AccessToken') as string;
+            if (accessTokens !== undefined) {
+                if (await handleItemAdd(nameItem, priceItem, descItem, finalSizeSort, accessTokens)) {
+                    alert(`Товар: ${nameItem} успешно добавлен`)
+                }
+                else {
+                    alert('Некоторое содержимое имеет недопустимое выражение')
+                }
+            }
+        }
+    }
+
+  
     const [selectedClick, setSelectedClick] = useState<boolean>(false);
 
     const [selectedClickButton, setSelectedClickButton] = useState<boolean>(false);
@@ -31,6 +201,8 @@ const AddSectionPanel: React.FC = () => {
         else {
             sizeMapper.set(item, false)
         }
+
+        sizeInOutputted(item)
 
         setSelectedClick(true)
     }
@@ -46,16 +218,28 @@ const AddSectionPanel: React.FC = () => {
         setSelectedClickButton(true)
     } 
 
+    
     useEffect(() => {
         setSelectedClick(false)
+
+        //Сортировка размеров по возрастанию, так легче заносить и читать из бд
+        if (selectedSizes.length > 0) {
+            const { sortedStrings } = sortStringsAndExtractNumbers(selectedSizes);
+
+            setfinalSizeSort(sortedStrings);
+
+            if (finalSizeSort.length > 0) {
+                console.log(finalSizeSort)
+            }
+        }
 
     }, [selectedClick]);
 
 
     useEffect(() => {
         setSelectedClickButton(false)
-
     }, [selectedClickButton]);
+
 
     const OutputButtonStateSize = (size_string: string, nospace: boolean) => {
 
@@ -85,14 +269,18 @@ const AddSectionPanel: React.FC = () => {
                 <div className="title_input big">Название</div>
 
                 <input className="input_text whitefull" 
-                type="text"></input>
+                type="text"
+                value={nameItem}
+                onChange={(e) => setNameItem(e.target.value)}></input>
             </div>
 
             <div className="input_sideline add_panel value smallspace">
                 <div className="title_input big">Цена</div>
 
-                <input className="input_text whitefull" 
-                type="text"></input>
+                <input  className="input_text whitefull" 
+                type="number" min="0"
+                value={priceItem}
+                onChange={(e) => setPriceItem(Number(e.target.value))}></input>
 
                 <div className="value_money_block">
                     Р
@@ -103,7 +291,9 @@ const AddSectionPanel: React.FC = () => {
             <div className="textarea_sideline">
                 <div className="title_input big">Описание</div>
 
-                <textarea rows={4} cols={20} className="input_textarea"></textarea>
+                <textarea rows={4} cols={20} className="input_textarea"
+                value={descItem}
+                onChange={(e) => setDescItem(e.target.value)}></textarea>
             </div>
 
             <div className="textarea_sideline sizeopt">
@@ -137,7 +327,7 @@ const AddSectionPanel: React.FC = () => {
                 <div className={OutputButtonState('secondButton')} onClick={() => SetSelectedButton('secondButton')}></div>
             </div>
             
-            <div className="buttonarea_complete">
+            <div className="buttonarea_complete" onClick={OnClickedAddItem}>
                 Создать товар
             </div>
 

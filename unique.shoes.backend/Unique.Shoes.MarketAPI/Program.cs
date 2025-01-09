@@ -1,23 +1,23 @@
-using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Npgsql;
 using System.Security.Cryptography;
 using unique.shoes.middleware.Cache;
-using unique.shoes.middleware.Database;
 using unique.shoes.middleware.JWT;
 using unique.shoes.middleware.Services;
-using Unique.Shoes.AccountAPI.Model.Database;
-using Unique.Shoes.AccountAPI.Model.Services;
+using Unique.Shoes.MarketAPI.Model.Database;
+using Unique.Shoes.MarketAPI.Model.Services;
 
-namespace unique.shoes.backend
+namespace Unique.Shoes.MarketAPI
 {
     public class Program
     {
         public static async Task Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
+
+            // Add services to the container.
 
             builder.Services.AddControllers();
 
@@ -56,7 +56,7 @@ namespace unique.shoes.backend
                 o.SwaggerDoc("v1", new OpenApiInfo
                 {
                     Version = "v1",
-                    Title = "Accounts API",
+                    Title = "Market API",
                     Description = "ASP.NET core, Practice",
                     Contact = new OpenApiContact
                     {
@@ -67,8 +67,8 @@ namespace unique.shoes.backend
 
                 var basePath = AppContext.BaseDirectory;
 
-               // var xmlPath = Path.Combine(basePath, "apidocs.xml");
-               // o.IncludeXmlComments(xmlPath);
+                // var xmlPath = Path.Combine(basePath, "apidocs.xml");
+                // o.IncludeXmlComments(xmlPath);
             });
 
             builder.Services.AddAuthentication(o =>
@@ -105,7 +105,6 @@ namespace unique.shoes.backend
                 o.TokenValidationParameters = tk_valid;
             });
 
-
             builder.Services.AddDbContext<DataContext>(options =>
             {
                 options.UseNpgsql(builder.Configuration.GetConnectionString("ServerConn"));
@@ -117,16 +116,10 @@ namespace unique.shoes.backend
 
             builder.Services.AddSingleton<ICacheService, CacheSDK>();
 
-            builder.Services.Configure<ForwardedHeadersOptions>(options =>
-            {
-                options.ForwardedHeaders =
-                ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto;
-            });
-
             builder.Services.AddCors(options =>
             {
                 options.AddPolicy("AllowOrigin",
-                    builder => builder.WithOrigins("http://localhost:8081", "http://localhost:4000", "http://localhost")
+                    builder => builder.WithOrigins("http://localhost:8082", "http://localhost:4000", "http://localhost")
                                       .AllowAnyMethod()
                                       .AllowAnyHeader());
             });
@@ -151,7 +144,7 @@ namespace unique.shoes.backend
 
             app.UseSwaggerUI(c =>
             {
-                c.SwaggerEndpoint("/swagger/v1/swagger.json", "Accounts API");
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "Market API");
                 c.RoutePrefix = "ui-swagger";
             });
 
@@ -192,15 +185,15 @@ namespace unique.shoes.backend
             using var scope = app.Services.CreateScope();
             var context = scope.ServiceProvider.GetRequiredService<DataContext>();
 
-            var tableNameFirst = "userTableObj";
-            var tableNameSecond = "usersMoreTableObj";
+            var tableNameFirst = "shopItemsTableObj";
+            //var tableNameSecond = "usersMoreTableObj";
 
 
             var tableExistsFirst = await CheckIfTableExistsAsync(context, tableNameFirst);
 
-            var tableExistsSecond = await CheckIfTableExistsAsync(context, tableNameSecond);
+           // var tableExistsSecond = await CheckIfTableExistsAsync(context, tableNameSecond);
 
-            if (!tableExistsFirst && !tableExistsSecond)
+            if (!tableExistsFirst)
             {
                 await context.Database.MigrateAsync();
             }

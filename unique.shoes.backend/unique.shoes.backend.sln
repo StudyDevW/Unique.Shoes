@@ -7,6 +7,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Unique.Shoes.AccountAPI", "
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Unique.Shoes.Middleware", "unique.shoes.middleware\Unique.Shoes.Middleware.csproj", "{BBA97C20-3E30-4AC9-AB66-D97601B30994}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Unique.Shoes.MarketAPI", "Unique.Shoes.MarketAPI\Unique.Shoes.MarketAPI.csproj", "{0E5669D6-4A09-4100-AA5D-A70142F9647F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{BBA97C20-3E30-4AC9-AB66-D97601B30994}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BBA97C20-3E30-4AC9-AB66-D97601B30994}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BBA97C20-3E30-4AC9-AB66-D97601B30994}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0E5669D6-4A09-4100-AA5D-A70142F9647F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0E5669D6-4A09-4100-AA5D-A70142F9647F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0E5669D6-4A09-4100-AA5D-A70142F9647F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0E5669D6-4A09-4100-AA5D-A70142F9647F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
