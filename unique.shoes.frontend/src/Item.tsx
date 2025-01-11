@@ -1,13 +1,40 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, MouseEvent } from 'react'
 import './preprocessor/App.sass'
+import { handleLoadImage } from './components/API/ItemInfo.tsx';
 
-function ItemShoes(name_item: string, item_image: string, type_item: string, animation_style: number) {
+
+
+const ItemShoes: React.FC<{
+  name_item: string,
+  type_item: string, 
+  animation_style: number, 
+  image_prevew_link: string, 
+  onContext: (event: MouseEvent) => void
+}> = ({name_item, type_item, animation_style, image_prevew_link, onContext}) => {
 
   const [backgroundImages, setBackgroundImages] = useState<string[]>([]);
 
   const [infoOfItems, setOpeninfoOfItems] = useState<boolean>(false);
 
   const [openInfoReady, setOpenInfoReady] = useState<boolean>(false);
+
+  const [imageSrc, setImageSrc] = useState('');
+
+  const ImagePreload = async () => {
+
+    if (image_prevew_link !== "") {
+
+        const imageFromAPI = await handleLoadImage(image_prevew_link);
+
+        if (imageFromAPI !== null) {
+          setImageSrc(imageFromAPI)
+        }
+    }
+  }
+
+  useEffect(()=>{
+    ImagePreload();
+  },[])
 
   const image_background_array: {[key: string]: string } = {
     background_1: 'url(../images/background_handdraw/background_curve.png)',
@@ -63,17 +90,16 @@ function ItemShoes(name_item: string, item_image: string, type_item: string, ani
     }
   }
 
-  const loading_info_bar = () => {
-    return (
-      <>
-        <div className="loading_item_infobar">
+  // const loading_info_bar = () => {
+  //   return (
+  //     <>
+  //       <div className="loading_item_infobar">
 
-        </div>
-      </>
-    )
-  }
+  //       </div>
+  //     </>
+  //   )
+  // }
 
- 
   const infoStart = () => {
     setOpeninfoOfItems(true);
   }
@@ -100,21 +126,33 @@ function ItemShoes(name_item: string, item_image: string, type_item: string, ani
 
   return (
     <>
-       
+
         
-        <div className="item_release" onMouseEnter={infoStart} onMouseLeave={infoEnd}>
+        <div className="item_release" onContextMenu={onContext} onMouseEnter={infoStart} onMouseLeave={infoEnd}>
+
+          
 
             {marks_complete()}
         
-            <div className="item_background" style={{backgroundImage: backgroundImages[animation_style]}}></div>
+            <div className="item_background" style={{backgroundImage: animation_style < 4 ? backgroundImages[animation_style] : 'none'}}></div>
 
-            <div className="item_image"></div>
+            <div className="item_image" 
+             style={{
+              backgroundSize: 'cover', 
+              backgroundPosition: 'center',
+              backgroundImage: imageSrc !== '' ? `url(${imageSrc})` : '',
+              borderRadius: '8px'
+            }}>
+
+            </div>
             
             <div className="item_name">
                 <div className="item_text">{name_item}</div>
             </div>
 
         </div>
+
+ 
       
     </>
   )

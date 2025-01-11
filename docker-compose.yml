@@ -18,7 +18,7 @@ services:
       dockerfile: Unique.Shoes.AccountAPI/Dockerfile
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
-      - ASPNETCORE_URLS=http://+:80;http://+:5000
+      - ASPNETCORE_URLS=http://+:80;http://+:443
     ports:
        - "8081:80"
     restart: unless-stopped
@@ -33,7 +33,9 @@ services:
       dockerfile: Unique.Shoes.MarketAPI/Dockerfile
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
-      - ASPNETCORE_URLS=http://+:80;http://+:5000
+      - ASPNETCORE_URLS=http://+:80;http://+:443
+    volumes:
+      - uploads:/app/Uploads
     ports:
        - "8082:80"
     restart: unless-stopped
@@ -111,3 +113,5 @@ services:
     depends_on:
       - unique.shoes.backend.accountapi
       - unique.shoes.frontend
+volumes:
+  uploads:

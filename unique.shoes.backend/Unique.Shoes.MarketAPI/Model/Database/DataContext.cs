@@ -21,6 +21,8 @@ namespace Unique.Shoes.MarketAPI.Model.Database
 
         public DbSet<ShopItemsTable> shopItemsTableObj { get; set; }
 
+        public DbSet<ShopImagesTable> shopImagesTableObj { get; set; }
+
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             if (!optionsBuilder.IsConfigured)
@@ -44,7 +46,6 @@ namespace Unique.Shoes.MarketAPI.Model.Database
                   "созданная в сотрудничестве с популярным рэпером Трэвисом Скоттом.",
                   flags = new string[] { "new" },
                   count = true,
-                  imageLink = "../",
                   price = 79990,
                   sizes = new string[] { "36 RU", "41 RU" }
                 }    

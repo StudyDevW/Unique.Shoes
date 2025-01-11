@@ -130,6 +130,8 @@ namespace Unique.Shoes.MarketAPI
 
             app.UseCors("AllowOrigin");
 
+            app.UseStaticFiles();
+
             app.UseRouting();
 
             app.UseForwardedHeaders();
@@ -186,14 +188,14 @@ namespace Unique.Shoes.MarketAPI
             var context = scope.ServiceProvider.GetRequiredService<DataContext>();
 
             var tableNameFirst = "shopItemsTableObj";
-            //var tableNameSecond = "usersMoreTableObj";
+            var tableNameSecond = "shopImagesTableObj";
 
 
             var tableExistsFirst = await CheckIfTableExistsAsync(context, tableNameFirst);
 
-           // var tableExistsSecond = await CheckIfTableExistsAsync(context, tableNameSecond);
+            var tableExistsSecond = await CheckIfTableExistsAsync(context, tableNameSecond);
 
-            if (!tableExistsFirst)
+            if (!tableExistsFirst && !tableExistsSecond)
             {
                 await context.Database.MigrateAsync();
             }

@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react"
 import { handleItemAdd } from "../components/API/CreateItem.tsx"; 
+import { handleImageUpload } from "../components/API/AddImage.tsx";
 import useGetInfoUserVariable from "../components/Variables/GetInfoUserVariable.ts";
 import Cookies from 'js-cookie';
 import CheckTokensValidate from "../TokenCheckMain.tsx"
@@ -19,6 +20,10 @@ let buttonMapper = new Map<string, boolean>([
     ['firstButton', false],
     ['secondButton', false]
 ]);
+
+let arrayFile: File[] = [];
+
+let compiledImagesPreview: string[] = [];
 
 function sortStringsAndExtractNumbers(arr: string[]): { sortedStrings: string[], numbers: number[] } {
 
@@ -46,14 +51,81 @@ function sortStringsAndExtractNumbers(arr: string[]): { sortedStrings: string[],
     return { sortedStrings, numbers };
 }
 
+function sortFilesArray(arr: File[]): { sortedFiles: File[] } {
+
+    const nonEmptyFiles = arr.filter(files => files !== undefined);
+    const emptyFiles = arr.filter(files => files === undefined);
+
+    // Сортируем непустые строки
+    const sortedNonEmptyFiles = nonEmptyFiles.sort();
+
+    // Объединяем пустые строки и отсортированные непустые строки
+    const sortedFiles = [...sortedNonEmptyFiles, ...emptyFiles];
+
+    return { sortedFiles };
+}
+
+
+
 const AddSectionPanel: React.FC = () => {
 
     const [selectedSizes, setSelectedSizes] = useState<string[]>(['', '', '', '', '', '', '', '']); 
 
     const [finalSizeSort, setfinalSizeSort] = useState<string[]>([]); 
 
+    const [imageAddClicked, setimageAddClicked] = useState<boolean>(false);
+
+    const [imageDeleteClicked, setimageDeleteClicked] = useState<boolean>(false);
+
+    const [imageBlockCount, setImageBlockCount] = useState<number>(0);
+
     const { userCheckGet } = useGetInfoUserVariable();
 
+    // const { imageMassiveGet, imageMassiveSet } = useImageExternalStorage();
+
+    const [imageFile, setImageFile ] = useState<File | null>(null);
+
+    // useEffect(() => {
+    //     // if (arrayFile.length === 0) {
+    //     //     if (imageMassiveGet !== null && imageMassiveGet.length > 0) {
+    //     //         arrayFile = imageMassiveGet;
+
+    //     //         console.log(arrayFile)
+    //     //     }
+
+    //     // }
+    // }, [])
+
+    const handleDrop = (event: React.DragEvent<HTMLDivElement>) => {
+        event.preventDefault();
+
+        const droppedFiles = event.dataTransfer.files;
+
+        if (droppedFiles.length > 0) {
+            if (arrayFile.length < 5)
+                setImageFile(droppedFiles[0]);
+            else 
+                console.log('лимит загружаемых изображений достигнут')
+        }
+
+    };
+
+    useEffect(() => {
+        if (imageFile !== null) {
+            arrayFile.push(imageFile);
+
+            compiledImagesPreview.push(URL.createObjectURL(arrayFile[arrayFile.length - 1]))
+
+            // imageMassiveSet(arrayFile); //после обновления стр, теряется 'File' (не стал делать)
+
+            console.log(arrayFile)
+            
+            console.log(compiledImagesPreview)
+
+            setImageBlockCount(prev => prev + 1)
+            // console.log(imageMassiveGet)
+        }
+    }, [imageFile])
 
     const [nameItem, setNameItem] = useState<string>("");
 
@@ -175,15 +247,29 @@ const AddSectionPanel: React.FC = () => {
         
         // CheckTokensValidate();
 
+        if (priceItem === undefined) {
+            alert('Цена имеет недопустимое выражение')
+            return;
+        }
+
         if (userCheckGet) {
         
             const accessTokens: string = Cookies.get('AccessToken') as string;
             if (accessTokens !== undefined) {
                 if (await handleItemAdd(nameItem, priceItem, descItem, finalSizeSort, accessTokens)) {
-                    alert(`Товар: ${nameItem} успешно добавлен`)
+                    console.log(`Товар: ${nameItem} успешно добавлен`)
                 }
                 else {
-                    alert('Некоторое содержимое имеет недопустимое выражение')
+                    console.log('Некоторое содержимое имеет недопустимое выражение')
+                }
+
+                if (arrayFile.length > 0) {
+                    if (await handleImageUpload(nameItem, arrayFile, accessTokens)) {
+                        console.log(`Изображения добавлены: ${arrayFile}`)
+                    }
+                    else {
+                        console.log('Ошибка загрузки изображений')
+                    }
                 }
             }
         }
@@ -203,7 +289,7 @@ const AddSectionPanel: React.FC = () => {
         }
 
         sizeInOutputted(item)
-
+ 
         setSelectedClick(true)
     }
 
@@ -241,6 +327,12 @@ const AddSectionPanel: React.FC = () => {
     }, [selectedClickButton]);
 
 
+    useEffect(() => {
+        if (priceItem === 0) {
+            setPriceItem(0);
+        }
+    }, [priceItem]);
+
     const OutputButtonStateSize = (size_string: string, nospace: boolean) => {
 
 
@@ -260,9 +352,133 @@ const AddSectionPanel: React.FC = () => {
         return 'buttonarea_sideline_button'
     }
 
+    const AddImageAdd = () => {
+      
+        setimageAddClicked(true)
+
+        console.log(imageBlockCount)
+    }
+
+    const ImageItemDelete = (id_image: number) => {
+
+        setimageDeleteClicked(true)
+
+        setImageFile(null);
+
+        arrayFile.splice(id_image, 1)
+
+        //Отрендеренные изображения
+        compiledImagesPreview.splice(id_image, 1)
+   
+    }
+
+    useEffect(()=>{
+        if (imageDeleteClicked) {
+            setimageDeleteClicked(false)
+            console.log(arrayFile)
+        }
+    }, [imageDeleteClicked])
+
+    const handleDragOver = (event: React.DragEvent<HTMLDivElement>) => {
+        event.preventDefault();
+    };
+
+
+
+    const ItemImage = (add_image: boolean, id_image: number = -1) => {
+        if (add_image) {
+            if (imageAddClicked) {
+                return (
+                <>
+                    <div className="add_image_button_panel hide"></div>
+                </>
+                )
+            }
+            else {
+                return (
+                <>
+                    <div className="add_image_button_panel" onClick={AddImageAdd}></div>
+                </>
+                )
+            }
+        }
+        else {
+
+            if (arrayFile[id_image] !== undefined && arrayFile[id_image] !== null) {
+
+                const imagesout = compiledImagesPreview[id_image];
+
+                return (
+                    <>
+                        <div className="add_image_button_panel curimg"
+                        // onDrop={handleDrop} 
+                        // onDragOver={handleDragOver} 
+                        onClick={() => ImageItemDelete(id_image)}
+                        >
+                            
+                            <div 
+                            style={{
+                                width: '100%', 
+                                height: '100%', 
+                                backgroundSize: 'cover', 
+                                backgroundPosition: 'center',
+                                backgroundImage: `url(${imagesout})`,
+                                borderRadius: '8px'
+                            }}>       
+                            </div>
+                       
+                        </div>
+                </>)
+            }
+            else {
+                return (<></>)
+            }
+         
+        } 
+
+    }
+
+    const ImageAddBlock = () => {
+        return (
+        <>
+           
+           {ItemImage(false, 0)}
+           {ItemImage(false, 1)}
+           {ItemImage(false, 2)}
+           {ItemImage(false, 3)}
+           {ItemImage(false, 4)}
+           {ItemImage(true)}
+        </>
+        )
+    }
+
+    const ImageUploadBlockJSX = () => {
+        if (imageAddClicked) {
+            return (
+                <>
+                    <div className="blurred_background" style={{left: '-20px', width: 'calc(100% + 30px)', height: '100%'}}>
+                       
+                        <div className="exit_image_upload_panel" onClick={() => setimageAddClicked(false)}></div>
+                       
+                        <div className="image_upload_panel_popup"
+                        onDrop={handleDrop} 
+                        onDragOver={handleDragOver}>
+                            Перетащите изображение
+
+                            
+                        </div>
+                    </div>
+                </>
+            )
+        }
+        else {
+            return (<></>)
+        }
+    }
+
     return (
     <>
-       
+        {ImageUploadBlockJSX()}
 
         <div className="add_section_panel_mainblock">
             <div className="input_sideline add_panel">
@@ -333,12 +549,16 @@ const AddSectionPanel: React.FC = () => {
 
         </div>
 
+    
         <div className="add_section_panel_secondblock">
 
         </div>
 
-        <div className="add_section_panel_thirdblock">
+        <div className="title_thirdblock_panel">Изображения</div>
 
+
+        <div className="add_section_panel_thirdblock">
+            {ImageAddBlock()}
         </div>
 
     </>)

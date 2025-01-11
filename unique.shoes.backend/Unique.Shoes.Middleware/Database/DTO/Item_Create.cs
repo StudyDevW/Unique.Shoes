@@ -18,8 +18,6 @@ namespace Unique.Shoes.Middleware.Database.DTO
 
         public bool count { get; set; }
 
-        public string imageLink { get; set; }
-
         public string[]? sizes { get; set; }
     }
 }

@@ -170,13 +170,13 @@ function App() {
           {/* <p style={{position: 'absolute', marginTop: '-3px'}}>Width: {size.width}px</p>
           <p style={{position: 'absolute', marginTop: '-3px', marginLeft: '100px'}}>Height: {size.height}px</p> */}
 
-            {ItemShoes('item_shoes_name', 'null', 'new_mark', 0)}
+            <ItemShoes name_item='item_shoes_name' type_item='new_mark' animation_style={0} image_prevew_link='' onContext={()=>{}}/>
 
-            {ItemShoes('item_shoes_name', 'null', 'new_mark', 1)}
+            <ItemShoes name_item='item_shoes_name' type_item='new_mark' animation_style={1} image_prevew_link='' onContext={()=>{}}/>
 
-            {ItemShoes('item_shoes_name', 'null', 'new_mark', 2)}
+            <ItemShoes name_item='item_shoes_name' type_item='new_mark' animation_style={2} image_prevew_link='' onContext={()=>{}}/>
 
-            {ItemShoes('item_shoes_name', 'null', 'new_mark', 1)}
+            <ItemShoes name_item='item_shoes_name' type_item='new_mark' animation_style={1} image_prevew_link='' onContext={()=>{}}/>
 
           </div>
         </div>
@@ -211,13 +211,14 @@ function App() {
             }
           }>
 
-          {ItemShoes('item_shoes_name', 'null', 'demand_mark', 1)}
+          <ItemShoes name_item='item_shoes_name' type_item='demand_mark' animation_style={1} image_prevew_link='' onContext={()=>{}}/>
 
-          {ItemShoes('item_shoes_name', 'null', 'demand_mark', 2)}
+          <ItemShoes name_item='item_shoes_name' type_item='demand_mark' animation_style={2} image_prevew_link='' onContext={()=>{}}/>
 
-          {ItemShoes('item_shoes_name', 'null', 'demand_mark', 1)}
+          <ItemShoes name_item='item_shoes_name' type_item='demand_mark' animation_style={1} image_prevew_link='' onContext={()=>{}}/>
 
-          {ItemShoes('item_shoes_name', 'null', 'demand_mark', 0)}
+          <ItemShoes name_item='item_shoes_name' type_item='demand_mark' animation_style={0} image_prevew_link='' onContext={()=>{}}/>
+
 
           {/* <p style={{position: 'absolute', marginTop: '-3px'}}>Width: {size.width}px</p>
           <p style={{position: 'absolute', marginTop: '-3px', marginLeft: '100px'}}>Height: {size.height}px</p> */}

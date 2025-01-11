@@ -2,6 +2,7 @@ import Header from "../Header.tsx"
 import CheckTokensValidate from "../TokenCheckMain.tsx"
 import useButtonActivePanel from "../components/Variables/PanelMenuVariable.ts";
 import AddSectionPanel from "./AddItemPanel.tsx";
+import ChangeSectionPanel from "./ChangeItemPanel.tsx";
 import useLoginSuccessVariable from '../components/Variables/LoginSuccessVariable.ts';
 import useGetInfoUserVariable from '../components/Variables/GetInfoUserVariable.ts';
 import { useEffect, useState } from 'react'
@@ -79,6 +80,8 @@ const ManagerPanel: React.FC = () => {
     const NavigatorOfSections = () => {
         if (PButtonActiveGet === "add_button")
             return (<AddSectionPanel/>)
+        else if (PButtonActiveGet === "change_button")
+            return (<ChangeSectionPanel/>)
 
         return (<></>)
     }
@@ -86,6 +89,9 @@ const ManagerPanel: React.FC = () => {
     const TitleTextSections = () => {
         if (PButtonActiveGet === "add_button")
             return "Добавить товар"
+        else if (PButtonActiveGet === "change_button")
+            return "Изменить товар"
+
 
         return "Неизвестная секция"
     }
@@ -169,6 +175,7 @@ const ManagerPanel: React.FC = () => {
             return (<></>)
         }
     }
+
 
     return (<>
         

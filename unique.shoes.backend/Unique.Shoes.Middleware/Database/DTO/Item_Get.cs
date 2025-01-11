@@ -1,15 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Unique.Shoes.Middleware.Database.DBO
+namespace Unique.Shoes.Middleware.Database.DTO
 {
-    public class ShopItemsTable
+    public class Item_Get
     {
-        [Key]
         public int id { get; set; }
 
         public string hashName { get; set; }
@@ -25,5 +23,7 @@ namespace Unique.Shoes.Middleware.Database.DBO
         public bool count { get; set; }
 
         public string[]? sizes { get; set; }
+
+        public string[]? imagePaths { get; set; }
     }
 }

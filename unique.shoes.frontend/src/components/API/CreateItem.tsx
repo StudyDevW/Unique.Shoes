@@ -10,7 +10,6 @@ const handleItemAdd = async (item_name: string, item_price: number, item_desc: s
         flags: flag_none,
         price: item_price,
         count: true,
-        imageLink: '../images/inprogress',
         sizes: item_sizes
     }, 
     {
