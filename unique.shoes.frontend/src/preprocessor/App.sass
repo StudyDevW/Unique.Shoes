@@ -90,6 +90,98 @@
   border-radius: 10px
   z-index: 15
 
+.header.fullsize
+  background: linear-gradient(rgba(0, 0, 0), rgba(0, 0, 0, 0.9) 20%, rgba(0, 0, 0, 0.9))
+  backdrop-filter: blur(13px)
+  position: fixed
+  height: 70vh
+  border-radius: 20px
+  animation: header_fullsized 1.2s forwards
+  overflow: hidden
+
+.header_item_preview_separator
+  position: absolute
+  margin-top: 171px
+  margin-left: 176px
+  width: calc(100% - 171px * 2)
+  height: 2px
+  background-color: #676767
+
+.header_item_preview_title
+  font-family: MUSEOSANS
+  align-content: center
+  font-size: 22px
+  position: absolute
+  margin-top: 121px
+  margin-left: 176px
+  width: 200px
+  height: 50px
+  color: white
+  user-select: none
+
+.header_item_preview_button_back
+  font-family: MUSEOSANS
+  align-content: center
+  font-size: 22px
+  position: absolute
+  margin-top: 121px
+  margin-left: calc(100% - 285px)
+  width: 200px
+  height: 50px
+  color: white
+  user-select: none
+
+.header_item_preview_area
+  position: absolute
+  margin-top: 171px
+  margin-left: 176px
+  width: calc(100% - 171px * 2)
+  height: calc(100% - 100px * 2)
+  
+
+
+.header_item_preview_area_title
+  position: absolute
+  margin-top: 45px
+  margin-left: 10px
+  color: white
+  font-family: MUSEOSANS
+  align-content: center
+  font-size: 33px
+  width: 766px
+  height: 90px
+
+.header_item_preview_area_image 
+  position: absolute
+  margin-top: 155px
+  margin-left: 10px
+  color: white
+  font-family: MUSEOSANS
+  align-content: center
+  font-size: 33px
+  width: 766px
+  height: 410px
+  background-color: white
+  border-radius: 10px
+  border: solid black 1px
+  
+
+@keyframes header_fullsized
+  0%
+    position: fixed
+    margin: 15px 11px
+    width: calc(100% - 22px) 
+    height: 73px
+    background-color: rgb(0, 0, 0)
+    border-radius: 10px
+    z-index: 15
+  100%
+    background: linear-gradient(rgba(0, 0, 0), rgba(0, 0, 0, 0.9) 20%, rgba(0, 0, 0, 0.9))
+    backdrop-filter: blur(13px)
+    position: fixed
+    height: 90vh
+    border-radius: 20px
+
 .blurred_background 
   animation: blur_exchange_open 0.5s forwards
   position: absolute
@@ -490,22 +582,25 @@
   margin-top: 75px
   width: calc(100% - (46px * 2))  
   height: calc(1080px - 250px)
+ 
 
 .new_assortment 
   position: relative
   margin-top: 50px
+  
   width: 100%  
   height: 360px
   background-color: transparent
   border: solid black
   border-radius: 10px
   z-index: 3
+  overflow: hidden
 
 .left_title_assortment
   position: absolute
   margin-left: 74px
   margin-top: 35px
-  font-size: 70px
+  font-size: 65px
   font-family: OCEANIC
   z-index: 2
 
@@ -625,44 +720,266 @@
 
 
 .item_area 
-  display: flexbox
+  display: flex
   flex-direction: row
+  flex-wrap: wrap
   position: absolute
-  margin-left: 570px
+  margin-left: 520px
   margin-top: 20px
   width: calc(100% - 535px)
   height: 320px
-  overflow: hidden
+  overflow-block: hidden
 
 .item_area.left 
-  margin-left: -40px
+  margin-left: 0px
 
 .item_release 
+  flex: none
   display: inline-flex
   position: relative
   margin-left: 20px
-  margin-top: 13px
+  top: -20px
+  margin-top: 33px
   width: 290px
   height: 290px
-  background-color: white
+  backdrop-filter: blur(10px)
   border-radius: 10px
   border: solid black
   animation: scale_anim_close_item 0.5s forwards
   &:hover
      animation: scale_anim_item 0.5s forwards
+
+
+@keyframes item_release_info
+  0%
+    transform: scale(1.02)
+    z-index: 2
+  100%
+    transform: scale(1.2)
+    z-index: 2
+
+@keyframes item_release_info_close
+  0%
+    transform: scale(1.2)
+    z-index: 2
+  100%
+    transform: scale(1.02)
+    z-index: 2
+    
+
+
+.item_release.info
+  animation: item_release_info 0.5s forwards
+
+
+
+
+  
+.item_release.close 
+  animation: item_release_info_close 0.9s forwards
+
+.item_loading_bar 
+  position: absolute
+  margin-top: calc(100% + 5px)
+  width: 100%
+  height: 4px
+  background-color: #666666f6
+  border-radius: 5px
  
 
+.item_loading_bar_progress
+  position: absolute
+  width: 100%
+  height: 100%
+  background-color: #0cdda5e0
+  animation: loading_bar 1s forwards
+
+.item_loading_bar_progress.rich
+  background-color: #aea06a
+
+@keyframes loading_bar
+  0%
+    width: 0%
+  100%
+    width: 100%
+
+.item_release.rich
+  border: solid #aea06a
+  backdrop-filter: none
+  background-color: #272621
+
+.item_price 
+  position: absolute
+  margin-top: calc(70% + 10px)
+  margin-left: 5px
+  width: 200px
+  height: 60px
+  border-radius: 10px
+  border: solid black 1px
+  align-content: center
+  text-align: center
+
+.item_price.rich
+  backdrop-filter: blur(10px)
+  color: #bbb291
+  border: solid #aea06a 1px
+  height: 45px
+  
+@keyframes item_close_price
+  0%
+    opacity: 1
+  100%
+    opacity: 0
+    transform: translateY(50px)
+
+.item_price.close
+  animation: item_close_price 0.5s forwards
+
+
 .item_name
+  // backdrop-filter: blur(10px)
   position: absolute
   margin-top: 70%
   width: calc(100% - 20px)
   height: 85px
   align-content: center
 
+
+
+.item_name.info
+  margin-top: 73px
+  rotate: 90deg
+  margin-left: 145px
+  width: 185px
+  height: 65px
+  border: solid black 1px
+  border-radius: 10px
+  padding-right: 15px
+  animation: item_info_open 0.5s forwards
+
+.item_name.info.rich
+  margin-top: 73px
+  backdrop-filter: blur(10px)
+  margin-left: 145px
+  rotate: 90deg
+  border: solid #aea06a 1px
+  width: 185px
+  height: 65px
+  border-radius: 10px
+  padding-right: 15px
+  animation: item_info_open_rich 0.5s forwards
+
+.item_name.info.close
+  border: none
+  animation: item_info_close 0.5s forwards
+
+.item_name.rich.info.close
+  animation: item_info_close_rich 0.5s forwards
+
+@keyframes item_info_close
+  0%
+    margin-top: 73px
+    rotate: 90deg
+    margin-left: 145px
+    width: 185px
+    height: 65px
+    padding-right: 15px
+  100%
+    position: absolute
+    rotate: 0deg
+    margin-left: 0px
+    margin-top: 70%
+    width: calc(100% - 20px)
+    height: 85px
+    align-content: center
+
+@keyframes item_info_open
+  0%
+    position: absolute
+    rotate: 0deg
+    margin-left: 0px
+    margin-top: 70%
+    width: calc(100% - 20px)
+    height: 85px
+    align-content: center
+  100%
+    margin-top: 73px
+    rotate: 90deg
+    margin-left: 145px
+    width: 185px
+    height: 65px
+    padding-right: 15px
+  
+
+@keyframes item_info_close_rich
+  0%
+    margin-top: 73px
+    rotate: 90deg
+    margin-left: 145px
+    width: 185px
+    height: 65px
+    padding-right: 15px
+  100%
+    padding-right: 5px
+    rotate: 0deg
+    margin-top: 69%
+    backdrop-filter: blur(10px)
+    margin-left: 15px
+    width: calc(100% - 16px * 2 - 5px)
+    border: solid #aea06a 1px
+    height: 58px
+    border-radius: 10px
+
+@keyframes item_info_open_rich
+  0%
+    padding-right: 5px
+    rotate: 0deg
+    margin-top: 69%
+    backdrop-filter: blur(10px)
+    margin-left: 15px
+    width: calc(100% - 16px * 2 - 5px)
+    border: solid #aea06a 1px
+    height: 58px
+    border-radius: 10px
+  100%
+    margin-top: 73px
+    rotate: 90deg
+    margin-left: 145px
+    width: 185px
+    height: 65px
+    padding-right: 15px
+  
+
+.item_name.rich
+  padding-right: 5px
+  margin-top: 69%
+  backdrop-filter: blur(10px)
+  margin-left: 15px
+  width: calc(100% - 16px * 2 - 5px)
+  border: solid #aea06a 1px
+  height: 58px
+  border-radius: 10px
+
+  
+
 .item_text
   margin-left: 15px
   font-size: 18px
   font-family: MUSEOSANS
+
+.item_text.info
+  font-size: 14px
+
+.item_text.info_sec
+  font-family: OCEANIC
+  margin-left: -10px
+  font-size: 23px
+
+.item_text.rich
+  font-family: OCEANIC
+  font-size: 16px
+  margin-left: 8px
+  color: #bbb291
 
 .item_image 
   position: absolute
@@ -672,14 +989,54 @@
   background-image: url(../images/missing_image.png)
   background-size: contain
   background-repeat: no-repeat
-  // background-color: green
+
+.item_image.start
+  animation: item_image_open 0.5s forwards 
+
+.item_image.close 
+  animation: item_image_close 0.5s forwards
+  
+@keyframes item_image_close
+  0%
+    margin-top: 5px
+    margin-left: 5px
+    width: 200px
+    height: 200px
+  100%
+    margin-top: 30px
+    margin-left: 0px
+    width: 100%
+    height: 200px
+
+@keyframes item_image_open
+  0%
+    margin-top: 30px
+    margin-left: 0px
+    width: 100%
+    height: 200px
+  100%
+    margin-top: 5px
+    margin-left: 5px
+    width: 200px
+    height: 200px
+
 
 .item_background
   position: absolute
   margin-top: 30px
   width: 100%
   height: 200px
+  animation: block_exchange_open 1s forwards
+  
   background-image: url(../images/background_handdraw/background_curve.png)
+  background-size: contain
+  background-repeat: no-repeat
+
+.item_rich 
+  position: absolute
+  width: 100%
+  height: 100%
+  background-image: url(../images/item_decoration.png)
   background-size: contain
   background-repeat: no-repeat
 
@@ -693,6 +1050,7 @@
   border-radius: 10px
   text-align: center
   align-content: center
+  z-index: 1
 
 .item_mark_demand
   position: absolute
@@ -704,6 +1062,7 @@
   border-radius: 10px
   text-align: center
   align-content: center
+  z-index: 1
 
 .item_mark_text
   font-size: 22px

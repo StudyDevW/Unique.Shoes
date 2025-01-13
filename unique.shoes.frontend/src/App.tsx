@@ -3,8 +3,12 @@ import './preprocessor/App.sass'
 import ItemShoes from './Item.tsx'
 import Header from './Header.tsx'
 import CheckTokensValidate from './TokenCheckMain.tsx'
+import useItemPreviewVariable from './components/Variables/ItemPreviewVariable.ts'
 
 function App() {
+
+  const { itemPrevewGet } = useItemPreviewVariable();
+
 
   const [starImages, setStarImages] = useState<string[]>([]);
 
@@ -16,6 +20,8 @@ function App() {
 
   // const [dynamicWidthAssort, setDWidth] = useState<number>(0);
   // const [dynamicMarginAssort, setDMargin] = useState<number>(0);
+
+
 
   const image_stars_array: {[key: string]: string } = {
     star_1: 'url(../images/stars_handdraw/star_1.png)',
@@ -71,7 +77,6 @@ function App() {
 
     replaceAdogImage(4, adog_stars_array['a_5'], adog_stars_array['a_4'])
   }
-
 
   useEffect(() => {
     const interval = setInterval(() => image_switch(), 1000); // Меняем изображение каждые 3 секунды  
@@ -170,13 +175,13 @@ function App() {
           {/* <p style={{position: 'absolute', marginTop: '-3px'}}>Width: {size.width}px</p>
           <p style={{position: 'absolute', marginTop: '-3px', marginLeft: '100px'}}>Height: {size.height}px</p> */}
 
-            <ItemShoes name_item='item_shoes_name' type_item='new_mark' animation_style={0} image_prevew_link='' onContext={()=>{}}/>
+            <ItemShoes name_item='item_shoes_name' type_item='new_mark' animation_style={0} image_prevew_link='' price={0} id_item={0} description_item='' image_paths={[]} size_item={[]} onContext={()=>{}}/>
 
-            <ItemShoes name_item='item_shoes_name' type_item='new_mark' animation_style={1} image_prevew_link='' onContext={()=>{}}/>
+            <ItemShoes name_item='item_shoes_name' type_item='new_mark' animation_style={1} image_prevew_link='' price={0} id_item={0} description_item='' image_paths={[]} size_item={[]} onContext={()=>{}}/>
 
-            <ItemShoes name_item='item_shoes_name' type_item='new_mark' animation_style={2} image_prevew_link='' onContext={()=>{}}/>
+            <ItemShoes name_item='item_shoes_name' type_item='new_mark' animation_style={2} image_prevew_link='' price={0} id_item={0} description_item='' image_paths={[]} size_item={[]} onContext={()=>{}}/>
 
-            <ItemShoes name_item='item_shoes_name' type_item='new_mark' animation_style={1} image_prevew_link='' onContext={()=>{}}/>
+            <ItemShoes name_item='item_shoes_name' type_item='new_mark' animation_style={1} image_prevew_link='' price={0} id_item={0} description_item='' image_paths={[]} size_item={[]} onContext={()=>{}}/>
 
           </div>
         </div>
@@ -211,13 +216,13 @@ function App() {
             }
           }>
 
-          <ItemShoes name_item='item_shoes_name' type_item='demand_mark' animation_style={1} image_prevew_link='' onContext={()=>{}}/>
+          <ItemShoes name_item='item_shoes_name' type_item='demand_mark' animation_style={1} image_prevew_link='' price={0} id_item={0} description_item='' image_paths={[]} size_item={[]} onContext={()=>{}}/>
 
-          <ItemShoes name_item='item_shoes_name' type_item='demand_mark' animation_style={2} image_prevew_link='' onContext={()=>{}}/>
+          <ItemShoes name_item='item_shoes_name' type_item='demand_mark' animation_style={2} image_prevew_link='' price={0} id_item={0} description_item='' image_paths={[]} size_item={[]} onContext={()=>{}}/>
 
-          <ItemShoes name_item='item_shoes_name' type_item='demand_mark' animation_style={1} image_prevew_link='' onContext={()=>{}}/>
+          <ItemShoes name_item='item_shoes_name' type_item='demand_mark' animation_style={1} image_prevew_link='' price={0} id_item={0} description_item='' image_paths={[]} size_item={[]} onContext={()=>{}}/>
 
-          <ItemShoes name_item='item_shoes_name' type_item='demand_mark' animation_style={0} image_prevew_link='' onContext={()=>{}}/>
+          <ItemShoes name_item='item_shoes_name' type_item='demand_mark' animation_style={0} image_prevew_link='' price={0} id_item={0} description_item='' image_paths={[]} size_item={[]} onContext={()=>{}}/>
 
 
           {/* <p style={{position: 'absolute', marginTop: '-3px'}}>Width: {size.width}px</p>

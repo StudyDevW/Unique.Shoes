@@ -1,22 +1,44 @@
 import { useState, useEffect, MouseEvent } from 'react'
 import './preprocessor/App.sass'
 import { handleLoadImage } from './components/API/ItemInfo.tsx';
-
+import useItemPreviewVariable from './components/Variables/ItemPreviewVariable.ts';
 
 
 const ItemShoes: React.FC<{
   name_item: string,
   type_item: string, 
+  description_item: string,
+  size_item: string[],
+  image_paths: string[],
+  id_item: number,
   animation_style: number, 
-  image_prevew_link: string, 
+  image_prevew_link: string,
+  price: number,
   onContext: (event: MouseEvent) => void
-}> = ({name_item, type_item, animation_style, image_prevew_link, onContext}) => {
+}> = ({
+  name_item, 
+  type_item, 
+  animation_style, 
+  image_prevew_link, 
+  size_item, 
+  image_paths, 
+  id_item, 
+  description_item, 
+  price, 
+  onContext
+}) => {
 
   const [backgroundImages, setBackgroundImages] = useState<string[]>([]);
 
   const [infoOfItems, setOpeninfoOfItems] = useState<boolean>(false);
+  
+  const [clickedItem, setClickedItem] = useState<boolean>(false);
 
   const [openInfoReady, setOpenInfoReady] = useState<boolean>(false);
+
+  const { itemPrevewGet, itemPrevewSet } = useItemPreviewVariable(); 
+  
+  const [openInfoClosing, setOpenInfoClosing] = useState<boolean>(false);
 
   const [imageSrc, setImageSrc] = useState('');
 
@@ -31,6 +53,15 @@ const ItemShoes: React.FC<{
         }
     }
   }
+
+  const ContextHooked = (event: MouseEvent) => {
+    onContext(event);
+    
+    setOpenInfoClosing(false);
+    setOpenInfoReady(false);
+    setOpeninfoOfItems(false);
+  }
+
 
   useEffect(()=>{
     ImagePreload();
@@ -102,60 +133,347 @@ const ItemShoes: React.FC<{
 
   const infoStart = () => {
     setOpeninfoOfItems(true);
+    
   }
 
   const infoEnd = () => {
-    setOpeninfoOfItems(false);
-    setOpenInfoReady(false);
+
+    setOpenInfoClosing(true);
+
+
+    // setOpenInfoReady(false);
   }
 
   useEffect(() => {
-    if (infoOfItems === true) {
+    if (infoOfItems && !openInfoReady) {
       const timer = setTimeout(() => {
         setOpenInfoReady(true);
-      }, 1500);
+      }, 1000);
   
+      
+
       return () => clearTimeout(timer);
     } 
   }, [infoOfItems]);
 
   useEffect(() => {
-    // if (openInfoReady === true)
-    //   alert()
+    //  if (openInfoReady === true)
+    //     alert()
+    
   }, [openInfoReady]);
 
-  return (
-    <>
+  useEffect(() => {
+    if (infoOfItems && openInfoReady && openInfoClosing) {
+      const timer = setTimeout(() => {
+        setOpenInfoClosing(false);
+        setOpenInfoReady(false);
+        setOpeninfoOfItems(false);
+      }, 1000);
 
-        
-        <div className="item_release" onContextMenu={onContext} onMouseEnter={infoStart} onMouseLeave={infoEnd}>
+      return () => clearTimeout(timer);
+    }
+    else if (openInfoClosing) {
+      setOpenInfoClosing(false);
+      setOpenInfoReady(false);
+      setOpeninfoOfItems(false);
+    }
+  
+  }, [openInfoClosing]);
 
-          
+  const loadingBar = (RichItem: boolean) => {
+      if (!infoOfItems) {
+        return (<></>)
+      }
 
-            {marks_complete()}
-        
-            <div className="item_background" style={{backgroundImage: animation_style < 4 ? backgroundImages[animation_style] : 'none'}}></div>
+      if (RichItem) {
+        return (
+          <>
+              <div className="item_loading_bar">
+                  <div className="item_loading_bar_progress rich"></div>
+              </div>
+          </>
+          )
+      }
 
-            <div className="item_image" 
-             style={{
-              backgroundSize: 'cover', 
-              backgroundPosition: 'center',
-              backgroundImage: imageSrc !== '' ? `url(${imageSrc})` : '',
-              borderRadius: '8px'
-            }}>
-
+      return (<>
+           <div className="item_loading_bar">
+              <div className="item_loading_bar_progress"></div>
             </div>
-            
-            <div className="item_name">
-                <div className="item_text">{name_item}</div>
-            </div>
+      </>)
+     
+  }
 
-        </div>
+  const handleOnClick = () => {
+    interface ItemProperties {
+      id: number,
+      name: string,
+      description: string
+      price: number
+      sizes: string[]
+      imagePaths: string[]
+    }
+
+    let itemPreview: ItemProperties = 
+    {
+      id: id_item,
+      name: name_item,
+      description: description_item,
+      imagePaths: image_paths,
+      price: price,
+      sizes: size_item
+    };
+    
+    itemPrevewSet(itemPreview);
+
+    setClickedItem(true)
+  }
+
+
+
+
+  useEffect(()=>{
+
+    if (clickedItem && itemPrevewGet !== null) {
+      console.log(itemPrevewGet);
+      setClickedItem(false);
+    }
+  
+    setClickedItem(false);
+    
+    
+  },[clickedItem])
 
  
-      
-    </>
-  )
+
+  const ItemWithMore = () => {
+    if (openInfoReady && !openInfoClosing) {
+
+      if (price > 500000) {
+        return (<>
+          <div className="item_release rich info" onContextMenu={onContext} onMouseEnter={infoStart} onMouseLeave={infoEnd}>
+ 
+             
+             <div className="item_rich">
+                <div className="item_image start" 
+                style={{
+                  width: '200px',
+                  height: '200px',
+                  marginTop: '5px',
+                  marginLeft: '5px',
+                  backdropFilter: 'blur(10px)',
+                  backgroundSize: 'contain', 
+                  backgroundPosition: 'center',
+                  backgroundImage: imageSrc !== '' ? `url(${imageSrc})` : '',
+                  borderRadius: '10px',
+                  border: 'solid #aea06a 1px',
+                  
+                }}>
+    
+                </div>
+
+            
+                <div className="item_name info rich">
+                    <div className="item_text info rich">{name_item}</div>
+                </div>
+    
+                <div className="item_price rich">
+                    <div className="item_text info_sec">{`${price} Р`}</div>
+                </div>
+             </div>
+
+          </div>
+ 
+       </>)
+      }
+
+        return (<>
+          <div className="item_release info" onContextMenu={onContext} onMouseEnter={infoStart} onMouseLeave={infoEnd}>
+
+              <div className="item_image start" 
+              style={{
+                width: '200px',
+                height: '200px',
+                marginTop: '5px',
+                marginLeft: '5px',
+                backgroundSize: 'contain', 
+                backgroundPosition: 'center',
+                backgroundImage: imageSrc !== '' ? `url(${imageSrc})` : '',
+                borderRadius: '10px',
+                border: 'solid black 1px'
+              }}>
+
+              </div>
+
+        
+
+              <div className="item_name info">
+                  <div className="item_text info">{name_item}</div>
+              </div>
+
+              <div className="item_price">
+                  <div className="item_text info_sec">{`${price} Р`}</div>
+              </div>
+          </div>
+
+        </>)
+    }
+    else if (openInfoReady && openInfoClosing) {
+
+
+      if (price > 500000) {
+        return (<>
+          <div className="item_release info rich close" onContextMenu={onContext} onMouseEnter={infoStart} onMouseLeave={infoEnd}>
+  
+              <div className="item_rich">
+                  <div className="item_image close" 
+                  style={{
+                    marginTop: '5px',
+                    marginLeft: '5px',
+                    backgroundSize: 'contain', 
+                    backgroundPosition: 'center',
+                    backgroundImage: imageSrc !== '' ? `url(${imageSrc})` : '',
+                    borderRadius: '10px',
+                  }}>
+        
+                  </div>
+        
+                  <div className="item_name rich info close">
+                      <div className="item_text rich">{name_item}</div>
+                  </div>
+        
+                  <div className="item_price close">
+                      <div className="item_text info_sec">{`${price} Р`}</div>
+                  </div>
+              </div>
+          </div>
+  
+       </>)
+      }
+
+      return (<>
+        <div className="item_release info close" onContextMenu={onContext} onMouseEnter={infoStart} onMouseLeave={infoEnd}>
+
+           <div className="item_image close" 
+           style={{
+             marginTop: '5px',
+             marginLeft: '5px',
+             backgroundSize: 'contain', 
+             backgroundPosition: 'center',
+             backgroundImage: imageSrc !== '' ? `url(${imageSrc})` : '',
+             borderRadius: '10px',
+           }}>
+
+           </div>
+
+           <div className="item_name info close">
+               <div className="item_text">{name_item}</div>
+           </div>
+
+           <div className="item_price close">
+               <div className="item_text info_sec">{`${price} Р`}</div>
+           </div>
+        </div>
+
+     </>)
+    }
+    else {
+      return (<>
+        {OutputItem()}
+      </>)
+    }
+  }
+
+  const RichItems = () => {
+    return (
+      <>
+  
+          
+          <div className="item_release rich" onClick={handleOnClick} onContextMenu={onContext} onMouseEnter={infoStart} onMouseLeave={infoEnd}>
+              {marks_complete()}
+
+              <div className="item_background" style={{backgroundImage: 'none'}}></div>
+              
+              {/* <div className="item_background" style={{backgroundImage: animation_style < 4 ? backgroundImages[animation_style] : 'none'}}></div>
+                
+           */}
+
+              <div className="item_rich">
+  
+                <div className="item_image" 
+                style={{
+                  backgroundSize: 'cover', 
+                  backgroundPosition: 'center',
+                  backgroundImage: imageSrc !== '' ? `url(${imageSrc})` : '',
+                  borderRadius: '8px'
+                }}>
+  
+                </div>
+                
+                <div className="item_name rich">
+                    <div className="item_text rich">{name_item}</div>
+                </div>
+
+                {loadingBar(true)}
+  
+              </div>
+          </div>
+  
+   
+        
+      </>
+    )
+  }
+
+  const OutputItem = () => {
+    if (price > 500000) {
+      return RichItems()
+    }
+
+    return (
+        <>
+
+            
+            <div className="item_release" onClick={handleOnClick} onContextMenu={ContextHooked} onMouseEnter={infoStart} onMouseLeave={infoEnd}>
+
+              
+
+                {marks_complete()}
+            
+            
+                <div className="item_background" style={{backgroundImage: animation_style < 4 ? backgroundImages[animation_style] : 'none'}}></div>
+                
+          
+                <div className="item_image" 
+                style={{
+                  backgroundSize: 'cover', 
+                  backgroundPosition: 'center',
+                  backgroundImage: imageSrc !== '' ? `url(${imageSrc})` : '',
+                  borderRadius: '8px'
+                }}>
+
+                </div>
+                
+                <div className="item_name">
+                    <div className="item_text">{name_item}</div>
+                </div>
+
+                {loadingBar(false)}
+
+            </div>
+
+    
+          
+        </>
+    )
+
+
+  }
+
+  
+  return (<>
+  {ItemWithMore()}
+
+  </>)
 }
 
 export default ItemShoes

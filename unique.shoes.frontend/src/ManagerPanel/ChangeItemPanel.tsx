@@ -77,11 +77,16 @@ const ChangeSectionPanel: React.FC = () => {
                 {infoItem.map(item => 
                     <ItemShoes 
                     key={item.id} 
+                    id_item={item.id}
                     name_item={item.name} 
+                    description_item={item.description}
+                    image_paths={item.imagePaths}
+                    size_item={item.sizes}
                     type_item={"none"} 
                     animation_style={2} 
                     image_prevew_link={item.imagePaths.length > 0 ? item.imagePaths[0] : ''}
-                    onContext={handleContextMenu}/>
+                    onContext={handleContextMenu}
+                    price={item.price}/>
                 )}
             </>)
         }
