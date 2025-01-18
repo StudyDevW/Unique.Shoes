@@ -1,23 +1,27 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Unique.Shoes.Middleware.Database.DBO
+namespace Unique.Shoes.Middleware.Database.DTO.ShopCart
 {
-    public class ShopCartTable
+    public class ShopCart_GetAll_Item
     {
-        [Key]
         public int id { get; set; }
 
-        public int userId { get; set; }
+        public int itemId { get; set; }
 
         public string hashName { get; set; }
+
+        public string name { get; set; }
+
+        public int price { get; set; }
 
         public int countItem { get; set; }
 
         public string size { get; set; }
+
+        public string? imageLink { get; set; }
     }
 }

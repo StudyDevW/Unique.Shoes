@@ -11,7 +11,7 @@ const handleImageUpload = async (nameItem: string, file: File[] | null, accessTo
         formData.append('fileMassive', image);
     });
 
-    const response = await axios.post(`http://localhost:8082/api/Items/Images/Upload`, formData, 
+    const response = await axios.post(`http://localhost:8082/api/Images/Upload`, formData, 
     {
         headers: {
             'Content-Type': 'multipart/form-data',

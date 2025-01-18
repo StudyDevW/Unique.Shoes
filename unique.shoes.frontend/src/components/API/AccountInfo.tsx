@@ -3,6 +3,7 @@ import axios from 'axios';
 let roleUser: string = "";
 let fullNameInternal: string = "";
 let firstNameInternal: string = "";
+let idUser: number = -1;
 
 const handleGetUserInfo = async (accessToken: string) => {
  
@@ -13,11 +14,12 @@ const handleGetUserInfo = async (accessToken: string) => {
             },
         });
 
-        const { lastName, firstName, roles } = response.data;
+        const { lastName, firstName, roles, id } = response.data;
 
         fullNameInternal = `${lastName} ${firstName}`
         firstNameInternal = firstName
         roleUser = roles
+        idUser = id
 
         return true
 
@@ -46,6 +48,9 @@ const GetInfoUser_Role = () => {
     return roleUser
 }
 
+const GetInfoUser_Id = () => {
+    return idUser;
+}
 
 
-export { handleGetUserInfo, GetInfoUser_Name, GetInfoUser_FullName, GetInfoUser_Role, ResetInfoUser }
+export { handleGetUserInfo, GetInfoUser_Name, GetInfoUser_FullName, GetInfoUser_Role, ResetInfoUser, GetInfoUser_Id }

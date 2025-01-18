@@ -12,7 +12,7 @@ using Unique.Shoes.MarketAPI.Model.Database;
 namespace Unique.Shoes.MarketAPI.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20250110211426_Init")]
+    [Migration("20250116032016_Init")]
     partial class Init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -23,6 +23,33 @@ namespace Unique.Shoes.MarketAPI.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
+
+            modelBuilder.Entity("Unique.Shoes.Middleware.Database.DBO.ShopCartTable", b =>
+                {
+                    b.Property<int>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("id"));
+
+                    b.Property<int>("countItem")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("hashName")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("size")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int>("userId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("id");
+
+                    b.ToTable("shopCartTableObj");
+                });
 
             modelBuilder.Entity("Unique.Shoes.Middleware.Database.DBO.ShopImagesTable", b =>
                 {

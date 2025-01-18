@@ -3,6 +3,7 @@ import { devtools, persist } from 'zustand/middleware'
 
 interface ItemProperties {
     id: number,
+    hashName: string,
     name: string,
     description: string
     price: number

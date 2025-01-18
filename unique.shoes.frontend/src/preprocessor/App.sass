@@ -107,17 +107,35 @@
   height: 2px
   background-color: #676767
 
-.header_item_preview_title
+.header_item_preview_title_area
+  display: flex
+  flex-direction: row
   font-family: MUSEOSANS
-  align-content: center
   font-size: 22px
   position: absolute
   margin-top: 121px
   margin-left: 176px
-  width: 200px
+  width: 50%
   height: 50px
   color: white
   user-select: none
+
+
+.header_item_preview_title
+  align-content: center
+  text-align: center
+  width: 180px
+  height: 50px
+  animation: scale_anim_close_login 0.5s forwards
+  &:hover
+    animation: scale_anim_login 0.5s forwards
+
+
+.header_item_preview_title.small
+  width: 120px
+
+.header_item_preview_title.inactive
+  color: rgb(122, 122, 122)
 
 .header_item_preview_button_back
   font-family: MUSEOSANS
@@ -130,6 +148,9 @@
   height: 50px
   color: white
   user-select: none
+  animation: scale_anim_close_login 0.5s forwards
+  &:hover
+    animation: scale_anim_login 0.5s forwards
 
 .header_item_preview_area
   position: absolute
@@ -151,20 +172,328 @@
   width: 766px
   height: 90px
 
+.header_item_preview_area_title.rich
+  font-family: OCEANIC
+  color: #aea06a
+
+.header_item_preview_area_rightitems
+  display: flex
+  flex-direction: column
+  position: absolute
+  margin-top: 45px
+  margin-left: calc(100% - 10px - 520px )
+  width: 520px
+  height: 580px
+
+.header_item_preview_area_price
+  position: relative
+  margin-top: 0px
+  margin-left: calc(100% - 10px - 300px )
+  color: white
+  font-family: MUSEOSANS
+  text-align: right
+  align-content: center
+  font-size: 45px
+  width: 300px
+  height: 90px
+
+.header_item_preview_area_price.rich
+  font-family: OCEANIC
+  color: #aea06a
+
+.header_item_preview_images_carusel
+  display: flex
+  flex-direction: column
+  position: absolute
+  margin-top: 145px
+  margin-left: calc(47% + 20px)
+  width: 70px
+  height: 435px
+
+.header_item_preview_images_item
+  position: relative
+  margin-top: 10px
+  margin-left: 5px
+  width: 60px
+  height: 60px
+  background-color: white
+  border: 1px solid black
+  border-radius: 10px
+  background-image: url('../images/missing_image.png')
+  background-position: center
+  background-size: contain
+  background-repeat: no-repeat
+  animation: scale_anim_close_login 0.5s forwards
+  user-select: none
+  &:hover
+    animation: scale_anim_login 0.5s forwards
+
+.header_item_preview_area_cartbutton
+  position: relative
+  margin-top: 20px
+  margin-left: calc(100% - 10px - 360px - 2px)
+  color: white
+  font-family: MUSEOSANS
+  text-align: center
+  align-content: center
+  font-size: 30px
+  width: 360px
+  height: 60px
+  background-color: black
+  border-radius: 10px
+  border: solid white 2px
+  user-select: none
+
+.header_item_preview_area_sizes
+  display: flex
+  flex-direction: row
+  flex-wrap: wrap
+  position: relative
+  margin-top: 15px
+  margin-left: calc(100% - 10px - 360px - 2px)
+  color: black
+  font-family: MUSEOSANS
+  font-size: 20px
+  width: 355px
+  max-height: 100px
+  background-color: white
+  border-radius: 10px
+  border: solid black 2px
+  align-items: center
+  padding: 10px 3px
+
+.header_item_preview_area_buybutton_text
+  align-content: center
+  width: 75%
+  text-align: center
+
+.header_item_preview_area_buybutton_separator
+  margin-top: 11px
+  width: 2px
+  height: 70%
+  background-color: black
+
+
+.header_item_preview_area_buybutton_size
+  font-size: 16px
+  align-content: center
+  width: 25%
+  text-align: center
+
+
+.header_item_preview_area_buybutton
+  display: flex
+  flex-direction: row
+  position: relative
+  margin-top: 15px
+  margin-left: calc(100% - 10px - 360px - 2px)
+  color: black
+  font-family: MUSEOSANS
+  text-align: center
+  align-content: center
+  font-size: 30px
+  width: 360px
+  height: 60px
+  background-color: white
+  border-radius: 10px
+  border: solid black 2px
+
+.header_item_preview_area_description
+  position: relative
+  margin-top: 15px
+  margin-left: calc(100% - 10px - 500px - 2px)
+  color: white
+  font-family: MUSEOSANS
+  text-align: right
+  align-content: flex-start
+  font-size: 18px
+  width: 500px
+  height: 170px
+  overflow-y: scroll
+  -webkit-overflow-scrolling: auto
+
+.header_item_preview_area_description::-webkit-scrollbar
+  display: none
+
+
 .header_item_preview_area_image 
   position: absolute
   margin-top: 155px
   margin-left: 10px
   color: white
   font-family: MUSEOSANS
-  align-content: center
   font-size: 33px
-  width: 766px
+  width: 47%
   height: 410px
   background-color: white
   border-radius: 10px
   border: solid black 1px
+
+// .item_loading_bar 
+//   position: absolute
+//   margin-top: calc(100% + 5px)
+//   width: 100%
+//   height: 4px
+//   background-color: #666666f6
+//   border-radius: 5px
+ 
+
+// .item_loading_bar_progress
+//   position: absolute
+//   width: 100%
+//   height: 100%
+//   background-color: #0cdda5e0
+//   animation: loading_bar 1s forwards
+
+// .item_loading_bar_progress.rich
+//   background-color: #aea06a
+
+.shopcart_area_header
+  position: absolute
+  display: flex
+  flex-direction: column
+  margin-top: 200px
+  margin-left: 180px
+  min-width: 620px
+  width: calc(55% - 10vh)
+  height: 620px
+  overflow-x: visible
+  overflow-y: auto
+  scrollbar-color: white transparent
   
+
+// .shopcart_area_header::-webkit-scrollbar
+//   display: none
+
+.shopcart_area_header::-webkit-scrollbar-track
+  display: none
+
+
+.shopcart_header_item
+  display: flex
+  flex-direction: row
+  position: relative
+  flex: none
+  margin-top: 20px
+  min-width: 600px
+  width: calc(100% - 40px)
+  height: 130px
+  background-color: rgba(0, 0, 0, 0.8)
+  border: solid white 2px
+  border-radius: 10px
+
+.name_shoes_item_shopcart
+  position: relative
+  font-family: MUSEOSANS
+  font-size: 20px
+  align-content: center
+  color: white
+  margin-left: 15px
+  margin-top: 20px
+  width: 20vw
+  min-width: 270px
+  height: 60px
+
+.rightbar_shoes_item_shopcart
+  position: absolute
+  margin-left: calc(100% - 200px)
+  width: 200px
+  height: 100%
+
+.price_rightbar_shopcart
+  font-family: MUSEOSANS 
+  font-size: 25px
+  align-content: center
+  padding-right: 15px
+  text-align: right
+  margin-top: 10px
+  margin-right: 5px
+  color: white
+  width: 175px
+  height: 55px
+
+.image_shoes_item_shopcart
+  position: relative
+  background-color: white
+  margin-top: 10px
+  flex: none
+  margin-left: 9px
+  width: 110px
+  height: 110px
+  border-radius: 8px
+  background-image: url(../images/missing_image.png)
+  background-size: contain
+  background-position: center
+  background-repeat: no-repeat
+  
+
+.header_item_preview_area_image_bar
+  position: absolute
+  margin-top: 575px
+  margin-left: 10px
+  width: 47%
+  height: 5px
+  background-color: #666666f6
+  border-radius: 10px
+
+.header_item_preview_area_image_bar_notify
+  position: absolute
+  font-family: MUSEOSANS
+  font-size: 14px
+  margin-top: 574px
+  color: rgb(138, 138, 138)
+  margin-left: 10px
+  width: 47%
+  height: 70px
+
+.header_item_preview_area_image_bar_progress
+  position: absolute
+  width: 100%
+  height: 100%
+  background-color: #0cdda5e0
+  animation: loading_bar 7s forwards
+  border-radius: 10px
+
+// .header_item_preview_area_image_bar_progress_stoptimer
+//   position: absolute
+//   width: 100%
+//   height: 100%
+//   background-color: #ff9651b0
+//   animation: loading_bars 20s forwards
+//   border-radius: 10px
+
+.image_selected_preview_carusel
+  position: absolute
+  width: 100%
+  height: 100%
+  border-radius: 7px
+  background-color: rgba(30, 30, 30, 0.6)
+  background-image: url(../images/stars_handdraw/star_4_white.png)
+  background-repeat: no-repeat
+  background-size: 25px
+  background-position: center
+  animation: block_exchange_open 0.5s forwards
+  
+
+.left_corner_decor_rich_header
+  position: absolute
+  
+  margin-top: 15px
+  width: 150px
+  height: 50px
+
+  background-image: url(../images/item_decoration_unique.png)
+  background-size: contain
+  background-repeat: no-repeat
+  background-position: center
+
+.left_corner_decor_rich_header.study
+  margin-left: calc(100% - 150px)
+  margin-top: 15px
+  background-image: url(../images/item_decoration_study.png)
+
+.header_item_preview_area_image.rich
+  border: solid #aea06a 3px
 
 @keyframes header_fullsized
   0%
@@ -454,6 +783,18 @@
   animation: scale_anim_close 0.5s forwards
   &:hover
     animation: scale_anim 0.5s forwards
+
+.item_sizeopt.preview
+  width: 70px
+  height: 40px
+  margin-top: 5px
+  margin-bottom: 5px
+
+.item_sizeopt.clicked.preview
+  width: 68px
+  height: 38px
+  margin-top: 5px
+  margin-bottom: 5px
 
 .item_sizeopt.clicked
   border: solid black 1px
@@ -798,6 +1139,13 @@
   background-color: #aea06a
 
 @keyframes loading_bar
+  0%
+    width: 0%
+  100%
+    width: 100%
+
+
+@keyframes loading_bars
   0%
     width: 0%
   100%
@@ -1149,6 +1497,7 @@
   border-radius: 10px
   border: solid rgb(255, 255, 255) 2px
   box-shadow: 0px 0px 35px -4px #000000
+  z-index: 10
 
 .miniProfile.closed
   animation: opacity_anim_closed 0.9s forwards

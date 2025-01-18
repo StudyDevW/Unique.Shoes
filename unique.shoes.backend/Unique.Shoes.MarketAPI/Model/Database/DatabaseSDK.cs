@@ -5,6 +5,7 @@ using unique.shoes.middleware.Database.DBO;
 using Unique.Shoes.MarketAPI.Model.Services;
 using Unique.Shoes.Middleware.Database.DBO;
 using Unique.Shoes.Middleware.Database.DTO;
+using Unique.Shoes.Middleware.Database.DTO.ShopCart;
 
 namespace Unique.Shoes.MarketAPI.Model.Database
 {
@@ -210,12 +211,11 @@ namespace Unique.Shoes.MarketAPI.Model.Database
 
         private int GetIdItemFromName(string itemName, DataContext _db)
         {
-            var items = _db.shopItemsTableObj;
+            var itemSelected = _db.shopItemsTableObj.Where(c => c.name == itemName).FirstOrDefault();
 
-            foreach (var item in items)
+            if (itemSelected != null)
             {
-                if (item.name == itemName)
-                    return item.id;
+                return itemSelected.id;
             }
 
             return 0;
@@ -243,5 +243,143 @@ namespace Unique.Shoes.MarketAPI.Model.Database
             }
         }
 
+        public bool ExistItemShopCart(string hashName, int userId)
+        {
+            using (DataContext db = new DataContext(_conf.GetConnectionString("ServerConn")))
+            {
+                var shopCartObj = db.shopCartTableObj.Where(c => c.userId == userId && c.hashName == hashName).FirstOrDefault();
+       
+                if (shopCartObj != null)
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        public async Task AddItemShopCart(ShopCart_Add dtoObj)
+        {
+            using (DataContext db = new DataContext(_conf.GetConnectionString("ServerConn")))
+            {
+                var shopItem = db.shopItemsTableObj.Where(c => c.hashName == dtoObj.hashName).FirstOrDefault();
+
+                if (shopItem != null)
+                {
+                    ShopCartTable shopCartTable = new ShopCartTable()
+                    {
+                        hashName = dtoObj.hashName,
+                        userId = dtoObj.userId,
+                        countItem = dtoObj.countItem,
+                        size = dtoObj.size
+                    };
+
+                    db.shopCartTableObj.Add(shopCartTable);
+                    await db.SaveChangesAsync();
+                }
+                else
+                {
+                    throw new Exception("hashName doesnt exist");
+                }
+
+            }
+        }
+
+        public ShopCart_GetAll GetShopCartItems(int idUser)
+        {
+            ShopCart_GetAll shopCartOutput = new ShopCart_GetAll()
+            {
+                shopCartItem = new List<ShopCart_GetAll_Item>(),
+                shopCartInfo = new ShopCart_GetAll_Info()
+            };
+
+            List<ShopCart_GetAll_Item> shopCartItems = new List<ShopCart_GetAll_Item>();
+
+            ShopCart_GetAll_Info shopCartInfo = new ShopCart_GetAll_Info();
+
+            int priceFinal = 0;
+
+            using (DataContext db = new DataContext(_conf.GetConnectionString("ServerConn")))
+            {
+                //Получаем объекты корзины из бд
+                var shopCartItemDbObj = db.shopCartTableObj.Where(c => c.userId == idUser).ToList();
+
+                for (int i = 0; i < shopCartItemDbObj.Count(); i++)
+                {
+                    //Сверяем hashName из корзины и из таблицы товаров чтобы заполнить данные о товаре
+                    var shopItemDbObj = db.shopItemsTableObj
+                        .Where(c => c.hashName == shopCartItemDbObj[i].hashName)
+                        .FirstOrDefault();
+
+                    if (shopItemDbObj != null)
+                    {
+                        var imageObj = db.shopImagesTableObj.Where(c => c.itemId == shopItemDbObj.id).FirstOrDefault();
+
+                        ShopCart_GetAll_Item shopItem = new ShopCart_GetAll_Item()
+                        {
+                            id = shopCartItemDbObj[i].id,
+                            itemId = shopItemDbObj.id,
+                            hashName = shopItemDbObj.hashName,
+                            name = shopItemDbObj.name,
+                            price = shopItemDbObj.price * shopCartItemDbObj[i].countItem,
+                            size = shopCartItemDbObj[i].size,
+                            countItem = shopCartItemDbObj[i].countItem,
+                            imageLink = imageObj != null ? imageObj.imageLink : null
+                        };
+
+                        priceFinal += shopItem.price * shopCartItemDbObj[i].countItem;
+                        shopCartItems.Add(shopItem);
+                    }
+
+                }
+
+                shopCartInfo = new ShopCart_GetAll_Info()
+                {
+                    count = shopCartItems.Count,
+                    totalPrice = priceFinal
+                };
+
+                shopCartOutput = new ShopCart_GetAll()
+                {
+                    shopCartItem = shopCartItems,
+                    shopCartInfo = shopCartInfo
+                };
+            }
+
+            return shopCartOutput;
+        }
+
+        public async Task ChangeItemShopCart(int cartId, ShopCart_Change dtoObj)
+        {
+            using (DataContext db = new DataContext(_conf.GetConnectionString("ServerConn")))
+            {
+                var shopCartObj = db.shopCartTableObj.Where(c => c.id == cartId).FirstOrDefault();
+
+                if (shopCartObj != null)
+                {
+                    if (shopCartObj.countItem != dtoObj.countItem)
+                        shopCartObj.countItem = dtoObj.countItem;
+
+                    if (shopCartObj.size != dtoObj.size)
+                        shopCartObj.size = dtoObj.size;
+
+                    await db.SaveChangesAsync();
+                }
+            }
+        }
+
+        public async Task DeleteItemShopCart(int cartId)
+        {
+            using (DataContext db = new DataContext(_conf.GetConnectionString("ServerConn")))
+            {
+                var shopCartObj = db.shopCartTableObj.Where(c => c.id == cartId).FirstOrDefault();
+
+                if (shopCartObj != null)
+                {
+                    db.shopCartTableObj.Remove(shopCartObj);
+                    await db.SaveChangesAsync();
+                }
+            }
+        }
     }
 }

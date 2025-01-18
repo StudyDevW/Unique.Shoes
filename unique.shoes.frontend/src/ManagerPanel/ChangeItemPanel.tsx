@@ -82,6 +82,7 @@ const ChangeSectionPanel: React.FC = () => {
                     description_item={item.description}
                     image_paths={item.imagePaths}
                     size_item={item.sizes}
+                    hash_item={item.hashName}
                     type_item={"none"} 
                     animation_style={2} 
                     image_prevew_link={item.imagePaths.length > 0 ? item.imagePaths[0] : ''}

@@ -22,19 +22,22 @@ const handleGetItemInfo = async (accessToken: string) => {
             },
         });
 
-        item_all_info = response.data;
-
-        return item_all_info;
+        if (response.status === 200)  {
+            item_all_info = response.data;
+            return item_all_info;
+        }
+            
+        return null;
 
     } catch (error) {
-        console.log("Внутренняя ошибка получения информации о товаре!")
-        return null
+        console.log("Внутренняя ошибка получения информации о товаре!");
+        return null;
     } 
 }
 
 const handleLoadImage = async (filePath: string) => {
     try {
-        const response = await axios.get('http://localhost:8082/api/Items/Images/GetImage', {
+        const response = await axios.get('http://localhost:8082/api/Images/GetImage', {
             responseType: 'blob',
             headers: {
                 filePath: filePath
@@ -49,4 +52,27 @@ const handleLoadImage = async (filePath: string) => {
     } 
 }
 
-export { handleGetItemInfo, handleLoadImage }
+const handleLoadImagesArray = async (filePaths: string[]) => {
+    try {
+        let arrImages: string[] = [''];
+
+        for (var i = 0; i < filePaths.length; i++) {
+            const response = await axios.get('http://localhost:8082/api/Images/GetImage', {
+                responseType: 'blob',
+                headers: {
+                    filePath: filePaths[i]
+                },
+            });
+
+            arrImages[i] = (URL.createObjectURL(response.data))
+        }
+
+        return arrImages;
+
+    } catch (error) {
+        console.log("Внутренняя ошибка получения информации о товаре!")
+        return null
+    } 
+}
+
+export { handleGetItemInfo, handleLoadImage, handleLoadImagesArray }

@@ -23,6 +23,9 @@ namespace Unique.Shoes.MarketAPI.Model.Database
 
         public DbSet<ShopImagesTable> shopImagesTableObj { get; set; }
 
+        public DbSet<ShopCartTable> shopCartTableObj { get; set; }
+
+
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             if (!optionsBuilder.IsConfigured)

@@ -56,10 +56,8 @@ namespace Unique.Shoes.AccountAPI.Controllers
                 if (_cache.CheckExistKeysStorage(check.check_success.Id, "refreshTokens"))
                     _cache.DeleteKeyFromStorage(check.check_success.Id, "refreshTokens");
 
-
                 _cache.WriteKeyInStorage(check.check_success.Id, "accessTokens", accessToken, DateTime.UtcNow.AddMinutes(10));
                 _cache.WriteKeyInStorage(check.check_success.Id, "refreshTokens", refreshToken, DateTime.UtcNow.AddDays(7));
-
 
                 Auth_PairTokens pair_tokens = new Auth_PairTokens()
                 {

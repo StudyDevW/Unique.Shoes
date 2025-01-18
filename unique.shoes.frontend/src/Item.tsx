@@ -6,6 +6,7 @@ import useItemPreviewVariable from './components/Variables/ItemPreviewVariable.t
 
 const ItemShoes: React.FC<{
   name_item: string,
+  hash_item: string,
   type_item: string, 
   description_item: string,
   size_item: string[],
@@ -17,6 +18,7 @@ const ItemShoes: React.FC<{
   onContext: (event: MouseEvent) => void
 }> = ({
   name_item, 
+  hash_item,
   type_item, 
   animation_style, 
   image_prevew_link, 
@@ -206,6 +208,7 @@ const ItemShoes: React.FC<{
   const handleOnClick = () => {
     interface ItemProperties {
       id: number,
+      hashName: string,
       name: string,
       description: string
       price: number
@@ -216,6 +219,7 @@ const ItemShoes: React.FC<{
     let itemPreview: ItemProperties = 
     {
       id: id_item,
+      hashName: hash_item,
       name: name_item,
       description: description_item,
       imagePaths: image_paths,

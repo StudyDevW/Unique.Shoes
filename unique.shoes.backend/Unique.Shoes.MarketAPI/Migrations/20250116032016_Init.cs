@@ -11,6 +11,22 @@ namespace Unique.Shoes.MarketAPI.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
+                name: "shopCartTableObj",
+                columns: table => new
+                {
+                    id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    userId = table.Column<int>(type: "integer", nullable: false),
+                    hashName = table.Column<string>(type: "text", nullable: false),
+                    countItem = table.Column<int>(type: "integer", nullable: false),
+                    size = table.Column<string>(type: "text", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_shopCartTableObj", x => x.id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "shopImagesTableObj",
                 columns: table => new
                 {
@@ -51,6 +67,9 @@ namespace Unique.Shoes.MarketAPI.Migrations
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropTable(
+                name: "shopCartTableObj");
+
             migrationBuilder.DropTable(
                 name: "shopImagesTableObj");
 

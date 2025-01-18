@@ -1,4 +1,5 @@
 ﻿using Unique.Shoes.Middleware.Database.DTO;
+using Unique.Shoes.Middleware.Database.DTO.ShopCart;
 
 namespace Unique.Shoes.MarketAPI.Model.Services
 {
@@ -13,5 +14,15 @@ namespace Unique.Shoes.MarketAPI.Model.Services
         public List<string> GetImages(int itemId);
 
         public Task DeleteItem(int idItem);
+
+        public Task AddItemShopCart(ShopCart_Add dtoObj);
+
+        public ShopCart_GetAll GetShopCartItems(int idUser);
+
+        public Task ChangeItemShopCart(int cartId, ShopCart_Change dtoObj);
+
+        public Task DeleteItemShopCart(int cartId);
+
+        public bool ExistItemShopCart(string hashName, int userId);
     }
 }

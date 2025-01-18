@@ -125,7 +125,7 @@ namespace Unique.Shoes.MarketAPI
             });
 
             var app = builder.Build();
-
+             
             await EnsureDatabaseInitializedAsync(app);
 
             app.UseCors("AllowOrigin");
@@ -189,13 +189,16 @@ namespace Unique.Shoes.MarketAPI
 
             var tableNameFirst = "shopItemsTableObj";
             var tableNameSecond = "shopImagesTableObj";
-
+            var tableNameThird = "shopCartTableObj";
 
             var tableExistsFirst = await CheckIfTableExistsAsync(context, tableNameFirst);
 
             var tableExistsSecond = await CheckIfTableExistsAsync(context, tableNameSecond);
 
-            if (!tableExistsFirst && !tableExistsSecond)
+            var tableExistsThird = await CheckIfTableExistsAsync(context, tableNameThird);
+
+
+            if (!tableExistsFirst && !tableExistsSecond && !tableExistsThird)
             {
                 await context.Database.MigrateAsync();
             }

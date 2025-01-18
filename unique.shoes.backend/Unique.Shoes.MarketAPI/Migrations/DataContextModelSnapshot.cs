@@ -22,6 +22,33 @@ namespace Unique.Shoes.MarketAPI.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
+            modelBuilder.Entity("Unique.Shoes.Middleware.Database.DBO.ShopCartTable", b =>
+                {
+                    b.Property<int>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("id"));
+
+                    b.Property<int>("countItem")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("hashName")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("size")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int>("userId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("id");
+
+                    b.ToTable("shopCartTableObj");
+                });
+
             modelBuilder.Entity("Unique.Shoes.Middleware.Database.DBO.ShopImagesTable", b =>
                 {
                     b.Property<int>("id")
