@@ -3,3 +3,5 @@
 /postgres_data
 
 /redis_cache
+
+/rabbitmq_data

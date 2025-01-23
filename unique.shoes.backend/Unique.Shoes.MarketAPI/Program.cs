@@ -8,6 +8,8 @@ using unique.shoes.middleware.JWT;
 using unique.shoes.middleware.Services;
 using Unique.Shoes.MarketAPI.Model.Database;
 using Unique.Shoes.MarketAPI.Model.Services;
+using Unique.Shoes.Middleware.Broker;
+using Unique.Shoes.Middleware.Services;
 
 namespace Unique.Shoes.MarketAPI
 {
@@ -110,11 +112,17 @@ namespace Unique.Shoes.MarketAPI
                 options.UseNpgsql(builder.Configuration.GetConnectionString("ServerConn"));
             });
 
+            builder.Services.AddSingleton<IRabbitMQService, RabbitSDK>();
+
+            builder.Services.AddSingleton<IRabbitListenerService, RabbitListener>();
+
             builder.Services.AddSingleton<IDatabaseService, DatabaseSDK>();
 
             builder.Services.AddSingleton<IJwtService, JwtSDK>();
 
             builder.Services.AddSingleton<ICacheService, CacheSDK>();
+
+
 
             builder.Services.AddCors(options =>
             {
@@ -125,7 +133,13 @@ namespace Unique.Shoes.MarketAPI
             });
 
             var app = builder.Build();
-             
+
+            using (var scope = app.Services.CreateScope())
+            {
+                var rabbitListener = scope.ServiceProvider.GetRequiredService<IRabbitListenerService>();
+                rabbitListener.ListenMarket();
+            }
+
             await EnsureDatabaseInitializedAsync(app);
 
             app.UseCors("AllowOrigin");
@@ -190,6 +204,8 @@ namespace Unique.Shoes.MarketAPI
             var tableNameFirst = "shopItemsTableObj";
             var tableNameSecond = "shopImagesTableObj";
             var tableNameThird = "shopCartTableObj";
+            var tableNameFour = "shopOrderTableObj";
+            var tableNameFive = "shopOrderItemsTableObj";
 
             var tableExistsFirst = await CheckIfTableExistsAsync(context, tableNameFirst);
 
@@ -197,8 +213,13 @@ namespace Unique.Shoes.MarketAPI
 
             var tableExistsThird = await CheckIfTableExistsAsync(context, tableNameThird);
 
+            var tableExistsFour = await CheckIfTableExistsAsync(context, tableNameFour);
 
-            if (!tableExistsFirst && !tableExistsSecond && !tableExistsThird)
+            var tableExistsFive = await CheckIfTableExistsAsync(context, tableNameFive);
+
+
+            if (!tableExistsFirst && !tableExistsSecond && !tableExistsThird 
+                && !tableExistsFour && !tableExistsFive)
             {
                 await context.Database.MigrateAsync();
             }

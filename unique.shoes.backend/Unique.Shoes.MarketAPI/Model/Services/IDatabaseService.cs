@@ -24,5 +24,11 @@ namespace Unique.Shoes.MarketAPI.Model.Services
         public Task DeleteItemShopCart(int cartId);
 
         public bool ExistItemShopCart(string hashName, int userId);
+
+        public Task AddOrderUser(Pay_Order dtoObj);
+
+        public Task OrderFinal(string hashPay);
+
+        public Order_All OrderAll(int userId);
     }
 }

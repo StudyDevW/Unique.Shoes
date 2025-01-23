@@ -3,17 +3,27 @@ import './preprocessor/App.sass'
 import useloginPageOpenedVariable from './components/Variables/OpenLoginPageVariable.ts';
 import {  LoginSignOut } from './components/API/LoginAuth.tsx';
 import useLoginSuccessVariable from './components/Variables/LoginSuccessVariable.ts';
-import { GetInfoUser_Name, GetInfoUser_FullName } from './components/API/AccountInfo.tsx';
+import { GetInfoUser_Name, GetInfoUser_FullName, GetInfoUser_Role } from './components/API/AccountInfo.tsx';
 import useLoadingProfile from './components/Variables/LoadingProfileVariable.ts';
 import useGetInfoUserVariable from './components/Variables/GetInfoUserVariable.ts';
+import useOpenProfileVariable from './components/Variables/OpenProfileVariable.ts';
+import useCloseProfileVariable from './components/Variables/CloseProfileVariable.ts';
+import { useNavigate, useLocation } from 'react-router-dom';
 
 const Miniprofile = (user_authed: boolean) => {
   const [miniProfile, setminiProfile] = useState<boolean>();
   const [closedAnim, setclosedAnim] = useState<boolean>();
+  const { closeProfileGet, closeProfileSet } = useCloseProfileVariable();
   const { loginSuccessGet, loginSuccessSet } = useLoginSuccessVariable();
   const { profileloadingGet } = useLoadingProfile();
   const { userCheckGet } = useGetInfoUserVariable();
   const { loginPageOpenedSet } = useloginPageOpenedVariable();
+  const { openProfileGet, openProfileSet } = useOpenProfileVariable();
+
+
+  const location = useLocation();
+
+  const navigate = useNavigate();
   
   const login_clicked = () => {
     setminiProfile(prev => !prev)
@@ -32,11 +42,33 @@ const Miniprofile = (user_authed: boolean) => {
 
   }
 
+  const open_profile_page = () => {
+    setclosedAnim(true)
+    setminiProfile(false)
+    openProfileSet(true)
+  }
+
   const close_login_page = () => {
     setclosedAnim(false)
-    loginPageOpenedSet(false)
-    
+
+    if (openProfileGet) {
+        openProfileSet(false);
+    }
+    else {
+        loginPageOpenedSet(false)
+    }
   }
+
+  useEffect(()=>{
+    if (closeProfileGet) {
+        close_login_page();
+        setminiProfile(false)
+        LoginSignOut()
+        loginSuccessSet(false)
+        closeProfileSet(false);
+    }
+  }, [closeProfileGet])
+
 
   const leave_from_account = () => {
     setclosedAnim(true)
@@ -61,6 +93,9 @@ const Miniprofile = (user_authed: boolean) => {
     if (!user_authed) {
          
         if (loginSuccessGet && userCheckGet) {
+
+            
+
             return (
                 <>
                     <div className="text_login margined" onClick={login_clicked}>{GetInfoUser_Name()}</div>
@@ -107,7 +142,7 @@ const Miniprofile = (user_authed: boolean) => {
                         </div>
                     </div>
         
-                    <div className="button_profile closed" onClick={leave_from_account}>
+                    <div className="button_profile closed">
                         <div className="text_button_profile">
                             Выйти
                         </div>
@@ -122,15 +157,42 @@ const Miniprofile = (user_authed: boolean) => {
         else {
             return (
             <>
-                <div className="button_profile">
+                {(location.pathname === "/manager_panel") && (<>
+                    <div className="button_profile" onClick={()=>navigate("/")}>
+                        <div className="text_button_profile">
+                            Вернуться
+                        </div>
+
+                        <div className="text_button_profile down">
+                            Перейти на главную
+                        </div>
+                    </div>
+                </>)}
+
+                {(location.pathname !== "/manager_panel") && (<>
+                    <div className="button_profile" onClick={open_profile_page}>
+                        <div className="text_button_profile">
+                            Профиль
+                        </div>
+
+                        <div className="text_button_profile down">
+                            Перейти в свой профиль
+                        </div>
+                    </div>
+                </>)}
+
+                {((GetInfoUser_Role().includes('Manager') || GetInfoUser_Role().includes('Admin')) && location.pathname !== "/manager_panel") && (
+                <>
+                  <div className="button_profile" onClick={()=>navigate('/manager_panel')}>
                     <div className="text_button_profile">
-                        Профиль
+                        Панель Менеджера
                     </div>
 
                     <div className="text_button_profile down">
-                        Перейти в свой профиль
+                        Управление сайтом
                     </div>
                 </div>
+                </>)}
 
                 <div className="button_profile" onClick={leave_from_account}>
                     <div className="text_button_profile">
@@ -266,11 +328,23 @@ const Miniprofile = (user_authed: boolean) => {
   }
   
   const profileAvatar = () => {
-    if (loginSuccessGet && userCheckGet && !profileloadingGet) { 
+    if (loginSuccessGet && userCheckGet && !profileloadingGet && !openProfileGet) { 
+        
+      
+
+        if (location.pathname === "/manager_panel") {
+            return (
+                <>
+                    <div className="avatar_mini">
+        
+                    </div>
+                </>)
+        }
+        
         return (
         <>
             <div className="avatar_mini" onClick={login_clicked}>
-
+                
             </div>
         </>
         )
@@ -292,7 +366,6 @@ const Miniprofile = (user_authed: boolean) => {
     if (loginSuccessGet === true)
         close_login_page();
   }, [loginSuccessGet]);
-
 
 
   return (

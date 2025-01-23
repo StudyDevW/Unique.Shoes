@@ -21,7 +21,7 @@ namespace Unique.Shoes.AccountAPI.Model.Database
 
         public DatabaseSDK(IConfiguration configuration)
         {
-            _logger = LoggerFactory.Create(builder => builder.AddConsole()).CreateLogger(string.Empty);
+            _logger = LoggerFactory.Create(builder => builder.AddConsole()).CreateLogger("AccountAPI | database-sdk-logger");
             _conf = configuration;
 
         }
@@ -81,7 +81,7 @@ namespace Unique.Shoes.AccountAPI.Model.Database
 
                 await RegisterWithMore(idRegisteredUser, db);
 
-                _logger.LogInformation($"RegisterUser: {dto.firstName}, created");
+                _logger.LogInformation($"RegisterUser: {dto.username}, создан");
             }
             
             return;
@@ -109,7 +109,7 @@ namespace Unique.Shoes.AccountAPI.Model.Database
                 db.userTableObj.Add(usersTable);
                 await db.SaveChangesAsync();
 
-                _logger.LogInformation($"RegisterUserWithAdmin: {dto.firstName}, created");
+                _logger.LogInformation($"RegisterUserWithAdmin: {dto.username}, создан");
             }
 
             return;
@@ -129,6 +129,9 @@ namespace Unique.Shoes.AccountAPI.Model.Database
                 {
                     if (obj.username == dto.username &&
                         obj.password == dto.password)
+                    {
+                        _logger.LogInformation($"CheckUser: Пользователь успешно вошел (username: {dto.username})");
+
                         return new Auth_CheckInfo()
                         {
                             check_success = new Auth_CheckSuccess
@@ -138,10 +141,11 @@ namespace Unique.Shoes.AccountAPI.Model.Database
                                 roles = obj.roles.ToList()
                             }
                         };
+                    }
                 }
             }
 
-            _logger.LogError("CheckUser: username or password incorrect!");
+            _logger.LogError("CheckUser: Пользователь ввел неверно имя или пароль!");
             return new Auth_CheckInfo() { check_error = new Auth_CheckError { errorLog = "username/password_incorrect" } };
         }
 
@@ -153,6 +157,8 @@ namespace Unique.Shoes.AccountAPI.Model.Database
 
                 if (selectedAcc != null)
                 {
+                    _logger.LogInformation($"InfoAccounts: Запрошена информация о аккаунте (id: {id})");
+
                     return new Accounts_Info()
                     {
                         id = selectedAcc.id,
@@ -161,30 +167,6 @@ namespace Unique.Shoes.AccountAPI.Model.Database
                         roles = selectedAcc.roles.ToList()
                     };
                 }
-            }
-
-            return null;
-        }
-
-        public Accounts_Info? InfoAccountDoctor(int id)
-        {
-            using (DataContext db = new DataContext(_conf.GetConnectionString("ServerConn")))
-            {
-                var filtered_query = db.userTableObj.Where(o => o.id == id && o.roles.Contains("Doctor"))
-                    .FirstOrDefault();
-
-                if (filtered_query != null)
-                {
-                    return new Accounts_Info()
-                    {
-                        id = filtered_query.id,
-                        firstName = filtered_query.firstName,
-                        lastName = filtered_query.lastName,
-                        roles = filtered_query.roles.ToList()
-                    };
-                }
-
-
             }
 
             return null;
@@ -203,11 +185,7 @@ namespace Unique.Shoes.AccountAPI.Model.Database
                         userToChange.lastName = dto.lastName;
                         await db.SaveChangesAsync();
 
-                        _logger.LogInformation($"UpdateAccount: (id: {id} ) lastname was changed");
-                    }
-                    else
-                    {
-                        _logger.LogInformation($"UpdateAccount: (id: {id} ) lastname not changed");
+                        _logger.LogInformation($"UpdateAccount: (id: {id} ) lastname изменен");
                     }
 
                     if (userToChange.firstName != dto.firstName)
@@ -215,11 +193,7 @@ namespace Unique.Shoes.AccountAPI.Model.Database
                         userToChange.firstName = dto.firstName;
                         await db.SaveChangesAsync();
 
-                        _logger.LogInformation($"UpdateAccount: (id: {id} ) firstName was changed");
-                    }
-                    else
-                    {
-                        _logger.LogInformation($"UpdateAccount: (id: {id} ) firstname not changed");
+                        _logger.LogInformation($"UpdateAccount: (id: {id} ) firstName изменен");
                     }
 
                     //Пароль не логирую
@@ -245,12 +219,9 @@ namespace Unique.Shoes.AccountAPI.Model.Database
                         userToChange.lastName = dto.lastName;
                         await db.SaveChangesAsync();
 
-                        _logger.LogInformation($"UpdateAccountWithAdmin: (id: {id} ) lastname was changed");
+                        _logger.LogInformation($"UpdateAccountWithAdmin: (id: {id} ) lastname изменен");
                     }
-                    else
-                    {// (id: {id} ) 
-                        _logger.LogInformation($"UpdateAccountWithAdmin: (id: {id} ) lastname not changed");
-                    }
+
 
                     if (userToChange.firstName != dto.firstName)
                     {
@@ -258,11 +229,7 @@ namespace Unique.Shoes.AccountAPI.Model.Database
                         await db.SaveChangesAsync();
 
 
-                        _logger.LogInformation($"UpdateAccountWithAdmin: (id: {id} ) firstname was changed");
-                    }
-                    else
-                    {
-                        _logger.LogInformation($"UpdateAccountWithAdmin: (id: {id} ) firstname not changed");
+                        _logger.LogInformation($"UpdateAccountWithAdmin: (id: {id} ) firstname изменен");
                     }
 
                     if (userToChange.username != dto.username)
@@ -270,12 +237,9 @@ namespace Unique.Shoes.AccountAPI.Model.Database
                         userToChange.username = dto.username;
                         await db.SaveChangesAsync();
 
-                        _logger.LogInformation($"UpdateAccountWithAdmin: (id: {id} ) username was changed");
+                        _logger.LogInformation($"UpdateAccountWithAdmin: (id: {id} ) username изменен");
                     }
-                    else
-                    {
-                        _logger.LogInformation($"UpdateAccountWithAdmin: (id: {id} ) username not changed");
-                    }
+  
 
                     if (userToChange.password != dto.password)
                     {
@@ -288,11 +252,7 @@ namespace Unique.Shoes.AccountAPI.Model.Database
                         userToChange.roles = dto.roles.ToArray();
                         await db.SaveChangesAsync();
 
-                        _logger.LogInformation($"UpdateAccountWithAdmin: (id: {id} ) roles was changed");
-                    }
-                    else
-                    {
-                        _logger.LogInformation($"UpdateAccountWithAdmin: (id: {id} ) roles not changed");
+                        _logger.LogInformation($"UpdateAccountWithAdmin: (id: {id} ) roles изменены");
                     }
                 }
             }
@@ -309,7 +269,7 @@ namespace Unique.Shoes.AccountAPI.Model.Database
                     db.userTableObj.Remove(userToChange);
                     await db.SaveChangesAsync();
 
-                    _logger.LogInformation($"DeleteAccountWithAdmin: (id: {id} ) was deleted");
+                    _logger.LogInformation($"DeleteAccountWithAdmin: (id: {id} ) был удален");
                 }
             }
         }
@@ -362,6 +322,8 @@ namespace Unique.Shoes.AccountAPI.Model.Database
             }
 
             allAccounts.ContentFill(accounts);
+
+            _logger.LogInformation($"GetAllAccounts: запрошены аккаунты");
 
             return allAccounts;
         }

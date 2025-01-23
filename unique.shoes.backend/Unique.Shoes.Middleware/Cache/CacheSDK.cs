@@ -60,6 +60,16 @@ namespace unique.shoes.middleware.Cache
             SetData($"{type}_storage_{id_user}", key, extime);
         }
 
+        public void WriteKeyInStorageObject<T>(string storage_desc, T key, DateTime extime)
+        {
+            SetData($"{storage_desc}_storage", key, extime);
+        }
+
+        public void DeleteKeyFromStorage(string storage_desc)
+        {
+            RemoveData($"{storage_desc}_storage");
+        }
+
         public void DeleteKeyFromStorage(int id_user, string type)
         {
             RemoveData($"{type}_storage_{id_user}");
@@ -75,9 +85,26 @@ namespace unique.shoes.middleware.Cache
             return false;
         }
 
+        public bool CheckExistKeysStorage<T>(string storage_desc)
+        {
+            var cache_data = GetData<T>($"{storage_desc}_storage");
+
+            if (cache_data != null)
+                return true;
+
+            return false;
+        }
+
         public string? GetKeyFromStorage(int id_user, string type)
         {
             var cache_data = GetData<string>($"{type}_storage_{id_user}");
+
+            return cache_data;
+        }
+
+        public T GetKeyFromStorage<T>(string storage_desc)
+        {
+            var cache_data = GetData<T>($"{storage_desc}_storage");
 
             return cache_data;
         }

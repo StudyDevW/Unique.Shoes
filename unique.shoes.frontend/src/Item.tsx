@@ -2,7 +2,7 @@ import { useState, useEffect, MouseEvent } from 'react'
 import './preprocessor/App.sass'
 import { handleLoadImage } from './components/API/ItemInfo.tsx';
 import useItemPreviewVariable from './components/Variables/ItemPreviewVariable.ts';
-
+import useTabIndexVariable from "./components/Variables/TabIndexVariable.ts";
 
 const ItemShoes: React.FC<{
   name_item: string,
@@ -41,6 +41,8 @@ const ItemShoes: React.FC<{
   const { itemPrevewGet, itemPrevewSet } = useItemPreviewVariable(); 
   
   const [openInfoClosing, setOpenInfoClosing] = useState<boolean>(false);
+
+  const { tabIndexSet } = useTabIndexVariable();
 
   const [imageSrc, setImageSrc] = useState('');
 
@@ -226,6 +228,8 @@ const ItemShoes: React.FC<{
       price: price,
       sizes: size_item
     };
+
+    tabIndexSet(0);
     
     itemPrevewSet(itemPreview);
 

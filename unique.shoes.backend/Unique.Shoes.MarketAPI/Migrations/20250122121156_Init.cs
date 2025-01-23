@@ -59,6 +59,38 @@ namespace Unique.Shoes.MarketAPI.Migrations
                     table.PrimaryKey("PK_shopItemsTableObj", x => x.id);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "shopOrderItemsTableObj",
+                columns: table => new
+                {
+                    id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    hashPay = table.Column<string>(type: "text", nullable: false),
+                    hashName = table.Column<string>(type: "text", nullable: false),
+                    size = table.Column<string>(type: "text", nullable: false),
+                    count = table.Column<int>(type: "integer", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_shopOrderItemsTableObj", x => x.id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "shopOrderTableObj",
+                columns: table => new
+                {
+                    hashPay = table.Column<string>(type: "text", nullable: false),
+                    userId = table.Column<int>(type: "integer", nullable: false),
+                    status = table.Column<string>(type: "text", nullable: false),
+                    deliveryStatus = table.Column<string>(type: "text", nullable: false),
+                    deliveryAddress = table.Column<string>(type: "text", nullable: false),
+                    price = table.Column<int>(type: "integer", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_shopOrderTableObj", x => x.hashPay);
+                });
+
             migrationBuilder.InsertData(
                 table: "shopItemsTableObj",
                 columns: new[] { "id", "count", "description", "flags", "hashName", "name", "price", "sizes" },
@@ -75,6 +107,12 @@ namespace Unique.Shoes.MarketAPI.Migrations
 
             migrationBuilder.DropTable(
                 name: "shopItemsTableObj");
+
+            migrationBuilder.DropTable(
+                name: "shopOrderItemsTableObj");
+
+            migrationBuilder.DropTable(
+                name: "shopOrderTableObj");
         }
     }
 }

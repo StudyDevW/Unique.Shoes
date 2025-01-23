@@ -16,6 +16,14 @@ services:
     build:
       context: ./unique.shoes.backend
       dockerfile: Unique.Shoes.AccountAPI/Dockerfile
+    logging:
+      driver: grafana/loki-docker-driver:latest
+      options:
+        loki-url: "http://localhost:3100/loki/api/v1/push"
+        loki-batch-size: "100"
+        loki-retries: 2
+        loki-max-backoff: 1000ms
+        loki-timeout: 1s
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=http://+:80;http://+:443
@@ -31,6 +39,14 @@ services:
     build:
       context: ./unique.shoes.backend
       dockerfile: Unique.Shoes.MarketAPI/Dockerfile
+    logging:
+      driver: grafana/loki-docker-driver:latest
+      options:
+        loki-url: "http://localhost:3100/loki/api/v1/push"
+        loki-batch-size: "100"
+        loki-retries: 2
+        loki-max-backoff: 1000ms
+        loki-timeout: 1s
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=http://+:80;http://+:443
@@ -38,6 +54,29 @@ services:
       - uploads:/app/Uploads
     ports:
        - "8082:80"
+    restart: unless-stopped
+  unique.shoes.backend.paymentapi:
+    image: ${DOCKER_REGISTRY-}uniqueshoes_paymentservice:1.0
+    container_name: Unique.Shoes.Backend.PaymentAPI
+    depends_on:
+      postgres_db:
+        condition: service_healthy
+    build:
+      context: ./unique.shoes.backend
+      dockerfile: Unique.Shoes.PaymentAPI/Dockerfile
+    logging:
+      driver: grafana/loki-docker-driver:latest
+      options:
+        loki-url: "http://localhost:3100/loki/api/v1/push"
+        loki-batch-size: "100"
+        loki-retries: 2
+        loki-max-backoff: 1000ms
+        loki-timeout: 1s
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:80;http://+:443
+    ports:
+       - "8083:80"
     restart: unless-stopped
   postgres_db:
     image: postgres:17.0-bookworm
@@ -103,6 +142,17 @@ services:
     restart: unless-stopped
     tty: true
     stdin_open: true
+  rabbitmq_broker:
+    image: rabbitmq:3-management
+    container_name: Unique.Shoes.RabbitMQ
+    hostname: rabbitmq
+    restart: always
+    volumes:
+      - ./rabbitmq_data:/var/lib/rabbitmq
+      - ./rabbitmq_data:/var/log/rabbitmq
+    ports:
+      - 5672:5672
+      - 15672:15672
   nginx:
     image: nginx:latest
     container_name: Unique.Shoes.NGINX
@@ -113,5 +163,31 @@ services:
     depends_on:
       - unique.shoes.backend.accountapi
       - unique.shoes.frontend
+
+
+#Сбор и визуализация логов
+  grafana:
+    container_name: Unique.Metrics.Grafana
+    image: grafana/grafana:latest
+    ports:
+      - "3000:3000"
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=admin 
+      - TZ=${SYSTEM_TIMEZONE:-Europe/Moscow}
+    volumes:
+      - grafana_data:/var/lib/grafana
+      - ./grafana/provisioning/datasources:/etc/grafana/provisioning/datasources
+  loki:
+    container_name: Unique.Metrics.Loki
+    hostname: loki
+    image: grafana/loki:latest
+    environment:
+      TZ: ${SYSTEM_TIMEZONE:-Europe/Moscow}
+    ports:
+      - "3100:3100"
+    command: -config.file=/etc/loki/local-config.yaml
+
 volumes:
   uploads:
+  rabbitmq_broker: 
+  grafana_data:

@@ -25,6 +25,10 @@ namespace Unique.Shoes.MarketAPI.Model.Database
 
         public DbSet<ShopCartTable> shopCartTableObj { get; set; }
 
+        public DbSet<OrderTable> shopOrderTableObj { get; set; }
+
+        public DbSet<OrderItemsTable> shopOrderItemsTableObj { get; set; }
+
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

@@ -22,6 +22,56 @@ namespace Unique.Shoes.MarketAPI.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
+            modelBuilder.Entity("Unique.Shoes.Middleware.Database.DBO.OrderItemsTable", b =>
+                {
+                    b.Property<int>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("id"));
+
+                    b.Property<string>("hashName")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("hashPay")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("size")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("id");
+
+                    b.ToTable("shopOrderItemsTableObj");
+                });
+
+            modelBuilder.Entity("Unique.Shoes.Middleware.Database.DBO.OrderTable", b =>
+                {
+                    b.Property<string>("hashPay")
+                        .HasColumnType("text");
+
+                    b.Property<string>("deliveryAddress")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("deliveryStatus")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("status")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int>("userId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("hashPay");
+
+                    b.ToTable("shopOrderTableObj");
+                });
+
             modelBuilder.Entity("Unique.Shoes.Middleware.Database.DBO.ShopCartTable", b =>
                 {
                     b.Property<int>("id")

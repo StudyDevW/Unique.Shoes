@@ -8,6 +8,8 @@ import useGetInfoUserVariable from '../components/Variables/GetInfoUserVariable.
 import { useEffect, useState } from 'react'
 import { GetInfoUser_Role } from '../components/API/AccountInfo.tsx';
 import { useNavigate } from 'react-router-dom';
+import useShopCartVariable from "../components/Variables/ShopCartVariable.ts";
+import { ObserverTokens } from "../components/Observer/TokenObserver.ts";
 
 interface PropertiesButton {
     name_button: string; 
@@ -76,7 +78,7 @@ const ManagerPanel: React.FC = () => {
     const navigate = useNavigate();
 
     CheckTokensValidate();
-
+    
     const NavigatorOfSections = () => {
         if (PButtonActiveGet === "add_button")
             return (<AddSectionPanel/>)
@@ -95,6 +97,12 @@ const ManagerPanel: React.FC = () => {
 
         return "Неизвестная секция"
     }
+
+    const { shopCartGet, shopCartSet } = useShopCartVariable();
+
+    useEffect(()=>{
+        shopCartSet(null)
+    }, [])
 
     // const ScalingElements = () => {
     //     const element = document.querySelector<HTMLElement>('.main_area_manager');

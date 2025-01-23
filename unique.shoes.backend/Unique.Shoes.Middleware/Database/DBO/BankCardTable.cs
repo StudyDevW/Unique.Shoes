@@ -12,9 +12,9 @@ namespace Unique.Shoes.Middleware.Database.DBO
         [Key]
         public int id { get; set; }
 
-        public int userId { get; set; }
-
         public string cardNumber { get; set; }
+
+        public string cvv { get; set; }
 
         public int moneyValue { get; set; }
     }

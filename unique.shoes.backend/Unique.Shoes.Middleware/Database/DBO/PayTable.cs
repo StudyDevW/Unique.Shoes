@@ -12,7 +12,7 @@ namespace Unique.Shoes.Middleware.Database.DBO
         [Key]
         public int id { get; set; }
 
-        public int idOrder { get; set; }
+        public string hashPay { get; set; }
 
         public string payStatus { get; set; }
 

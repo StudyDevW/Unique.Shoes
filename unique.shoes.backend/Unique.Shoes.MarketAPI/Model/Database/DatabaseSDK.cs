@@ -1,11 +1,16 @@
-﻿using System.Collections.Immutable;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
+using System.Collections.Immutable;
 using System.Security.Cryptography;
 using System.Text;
 using unique.shoes.middleware.Database.DBO;
+using unique.shoes.middleware.Services;
 using Unique.Shoes.MarketAPI.Model.Services;
+using Unique.Shoes.Middleware.Broker.DTO;
 using Unique.Shoes.Middleware.Database.DBO;
 using Unique.Shoes.Middleware.Database.DTO;
 using Unique.Shoes.Middleware.Database.DTO.ShopCart;
+using Unique.Shoes.Middleware.Services;
 
 namespace Unique.Shoes.MarketAPI.Model.Database
 {
@@ -13,12 +18,15 @@ namespace Unique.Shoes.MarketAPI.Model.Database
     {
         private readonly ILogger _logger;
         private readonly IConfiguration _conf;
+        private readonly ICacheService _cache;
+        private readonly IRabbitMQService _rabbit;
 
-        public DatabaseSDK(IConfiguration configuration)
+        public DatabaseSDK(IConfiguration configuration, ICacheService cache, IRabbitMQService rabbit)
         {
-            _logger = LoggerFactory.Create(builder => builder.AddConsole()).CreateLogger(string.Empty);
+            _logger = LoggerFactory.Create(builder => builder.AddConsole()).CreateLogger("MarketAPI | database-sdk-logger");
             _conf = configuration;
-
+            _cache = cache;
+            _rabbit = rabbit;
         }
 
         private static string GenerateMD5Hash(string input)
@@ -61,7 +69,7 @@ namespace Unique.Shoes.MarketAPI.Model.Database
                 db.shopItemsTableObj.Add(shopItemsTable);
                 await db.SaveChangesAsync();
 
-                _logger.LogInformation($"CreateItem: {dto.name}, created");
+                _logger.LogInformation($"CreateItem: {shopItemsTable.hashName}, создан");
             }
         }
 
@@ -129,7 +137,7 @@ namespace Unique.Shoes.MarketAPI.Model.Database
                 
                     db.shopItemsTableObj.Remove(itemToDelete);
                     await db.SaveChangesAsync();
-                    _logger.LogInformation($"DeleteItem: {idItemLog} item deleted");
+                    _logger.LogInformation($"DeleteItem: {idItemLog} товар удален");
 
                     if (imagesToDelete != null) {
                 
@@ -141,7 +149,7 @@ namespace Unique.Shoes.MarketAPI.Model.Database
 
                             db.shopImagesTableObj.Remove(imagesToDelete.FirstOrDefault());
                             await db.SaveChangesAsync();
-                            _logger.LogInformation($"DeleteItem: {idItemLog}, image {idImageLog} deleted");
+                            _logger.LogInformation($"DeleteItem: {idItemLog}, изображение id: {idImageLog} удалено");
                         }
                     }
                 }
@@ -205,6 +213,8 @@ namespace Unique.Shoes.MarketAPI.Model.Database
                     }
                 }
 
+                _logger.LogInformation($"GetAllItems: товары запрошены успешно");
+
                 return itemOutput;
             }
         }
@@ -238,7 +248,7 @@ namespace Unique.Shoes.MarketAPI.Model.Database
                     db.shopImagesTableObj.Add(shopImagesTable);
                     await db.SaveChangesAsync();
 
-                    _logger.LogInformation($"AddImages: Image for {itemName}, uploaded; Path: {imageLinks[i]}");
+                    _logger.LogInformation($"AddImages: Изображение для товара id: {shopImagesTable.itemId}, загружено; Path: {imageLinks[i]}");
                 }
             }
         }
@@ -251,6 +261,7 @@ namespace Unique.Shoes.MarketAPI.Model.Database
        
                 if (shopCartObj != null)
                 {
+                    _logger.LogInformation($"ExistItemShopCart: Товар {hashName} существует в корзине для пользователя id: {userId}");
                     return true;
                 }
             }
@@ -273,6 +284,8 @@ namespace Unique.Shoes.MarketAPI.Model.Database
                         countItem = dtoObj.countItem,
                         size = dtoObj.size
                     };
+
+                    _logger.LogInformation($"AddItemShopCart: Товар {dtoObj.hashName} успешно добавлен в корзину для пользователя id: {dtoObj.userId}");
 
                     db.shopCartTableObj.Add(shopCartTable);
                     await db.SaveChangesAsync();
@@ -298,11 +311,13 @@ namespace Unique.Shoes.MarketAPI.Model.Database
             ShopCart_GetAll_Info shopCartInfo = new ShopCart_GetAll_Info();
 
             int priceFinal = 0;
+            int countFinal = 0;
 
             using (DataContext db = new DataContext(_conf.GetConnectionString("ServerConn")))
             {
                 //Получаем объекты корзины из бд
-                var shopCartItemDbObj = db.shopCartTableObj.Where(c => c.userId == idUser).ToList();
+                var shopCartItemDbObj = db.shopCartTableObj.Where(c => c.userId == idUser).OrderBy(sort => sort.id).ToList();
+
 
                 for (int i = 0; i < shopCartItemDbObj.Count(); i++)
                 {
@@ -310,6 +325,8 @@ namespace Unique.Shoes.MarketAPI.Model.Database
                     var shopItemDbObj = db.shopItemsTableObj
                         .Where(c => c.hashName == shopCartItemDbObj[i].hashName)
                         .FirstOrDefault();
+
+                    //_logger.LogInformation(shopCartItemDbObj[i].id.ToString());
 
                     if (shopItemDbObj != null)
                     {
@@ -327,15 +344,18 @@ namespace Unique.Shoes.MarketAPI.Model.Database
                             imageLink = imageObj != null ? imageObj.imageLink : null
                         };
 
-                        priceFinal += shopItem.price * shopCartItemDbObj[i].countItem;
+                        priceFinal += shopItem.price;
+                        countFinal += shopItem.countItem;
                         shopCartItems.Add(shopItem);
                     }
 
                 }
 
+
+
                 shopCartInfo = new ShopCart_GetAll_Info()
                 {
-                    count = shopCartItems.Count,
+                    count = countFinal,
                     totalPrice = priceFinal
                 };
 
@@ -358,10 +378,12 @@ namespace Unique.Shoes.MarketAPI.Model.Database
                 if (shopCartObj != null)
                 {
                     if (shopCartObj.countItem != dtoObj.countItem)
+                    {
                         shopCartObj.countItem = dtoObj.countItem;
+                    }
 
-                    if (shopCartObj.size != dtoObj.size)
-                        shopCartObj.size = dtoObj.size;
+                    _logger.LogInformation($"ChangeItemShopCart: cartId: {cartId} успешно изменил количество на count: {dtoObj.countItem}");
+
 
                     await db.SaveChangesAsync();
                 }
@@ -378,8 +400,162 @@ namespace Unique.Shoes.MarketAPI.Model.Database
                 {
                     db.shopCartTableObj.Remove(shopCartObj);
                     await db.SaveChangesAsync();
+
+                    _logger.LogInformation($"DeleteItemShopCart: cartId: {cartId}, запись успешно удалена!");
+
                 }
             }
         }
+
+        private string GenerateOrderKey()
+        {
+            const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+
+            const int length = 10;
+
+            Random random = new Random();
+
+            string key_ret = new string(Enumerable.Repeat(chars, length)
+                                .Select(s => s[random.Next(s.Length)]).ToArray());
+
+            //while (SimilarKeyMedia(key_ret))
+            //{
+            //    key_ret = new string(Enumerable.Repeat(chars, length)
+            //                    .Select(s => s[random.Next(s.Length)]).ToArray());
+            //}
+
+            return "ORDERKEY-" + key_ret;
+        }
+
+        public async Task AddOrderUser(Pay_Order dtoObj)
+        {
+            using (DataContext db = new DataContext(_conf.GetConnectionString("ServerConn")))
+            {
+                var key_order = GenerateOrderKey();
+
+                var hashPayGenerated = GenerateMD5Hash("id: " + key_order + " user pay code");
+
+                OrderTable orderTable = new OrderTable()
+                {
+                    hashPay = hashPayGenerated,
+                    userId = dtoObj.userId,
+                    deliveryAddress = dtoObj.deliveryAddress,
+                    deliveryStatus = "wait_pay",
+                    status = "waiting",
+                    price = dtoObj.price
+                };
+
+                db.shopOrderTableObj.Add(orderTable);
+                await db.SaveChangesAsync();
+
+                for (int i = 0; i < dtoObj.items.Count(); i++)
+                {   
+                    OrderItemsTable orderItemsTable = new OrderItemsTable()
+                    {
+                        hashName = dtoObj.items[i].hashName,
+                        hashPay = hashPayGenerated,
+                        size = dtoObj.items[i].size,
+                        count = dtoObj.items[i].count
+                    };
+
+                    db.shopOrderItemsTableObj.Add(orderItemsTable);
+                    await db.SaveChangesAsync();
+                }
+
+                _logger.LogInformation($"Заказ {hashPayGenerated} создан\nИнформация о товарах загружена в заказ");
+              
+
+                _rabbit.SendMessage<MarketToPaymentMQ>(
+                    new MarketToPaymentMQ() 
+                    { 
+                        hashPay = hashPayGenerated,
+                        price = dtoObj.price
+                    }, "payment_queue_request");
+
+                _logger.LogInformation($"Заказ {hashPayGenerated} был отправлен в очередь payment_queue_request");
+            }
+        }
+
+        public async Task OrderFinal(string hashPay)
+        {
+            using (DataContext db = new DataContext(_conf.GetConnectionString("ServerConn")))
+            {
+                var orderObj = db.shopOrderTableObj.Where(c => c.hashPay == hashPay).FirstOrDefault();
+
+                if (orderObj != null)
+                {
+                    orderObj.status = "payed";
+                    orderObj.deliveryStatus = "packing_and_sorting";
+                    await db.SaveChangesAsync();
+                }
+            }
+        }
+
+        public Order_All OrderAll(int userId)
+        {
+            Order_All orderAll = new Order_All()
+            {
+                orders = new List<Order_Info>()
+            };
+
+            List<Order_Info> ordersFill = new List<Order_Info>();
+
+            using (DataContext db = new DataContext(_conf.GetConnectionString("ServerConn")))
+            {
+                var ordersFind = db.shopOrderTableObj.Where(c => c.userId == userId).ToList();
+
+                if (ordersFind != null)
+                {
+                    for (int i = 0; i < ordersFind.Count(); i++)
+                    {
+                        var ordersItemsFind = db.shopOrderItemsTableObj.Where(c => c.hashPay == ordersFind[i].hashPay).ToList();
+
+                        List<Order_Item> items = new List<Order_Item>();
+
+                        //Заполнение купленных товаров в заказе
+                        for (int j = 0; j < ordersItemsFind.Count(); j++)
+                        {
+                            var itemShop = db.shopItemsTableObj.Where(c => c.hashName == ordersItemsFind[j].hashName).FirstOrDefault();
+
+                            if (itemShop != null)
+                            {
+                                var imageObj = db.shopImagesTableObj.Where(c => c.itemId == itemShop.id).FirstOrDefault();
+
+                                Order_Item orderItem = new Order_Item()
+                                {
+                                    itemId = itemShop.id,
+                                    hashName = itemShop.hashName,
+                                    name = itemShop.name,
+                                    size = ordersItemsFind[j].size,
+                                    countItem = ordersItemsFind[j].count,
+                                    price = itemShop.price * ordersItemsFind[j].count,
+                                    imageLink = imageObj != null ? imageObj.imageLink : null
+                                };
+
+                                items.Add(orderItem);
+                            }
+                        }
+
+                        //Вывод информации о заказе вместе с купленными товарами
+                        Order_Info orderInfo = new Order_Info() {
+                            hashPay = ordersFind[i].hashPay,
+                            payStatus = ordersFind[i].status,
+                            deliveryStatus = ordersFind[i].deliveryStatus,
+                            deliveryAddress = ordersFind[i].deliveryAddress,
+                            price = ordersFind[i].price,
+                            items = items
+                        };
+
+                        ordersFill.Add(orderInfo);
+                    }
+
+                    orderAll.orders = ordersFill;
+                }
+
+                return orderAll;
+            }
+
+        }
+
     }
 }

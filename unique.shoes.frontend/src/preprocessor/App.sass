@@ -90,6 +90,15 @@
   border-radius: 10px
   z-index: 15
 
+.shopcart_title_empty
+  font-family: MUSEOSANS
+  font-size: 25px
+  text-align: center
+  color: white
+  align-content: center
+  width: 100%
+  height: 100px
+
 .header.fullsize
   background: linear-gradient(rgba(0, 0, 0), rgba(0, 0, 0, 0.9) 20%, rgba(0, 0, 0, 0.9))
   backdrop-filter: blur(13px)
@@ -97,6 +106,7 @@
   height: 70vh
   border-radius: 20px
   animation: header_fullsized 1.2s forwards
+  min-width: 1440px
   overflow: hidden
 
 .header_item_preview_separator
@@ -360,7 +370,89 @@
   overflow-x: visible
   overflow-y: auto
   scrollbar-color: white transparent
-  
+
+.shopcart_area_finalprice
+  position: absolute
+  display: flex
+  flex-direction: column
+  margin-top: 220px
+  margin-left: calc(60% + 15px)
+  width: calc(35% - 12vh)
+  height: 420px
+  background-color: rgba(0, 0, 0, 0.8)
+  border: solid white 2px
+  border-radius: 10px
+
+.shopcart_finalprice_buybutton
+  position: relative
+  font-family: MUSEOSANS
+  text-align: center
+  align-content: center
+  font-size: 21px
+  color: rgb(0, 0, 0, 0.8)
+  margin-left: 15px
+  margin-top: 20px
+  width: calc(100% - 15px * 2)
+  height: 70px
+  background-color: rgb(255, 255, 255)
+  border-radius: 10px
+
+.shopcart_finalprice_description
+  position: relative
+  font-family: MUSEOSANS
+  font-size: 15px
+  color: rgb(187, 187, 187)
+  margin-top: 15px
+  margin-left: 25px
+  width: 80%
+  height: 50px
+
+.shopcart_finalprice_separator
+  position: relative
+  margin-left: 25px
+  margin-top: 10px
+  width: calc(100% - 25px * 2)
+  height: 2px
+  background-color: rgb(187, 187, 187)
+
+.shopcart_finalprice_separator.margined
+  margin-top: 15px
+
+
+
+.shopcart_finalprice_info_area
+  position: relative
+  display: flex
+  flex-direction: column
+  margin-left: 25px
+  margin-top: 15px
+  width: calc(100% - 25px * 2)
+  height: 100px
+
+.shopcart_finalprice_info
+  position: relative
+  width: 170px
+  height: 45px
+  font-family: MUSEOSANS
+  font-size: 27px
+  color: white
+
+
+.shopcart_finalprice_info.desc
+  display: flex
+  flex-direction: row
+  font-size: 18px
+  width: 100%
+
+.shopcart_finalprice_info_text
+  margin-left: 2px
+  position: relative
+  height: 100%
+  width: 50%
+
+.shopcart_finalprice_info_text.reverse
+  width: calc(50% - 5px)
+  text-align: right
 
 // .shopcart_area_header::-webkit-scrollbar
 //   display: none
@@ -382,6 +474,8 @@
   border: solid white 2px
   border-radius: 10px
 
+
+
 .name_shoes_item_shopcart
   position: relative
   font-family: MUSEOSANS
@@ -393,6 +487,17 @@
   width: 20vw
   min-width: 270px
   height: 60px
+
+.size_shoes_item_shopcart
+  position: absolute
+  font-family: MUSEOSANS
+  font-size: 17px
+  align-content: center
+  color: rgb(200, 200, 200)
+  margin-left: 134px
+  margin-top: 85px
+  width: 150px
+  height: 40px
 
 .rightbar_shoes_item_shopcart
   position: absolute
@@ -412,11 +517,60 @@
   width: 175px
   height: 55px
 
+.count_items_rightbar_shopcart
+  display: flex
+  flex-direction: row
+  width: 175px
+  height: 55px
+  
+
+.count_items_rightbar
+  margin-top: 10px
+  position: relative
+  width: 40px
+  height: 40px
+  margin-left: 3px
+  
+
+.count_items_rightbar.left
+  width: 30px
+  background-image: url(../images/right-arrow.png)
+  background-position: center
+  background-size: 22px
+  background-repeat: no-repeat
+
+.count_items_rightbar.middle
+  font-family: MUSEOSANS
+  font-size: 18px
+  align-content: center
+  text-align: center
+  color: white
+  margin-top: 14px
+  width: 50px
+  height: 30px
+  border-radius: 10px
+  border: solid white 1px
+
+.count_items_rightbar.right
+  width: 30px
+  background-image: url(../images/left-arrow.png)
+  background-position: center
+  background-size: 22px
+  background-repeat: no-repeat
+
+.count_items_rightbar.delete
+  margin-left: 15px
+  background-image: url(../images/trash-bin.png)
+  background-position: center
+  background-size: 32px
+  background-repeat: no-repeat
+  
+
 .image_shoes_item_shopcart
   position: relative
-  background-color: white
   margin-top: 10px
   flex: none
+  background-color: white
   margin-left: 9px
   width: 110px
   height: 110px
@@ -427,11 +581,75 @@
   background-repeat: no-repeat
   
 
+.image_shoes_item_shopcart.loading
+  animation: loading_grad 5s forwards infinite
+  background-image: none  
+  background: linear-gradient(to right, rgb(31, 31, 31),rgb(139, 139, 139), rgb(31, 31, 31))
+  background-size: 400% 400%
+  
+.name_shoes_item_shopcart.loading
+  animation: loading_grad 5s forwards infinite
+  background-image: none  
+  background: linear-gradient(to right, rgb(31, 31, 31),rgb(139, 139, 139), rgb(31, 31, 31))
+  background-size: 400% 400%
+  border-radius: 10px
+  height: 50px
+
+.size_shoes_item_shopcart.loading
+  animation: loading_grad 5s forwards infinite
+  background-image: none  
+  background: linear-gradient(to right, rgb(31, 31, 31),rgb(139, 139, 139), rgb(31, 31, 31))
+  background-size: 400% 400%
+  border-radius: 10px
+  top: -6px
+  height: 30px
+
+.shopcart_finalprice_buybutton.loading
+  animation: loading_grad 5s forwards infinite
+  background-image: none  
+  background: linear-gradient(to right, rgb(31, 31, 31),rgb(139, 139, 139), rgb(31, 31, 31))
+  background-size: 400% 400%
+  border-radius: 10px
+
+.shopcart_finalprice_description.loading
+  animation: loading_grad 5s forwards infinite
+  background-image: none  
+  background: linear-gradient(to right, rgb(31, 31, 31),rgb(139, 139, 139), rgb(31, 31, 31))
+  background-size: 400% 400%
+  border-radius: 10px
+
+.shopcart_finalprice_info_area.loading
+  animation: loading_grad 5s forwards infinite
+  background-image: none  
+  background: linear-gradient(to right, rgb(31, 31, 31),rgb(139, 139, 139), rgb(31, 31, 31))
+  background-size: 400% 400%
+  border-radius: 10px
+  width: 300px
+  height: 60px
+  margin-left: 15px
+  margin-top: 20px
+
+.shopcart_finalprice_info_area.loading.smallw  
+  width: 200px
+  height: 50px
+
+@keyframes loading_grad
+  0% 
+    background-position: 0% 50%
+  50% 
+    background-position: 100% 50%
+  100%
+    background-position: 0% 50%
+  // 100% 
+  //   background: linear-gradient(to right, rgb(199, 199, 199), rgb(51, 51, 51))
+
+
 .header_item_preview_area_image_bar
   position: absolute
   margin-top: 575px
   margin-left: 10px
   width: 47%
+
   height: 5px
   background-color: #666666f6
   border-radius: 10px
@@ -572,6 +790,138 @@
   border-radius: 10px
   z-index: 15
   box-shadow: 0px 0px 35px -4px #000000
+
+
+.main_content_profile
+  position: absolute
+  display: flex
+  flex-direction: row
+  transform: translateY(-250%)
+  animation: up_to_down_anim_next 1s forwards
+  margin: 105px calc(50% - 900px / 2)
+  width: 900px
+  height: 673px
+  background-color: rgb(255, 255, 255)
+  border-radius: 10px
+  z-index: 15
+  box-shadow: 0px 0px 35px -4px #000000
+
+.left_main_profile_area
+  display: flex
+  flex-direction: column
+  margin-top: 15px
+  margin-left: 15px
+  width: 250px
+  height: 95%
+  background-color: white
+  border-radius: 10px
+  box-shadow: 0px 0px 12px -4px #000000
+
+.content_main_profile_area
+  display: flex
+  flex-direction: column
+  
+  background-color: pink
+
+.right_main_profile_area
+  display: flex
+  flex-direction: column
+  margin-top: 15px
+  margin-left: 15px
+  width: 600px
+  height: 95%
+
+.title_main_profile_content
+  position: absolute
+  margin-left: 15px
+  align-content: center
+  font-family: MUSEOSANS
+  font-size: 30px
+  width: 300px
+  height: 70px
+
+
+
+.main_profile_userinfo_area
+  display: flex
+  flex-direction: column
+  position: relative
+  width: 100%
+  height: 200px
+
+.main_profile_buttons_area
+  display: flex
+  flex-direction: column
+  margin-top: 15px
+  position: relative
+  width: 100%
+  height: 180px
+
+.main_profile_buttons_area.small
+  position: relative
+  top: 140px
+  height: 60px
+
+.main_profile_button
+  position: relative
+  font-family: MUSEOSANS
+  align-content: center
+  font-size: 17px
+  top: -15px
+  margin-top: 15px
+  margin-left: 13px
+  padding-bottom: 3px
+  padding-left: 10px
+  width: calc(100% - 15px * 2 - 10px)
+  height: 40px
+  background-color: white
+  border: solid black 1px
+  border-radius: 10px
+  user-select: none
+
+
+.main_profile_button.clicked
+  background-color: black
+  color: white
+
+.main_profile_button.exit
+  padding-left: 0px
+  text-align: center
+  width: calc(100% - 15px * 2)
+  color: rgb(179, 51, 51)
+  border: solid rgb(173, 27, 27) 1px
+
+.main_profile_userinfo_avatar
+  position: relative
+  margin-top: 25px
+  margin-left: calc(49% - (100px / 2))
+  border-radius: 50px
+  width: 100px
+  height: 100px
+  background-image: url(../images/def_user_black.png)
+  background-size: contain
+  background-repeat: no-repeat
+
+.main_profile_userinfo_fullname
+  position: relative
+  font-family: MUSEOSANS
+  align-content: center
+  text-align: center
+  font-size: 20px
+  margin-top: 5px
+  width: 100%
+  height: 40px
+
+.main_profile_userinfo_change
+  position: relative
+  font-family: MUSEOSANS
+  align-content: center
+  text-align: center
+  font-size: 15px
+  margin-top: 5px
+  width: 100%
+  height: 20px
+  color: rgb(63, 63, 63)
 
 .left_area_login_decor
   display: flexbox
@@ -1451,7 +1801,7 @@
   text-align: right
   margin-left: calc(100% - 300px)
   width: 240px
-  height: 70px
+  min-height: 70px
   cursor: pointer
   user-select: none
   
@@ -1492,7 +1842,7 @@
   position: absolute
   margin-left: calc(100% - 310px)
   width: 300px
-  height: 240px
+  min-height: 240px
   background-color: black
   border-radius: 10px
   border: solid rgb(255, 255, 255) 2px
@@ -1503,8 +1853,9 @@
   animation: opacity_anim_closed 0.9s forwards
 
 .button_profile
-  margin-top: 20px
+  margin-top: 10px
   margin-left: 10px
+  margin-bottom: 10px
   position: relative
   width: calc(100% - 25px)
   height: 70px
@@ -1817,6 +2168,10 @@
   background-position: center
   background-repeat: no-repeat
 
+.indicator_button_active_panel.profile
+  top: -3px
+  background-size: 20px
+  
 .icon_area_button_panel 
   position: absolute
   width: 35px

@@ -15,9 +15,11 @@ namespace Unique.Shoes.AccountAPI.Controllers
         private readonly IDatabaseService _database;
         private readonly IJwtService _jwt;
         private readonly ICacheService _cache;
+        private readonly ILogger _logger;
 
         public AuthenticationController(IDatabaseService database, IJwtService jwt, ICacheService cache, IConfiguration configuration)
         {
+            _logger = LoggerFactory.Create(builder => builder.AddConsole()).CreateLogger("AccountAPI | controller-logger");
             _database = database;
             _jwt = jwt;
             _cache = cache;
@@ -29,6 +31,7 @@ namespace Unique.Shoes.AccountAPI.Controllers
             try
             {
                 await _database.RegisterUser(dtoObj);
+               
                 return Ok("account_created");
             }
             catch (Exception e)
@@ -56,7 +59,7 @@ namespace Unique.Shoes.AccountAPI.Controllers
                 if (_cache.CheckExistKeysStorage(check.check_success.Id, "refreshTokens"))
                     _cache.DeleteKeyFromStorage(check.check_success.Id, "refreshTokens");
 
-                _cache.WriteKeyInStorage(check.check_success.Id, "accessTokens", accessToken, DateTime.UtcNow.AddMinutes(10));
+                _cache.WriteKeyInStorage(check.check_success.Id, "accessTokens", accessToken, DateTime.UtcNow.AddMinutes(1));
                 _cache.WriteKeyInStorage(check.check_success.Id, "refreshTokens", refreshToken, DateTime.UtcNow.AddDays(7));
 
                 Auth_PairTokens pair_tokens = new Auth_PairTokens()
@@ -64,6 +67,8 @@ namespace Unique.Shoes.AccountAPI.Controllers
                     accessToken = _cache.GetKeyFromStorage(check.check_success.Id, "accessTokens"),
                     refreshToken = _cache.GetKeyFromStorage(check.check_success.Id, "refreshTokens")
                 };
+
+                _logger.LogInformation($"Пользователь {dtoObj.username} успешно вошел!");
 
                 return Ok(pair_tokens);
             }
@@ -89,6 +94,7 @@ namespace Unique.Shoes.AccountAPI.Controllers
             }
             else if (validation.TokenHasSuccess())
             {
+                _logger.LogInformation($"Токен для id: {validation.token_success.Id} валид!");
                 return Ok("valid");
             }
 
@@ -113,6 +119,8 @@ namespace Unique.Shoes.AccountAPI.Controllers
                 _cache.DeleteKeyFromStorage(validation.token_success.Id, "accessTokens");
 
                 _cache.DeleteKeyFromStorage(validation.token_success.Id, "refreshTokens");
+
+                _logger.LogInformation($"Пользователь id: {validation.token_success.Id} вышел!");
 
                 return Ok($"{validation.token_success.Id}_is_logout");
             }
@@ -148,7 +156,7 @@ namespace Unique.Shoes.AccountAPI.Controllers
                     _cache.DeleteKeyFromStorage(authsuccess.Id, "refreshTokens");
 
 
-                _cache.WriteKeyInStorage(authsuccess.Id, "accessTokens", accessToken, DateTime.UtcNow.AddMinutes(10));
+                _cache.WriteKeyInStorage(authsuccess.Id, "accessTokens", accessToken, DateTime.UtcNow.AddMinutes(1));
                 _cache.WriteKeyInStorage(authsuccess.Id, "refreshTokens", refreshToken, DateTime.UtcNow.AddDays(7));
 
 
@@ -157,6 +165,9 @@ namespace Unique.Shoes.AccountAPI.Controllers
                     accessToken = _cache.GetKeyFromStorage(authsuccess.Id, "accessTokens"),
                     refreshToken = _cache.GetKeyFromStorage(authsuccess.Id, "refreshTokens")
                 };
+
+
+                _logger.LogInformation($"Токены для id: {validation.token_success.Id} обновлены!");
 
                 return Ok(pair_tokens);
             }

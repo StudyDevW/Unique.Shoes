@@ -10,6 +10,6 @@ namespace Unique.Shoes.Middleware.Database.DTO
     {
         public int countItem { get; set; }
 
-        public string size { get; set; }
+        //public string size { get; set; }
     }
 }
