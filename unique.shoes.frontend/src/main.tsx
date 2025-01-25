@@ -8,12 +8,19 @@ import {
     Route,
     Link,
 } from 'react-router';
+import PaymentExist from './PaymentExist.tsx';
 
 const router = createBrowserRouter([
     {
         path: '/',
         element: (
             <App/>
+        ),
+    },
+    {
+        path: '/paymentexist',
+        element: (
+            <PaymentExist/>
         ),
     },
     {

@@ -4,11 +4,34 @@ import ItemShoes from './Item.tsx'
 import Header from './Header.tsx'
 import CheckTokensValidate from './TokenCheckMain.tsx'
 import useItemPreviewVariable from './components/Variables/ItemPreviewVariable.ts'
+import useOpenProfileVariable from './components/Variables/OpenProfileVariable.ts'
+import useGetInfoUserVariable from './components/Variables/GetInfoUserVariable.ts'
+import { useNavigate, useLocation } from 'react-router-dom';
+import useLoadingProfile from './components/Variables/LoadingProfileVariable.ts'
+import { AccessCheckBackground } from './components/Observer/TokenObserver.ts'
+import useLoginSuccessVariable from './components/Variables/LoginSuccessVariable.ts'
+import { GetInfoUser_Id } from './components/API/AccountInfo.tsx'
+import { handleGetItemInfo } from './components/API/ItemInfo.tsx'
+import Cookies from 'js-cookie';
+
+interface ItemProperties {
+  id: number,
+  hashName: string,
+  name: string,
+  description: string
+  flags: string[]
+  price: number
+  count: boolean
+  sizes: string[]
+  imagePaths: string[]
+}
 
 function App() {
 
   const { itemPrevewGet } = useItemPreviewVariable();
-
+  const location = useLocation();
+  const { loginSuccessGet, loginSuccessSet } = useLoginSuccessVariable();
+  const [infoItem, setInfoItem] = useState<ItemProperties[]>([]);
 
   const [starImages, setStarImages] = useState<string[]>([]);
 
@@ -21,8 +44,7 @@ function App() {
   // const [dynamicWidthAssort, setDWidth] = useState<number>(0);
   // const [dynamicMarginAssort, setDMargin] = useState<number>(0);
 
-
-
+ 
   const image_stars_array: {[key: string]: string } = {
     star_1: 'url(../images/stars_handdraw/star_1.png)',
     star_2: 'url(../images/stars_handdraw/star_2.png)',
@@ -84,8 +106,6 @@ function App() {
     return () => clearInterval(interval);
   }, []);
 
-  CheckTokensValidate();
-
   useEffect(() => {
     const updateSize = () => {
       if (ref.current) {
@@ -134,7 +154,45 @@ function App() {
   // }
 
 
+  useEffect(()=>{
+    loginSuccessSet(false);
+    ItemGetInfo();
+  },[])
+  
+  const ItemGetInfo = async () => {
 
+      const getInfo = await handleGetItemInfo()
+  
+      if (getInfo !== null) {
+          setInfoItem(getInfo);
+      }
+  }
+
+  const ItemPrint = (category: string) => {
+    if (infoItem !== undefined) {
+        return (<>
+            {infoItem.map((item, index) => 
+              (item.flags.includes(category)) && 
+               <ItemShoes 
+                key={item.id} 
+                id_item={item.id}
+                name_item={item.name} 
+                description_item={item.description}
+                image_paths={item.imagePaths}
+                size_item={item.sizes}
+                hash_item={item.hashName}
+                type_item={"new_mark"} 
+                animation_style={2} 
+                image_prevew_link={item.imagePaths.length > 0 ? item.imagePaths[0] : ''}
+                onContext={() => {}}
+                price={item.price}/>
+            )}
+        </>)
+    }
+    else {
+        return (<></>)
+    }
+  }
 
 
   return (
@@ -175,14 +233,7 @@ function App() {
           {/* <p style={{position: 'absolute', marginTop: '-3px'}}>Width: {size.width}px</p>
           <p style={{position: 'absolute', marginTop: '-3px', marginLeft: '100px'}}>Height: {size.height}px</p> */}
 
-            <ItemShoes name_item='item_shoes_name' type_item='new_mark' animation_style={0} image_prevew_link='' price={0} id_item={0} description_item='' image_paths={[]} size_item={[]} onContext={()=>{}}/>
-
-            <ItemShoes name_item='item_shoes_name' type_item='new_mark' animation_style={1} image_prevew_link='' price={0} id_item={0} description_item='' image_paths={[]} size_item={[]} onContext={()=>{}}/>
-
-            <ItemShoes name_item='item_shoes_name' type_item='new_mark' animation_style={2} image_prevew_link='' price={0} id_item={0} description_item='' image_paths={[]} size_item={[]} onContext={()=>{}}/>
-
-            <ItemShoes name_item='item_shoes_name' type_item='new_mark' animation_style={1} image_prevew_link='' price={0} id_item={0} description_item='' image_paths={[]} size_item={[]} onContext={()=>{}}/>
-
+            {(infoItem !== null) && ItemPrint('new')}
           </div>
         </div>
 

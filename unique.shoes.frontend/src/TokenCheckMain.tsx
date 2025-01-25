@@ -5,91 +5,29 @@ import Cookies from 'js-cookie';
 import useLoginSuccessVariable from './components/Variables/LoginSuccessVariable.ts';
 import useGetInfoUserVariable from './components/Variables/GetInfoUserVariable.ts';
 import useErrAccessTokenVariable from './components/Variables/ErrAccessTokenVariable.ts';
+import { useNavigate, useLocation } from 'react-router-dom';
+import useOpenProfileVariable from './components/Variables/OpenProfileVariable.ts'
+import { AccessCheckBackground } from './components/Observer/TokenObserver.ts';
+import { GetInfoUser_Id, handleGetUserInfo } from './components/API/AccountInfo.tsx';
 
-import { handleGetUserInfo } from './components/API/AccountInfo.tsx';
 
-const CheckTokensValidate = () => {
+const CheckTokensValidate = async () => {
 
-    const { profileloadingSet } = useLoadingProfile();
-    const { loginSuccessGet, loginSuccessSet } = useLoginSuccessVariable();
-    const { userCheckSet } = useGetInfoUserVariable();
-    const { errAccessGet, errAccessSet } = useErrAccessTokenVariable();
+  const accessTokens: string = Cookies.get('AccessToken') as string;
+  if (accessTokens !== undefined) {
 
-    const TokensUpdate = async () => {
-      const refreshTokens: string = Cookies.get('RefreshToken') as string;
-      if (refreshTokens !== undefined) {
-        profileloadingSet(true);
+      var userCheck = await handleGetUserInfo(accessTokens);
 
-        if (await handleRefreshTokenUpdate(refreshTokens)) {
-          loginSuccessSet(true);
-          errAccessSet(false);
-          profileloadingSet(false);
-        }
-        else {
-          loginSuccessSet(false);
-          profileloadingSet(false);
-        }
+      if (userCheck) {
+        return true;
       }
-      else {
-        profileloadingSet(false);
-      }
-    }
-  
-  
-    const TokenCheck = async () => {
-      const accessTokens: string = Cookies.get('AccessToken') as string;
-      if (accessTokens !== undefined) {
-        profileloadingSet(true);
 
-        try {
-          const handlerCheck = await handleAccessTokenCheck(accessTokens)
+     return false;
+  }
 
-          if (handlerCheck === true) {
-            loginSuccessSet(true);
-            errAccessSet(false);
-            profileloadingSet(false);
-          }
-        }
-        catch (err) {
-          loginSuccessSet(false);
-          errAccessSet(true);
-          profileloadingSet(false);
-        }
-
-      }
-    
-
-      profileloadingSet(false);
-    }
-  
-    const UserGetInfo = async () => {
-      const accessTokens: string = Cookies.get('AccessToken') as string;
-      if (accessTokens !== undefined) {
-
-        if (await handleGetUserInfo(accessTokens) === true) {
-          userCheckSet(true)
-        }
-
-        profileloadingSet(false)
-      }
-    }
-  
-    useEffect(() => {
-      TokenCheck();
-    }, []);
-  
-    //Если AccessToken просрочен, то обновляем
-    useEffect(() => {
-      if (errAccessGet === true)
-        TokensUpdate();
-    }, [errAccessGet]);
-  
-    useEffect(() => {
-      if (loginSuccessGet) {
-          UserGetInfo();
-      }
-    }, [loginSuccessGet]);
-
+  return false;
 }
+
+
 
 export default CheckTokensValidate

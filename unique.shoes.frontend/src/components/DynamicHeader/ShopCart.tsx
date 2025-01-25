@@ -7,6 +7,7 @@ import { useState, useRef, useEffect } from 'react'
 import useTabIndexVariable from "../Variables/TabIndexVariable.ts";
 import useItemPreviewVariable from "../Variables/ItemPreviewVariable.ts";
 import { loadingComponent } from "../Loading/LoadingComponent.ts";
+import { handleOrderRequest } from "../API/OrdersInfo.tsx";
 let arrImages: string[] = [];
 
 var loadingImages = new loadingComponent();
@@ -162,6 +163,14 @@ const LoadShopCart: React.FC = () => {
     
 }
 
+interface PayItemsProperties {
+    hashName: string,
+    size: string,
+    count: number
+}
+
+var itemsToPay: PayItemsProperties[] = [];
+
 const ShopCart: React.FC<{imagesRendered: string[]}> = ({imagesRendered}) => {
 
     const { shopCartGet, shopCartSet } = useShopCartVariable();
@@ -173,6 +182,11 @@ const ShopCart: React.FC<{imagesRendered: string[]}> = ({imagesRendered}) => {
     const [updateCart, setUpdateCart] = useState<boolean>(false);
 
     const { itemPrevewSet } = useItemPreviewVariable(); 
+
+
+    const [payShopCart, setpayShopCart] = useState<boolean>(false);
+
+    const [addressOrder, setAddressOrder] = useState<string>("");
 
     const [synchronizeCart, setSynchronizeCart] = useState<boolean>(false);
 
@@ -252,7 +266,7 @@ const ShopCart: React.FC<{imagesRendered: string[]}> = ({imagesRendered}) => {
         const accessTokens: string = Cookies.get('AccessToken') as string;
         if (accessTokens !== undefined) {
   
-            const getInfo = await handleGetItemInfo(accessTokens)
+            const getInfo = await handleGetItemInfo()
         
             if (getInfo !== null) {
                // setInfoItem(getInfo);
@@ -311,6 +325,32 @@ const ShopCart: React.FC<{imagesRendered: string[]}> = ({imagesRendered}) => {
         setSynchronizeCart(false);
     }
 
+
+
+    const PayRequest = async () => {
+        if (shopCartGet !== null) {
+            itemsToPay.length = 0;
+
+            shopCartGet.shopCartItem.map((itemCart) => {
+                itemsToPay.push({hashName: itemCart.hashName, count: itemCart.countItem, size: itemCart.size})
+            });
+
+            const accessTokens: string = Cookies.get('AccessToken') as string;  
+
+            if (accessTokens !== undefined && itemsToPay !== undefined) {
+                var hashPay = await handleOrderRequest(GetInfoUser_Id(),  addressOrder, shopCartGet.shopCartInfo.totalPrice, itemsToPay, accessTokens)
+                if (hashPay !== null) {
+                    window.location.href = `http://localhost:5173/${hashPay}`;
+                    setpayShopCart(false);
+                }
+                else {
+                    console.log("Неудалось создать заказ!")
+                }
+           
+            }
+        }
+    }
+
     useEffect(()=>{
 
         if (updateCart) {
@@ -332,6 +372,9 @@ const ShopCart: React.FC<{imagesRendered: string[]}> = ({imagesRendered}) => {
         }
     }, [synchronizeCart || countItemCart])
 
+    useEffect(()=>{
+
+    }, [payShopCart])
 
     if (shopCartGet === null || imagesRendered === null)
         return (<></>)
@@ -342,7 +385,33 @@ const ShopCart: React.FC<{imagesRendered: string[]}> = ({imagesRendered}) => {
     
 
     return (<>
-   
+
+        {(payShopCart) && ( 
+            <div className="blurred_background_cart">
+                <div className="shopcart_pay_window">
+                    <div className="shopcart_pay_window_title">Укажите адрес</div>
+
+                    <div className="shopcart_pay_window_back" onClick={()=>setpayShopCart(false)}>Отменить</div>
+
+                    <div className="shopcart_pay_window_input_area">
+                    
+                        <input className="input_text whitefull" 
+                        type="text"
+                        value={addressOrder}
+                        onChange={(e) => setAddressOrder(e.target.value)}></input>
+                    </div>
+
+                    <div className="buttonarea_complete" 
+                    style={{marginTop: '75px', marginLeft: '36px', width: '320px', fontSize: '20px'}}
+                    onClick={()=>PayRequest()}>
+                        {`Оплатить ${formatPrice(shopCartGet.shopCartInfo.totalPrice)}Р`}
+                    </div>
+                </div>
+            </div>
+        )}
+       
+     
+
         <div className="shopcart_area_header">
 
             {(shopCartGet.shopCartItem.length === 0 && 
@@ -379,7 +448,7 @@ const ShopCart: React.FC<{imagesRendered: string[]}> = ({imagesRendered}) => {
         </div>
 
         <div className="shopcart_area_finalprice">
-            {(shopCartGet.shopCartInfo.count > 0) && (<div className="shopcart_finalprice_buybutton">Перейти к оформлению</div>)}
+            {(shopCartGet.shopCartInfo.count > 0) && (<div className="shopcart_finalprice_buybutton" onClick={()=>setpayShopCart(true)}>Перейти к оформлению</div>)}
 
             {(shopCartGet.shopCartInfo.count === 0) && (<div className="shopcart_finalprice_buybutton">Нет товаров для заказа</div>)}
 

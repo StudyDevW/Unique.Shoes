@@ -21,5 +21,7 @@ namespace Unique.Shoes.Middleware.Database.DBO
         public string deliveryStatus { get; set; }
 
         public string deliveryAddress { get; set; }
+
+        public DateTime? creationDate { get; set; }
     }
 }

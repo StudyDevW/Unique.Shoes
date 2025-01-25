@@ -43,9 +43,7 @@ namespace Unique.Shoes.MarketAPI.Controllers
             {
                 try
                 {
-                    await _database.AddOrderUser(dtoObj);
-
-                    return Ok();
+                    return Ok(await _database.AddOrderUser(dtoObj));
                 }
                 catch (Exception e)
                 {
@@ -57,8 +55,8 @@ namespace Unique.Shoes.MarketAPI.Controllers
         }
 
         [Authorize(AuthenticationSchemes = "Asymmetric")]
-        [HttpGet("Check")]
-        public async Task<IActionResult> HashCheck([FromHeader] string hashPay)
+        [HttpGet("Check/{userId}")]
+        public async Task<IActionResult> HashCheck(int userId)
         {
             string bearer_key = Request.Headers["Authorization"];
 
@@ -72,23 +70,28 @@ namespace Unique.Shoes.MarketAPI.Controllers
             {
                 try
                 {
-                    if (_cache.CheckExistKeysStorage<PaymentToMarketMQ>($"rabbit_response_{hashPay}"))
+                    var hashes = _database.GetAllPaymentHashes(userId);
+
+                    for (int i = 0; i < hashes.Count(); i++)
                     {
-                        var responseHash = _cache.GetKeyFromStorage<PaymentToMarketMQ>($"rabbit_response_{hashPay}");
-
-                        if (responseHash.payStatus == "success")
+                        if (_cache.CheckExistKeysStorage<PaymentToMarketMQ>($"rabbit_response_{hashes[i]}"))
                         {
-                            await _database.OrderFinal(responseHash.hashPay);
+                            var responseHash = _cache.GetKeyFromStorage<PaymentToMarketMQ>($"rabbit_response_{hashes[i]}");
 
-                            _logger.LogInformation($"Заказ {responseHash.hashPay} отмечен как оплаченный");
+                            if (responseHash.payStatus == "success")
+                            {
+                                await _database.OrderFinal(responseHash.hashPay);
 
-                            _cache.DeleteKeyFromStorage($"rabbit_response_{hashPay}");
+                                _logger.LogInformation($"Заказ {responseHash.hashPay} отмечен как оплаченный");
 
-                            _logger.LogInformation($"Запись {responseHash.hashPay} удалена из кэша");
+                                _cache.DeleteKeyFromStorage($"rabbit_response_{hashes[i]}");
 
-                            return Ok();
+                                _logger.LogInformation($"Запись {responseHash.hashPay} удалена из кэша");
+
+                                return Ok();
+                            }
+
                         }
-
                     }
 
                     return BadRequest();

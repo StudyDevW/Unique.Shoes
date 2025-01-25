@@ -71,13 +71,10 @@ const ManagerPanel: React.FC = () => {
 
     const [managerAccess, managerAccessSet] = useState<boolean>(false);
 
-    const { loginSuccessGet } = useLoginSuccessVariable();
+    const { loginSuccessGet, loginSuccessSet } = useLoginSuccessVariable();
 
-    const { userCheckGet } = useGetInfoUserVariable();
+    const navigate = useNavigate()
 
-    const navigate = useNavigate();
-
-    CheckTokensValidate();
     
     const NavigatorOfSections = () => {
         if (PButtonActiveGet === "add_button")
@@ -101,7 +98,8 @@ const ManagerPanel: React.FC = () => {
     const { shopCartGet, shopCartSet } = useShopCartVariable();
 
     useEffect(()=>{
-        shopCartSet(null)
+        shopCartSet(null);
+        loginSuccessSet(false);
     }, [])
 
     // const ScalingElements = () => {
@@ -124,31 +122,30 @@ const ManagerPanel: React.FC = () => {
 
     // ScalingElements();
 
-    
-    useEffect(() => {
-        if (GetInfoUser_Role() !== "") {
-            if (loginSuccessGet && userCheckGet) {
-                //Проверка на роль
-                if (GetInfoUser_Role().includes('Manager') || GetInfoUser_Role().includes('Admin')) {
-                    managerAccessSet(true)
+    useEffect(()=>{
+        if (!managerAccess) {
+            const interval = setInterval(() => {
+                var roleUser = GetInfoUser_Role();
+
+                if (loginSuccessGet && roleUser !== null) {
+                    if (roleUser.includes('Manager') || roleUser.includes('Admin')) {
+                        managerAccessSet(true)
+                    }
+                    else {
+                        navigate("/")
+                    }
                 }
                 else {
-                    navigate('/');
+                    console.log(roleUser)
+                    managerAccessSet(false)
+                    navigate("/")
                 }
-            }
-            else {
-                navigate('/');
-                managerAccessSet(false)
-            }
+            }, 1000); 
+            return () => clearInterval(interval);
         }
-        else if (!loginSuccessGet) {
-            navigate('/');
-            managerAccessSet(false)
-        }
-        else {
-            managerAccessSet(false)
-        }
-    }, [GetInfoUser_Role()]);
+    }, [managerAccess])
+    
+
 
     const AccessForSections = () => {
 

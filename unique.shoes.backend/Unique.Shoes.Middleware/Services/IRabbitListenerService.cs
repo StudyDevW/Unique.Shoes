@@ -9,7 +9,6 @@ namespace Unique.Shoes.Middleware.Services
     public interface IRabbitListenerService
     {
         public void ListenPayment();
-        public void ListenMarket();
         public void Close();
     }
 }

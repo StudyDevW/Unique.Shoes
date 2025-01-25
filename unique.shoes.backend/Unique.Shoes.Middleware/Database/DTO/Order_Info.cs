@@ -18,6 +18,8 @@ namespace Unique.Shoes.Middleware.Database.DTO
 
         public int price { get; set; }
 
+        public DateTime? creationDate { get; set; }
+
         public List<Order_Item> items { get; set; }
     }
 }

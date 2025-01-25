@@ -7,11 +7,16 @@ import useLoadingProfile from './components/Variables/LoadingProfileVariable.ts'
 let animClosedHeader: boolean = false;
 import useItemPreviewVariable from './components/Variables/ItemPreviewVariable.ts';
 import MainProfile from './Profile/MainProfile.tsx';
+import { BrowserRouter as Router, Route } from 'react-router-dom';
 
 import LoadShopCart from './components/DynamicHeader/ShopCart.tsx';
 import useTabIndexVariable from './components/Variables/TabIndexVariable.ts';
 import useOpenProfileVariable from './components/Variables/OpenProfileVariable.ts';
 import PreviewItemHeader from './components/DynamicHeader/PreviewItem.tsx';
+import useGetInfoUserVariable from './components/Variables/GetInfoUserVariable.ts';
+import CheckTokensValidate from './TokenCheckMain.tsx';
+import useLoginSuccessVariable from './components/Variables/LoginSuccessVariable.ts';
+import { GetInfoUser_Id } from './components/API/AccountInfo.tsx';
 
 
 const HeaderPreviewItem: React.FC = () => {
@@ -76,7 +81,7 @@ const HeaderPreviewItem: React.FC = () => {
 
 const Header: React.FC = () => {
     
-    const { loginPageOpenedGet } = useloginPageOpenedVariable();
+    const { loginPageOpenedGet, loginPageOpenedSet } = useloginPageOpenedVariable();
 
     const { openProfileGet, openProfileSet } = useOpenProfileVariable();
 
@@ -88,6 +93,28 @@ const Header: React.FC = () => {
 
     const refScrollUp = useRef<HTMLDivElement>(null);
 
+    const { userCheckGet, userCheckSet } = useGetInfoUserVariable();
+
+    const { loginSuccessGet, loginSuccessSet } = useLoginSuccessVariable();
+  
+    const [tokenSuccess, SetTokenSuccess] = useState<boolean>(false);
+  
+  
+    const TokenPreStart = async () => {
+        if (!loginSuccessGet && await CheckTokensValidate()) {
+            SetTokenSuccess(true);
+            console.log(`Профиль открыт ${openProfileGet}`)
+            console.log(loginSuccessGet)
+        }
+    }
+  
+    useEffect(()=>{
+        TokenPreStart();
+    }, [loginSuccessGet])
+
+    useEffect(()=>{
+      TokenPreStart();
+    }, [loginPageOpenedGet])
 
     const handleScrollUp = () => {
         refScrollUp.current?.scrollIntoView({ behavior: "smooth" });
@@ -97,17 +124,29 @@ const Header: React.FC = () => {
       if (itemPrevewGet !== null && resetPreview) {
         itemPrevewSet(null);
         setResetPreview(false);
+      
       }
+      
+
     }
   
     useEffect(() => {
       ResetPrev();
     },[])
 
+    useEffect(()=>{
+      if (tokenSuccess) {
+        loginSuccessSet(true);
+
+        userCheckSet(true);
+
+        console.log(loginSuccessGet);
+      }
+    }, [tokenSuccess])
+
     useEffect(() => {
       if (itemPrevewGet !== null) {
         setHeaderBig(true);
-
       }
     },[itemPrevewGet])
 
@@ -207,7 +246,8 @@ const Header: React.FC = () => {
                   {Miniprofile(true)}
             </div>
             
-            <MainProfile/>
+            
+            {(tokenSuccess) && (<MainProfile/>)}
     
           </>)
         }

@@ -14,13 +14,9 @@ interface ItemProperties {
 
 let item_all_info: ItemProperties[];
 
-const handleGetItemInfo = async (accessToken: string) => {
+const handleGetItemInfo = async () => {
     try {
-        const response = await axios.get('http://localhost:8082/api/Items', {
-            headers: {
-                Authorization: `Bearer ${accessToken}`,
-            },
-        });
+        const response = await axios.get('http://localhost:8082/api/Items');
 
         if (response.status === 200)  {
             item_all_info = response.data;

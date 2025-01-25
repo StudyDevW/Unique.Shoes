@@ -2,6 +2,7 @@
 using unique.shoes.middleware.Services;
 using Unique.Shoes.Middleware.Broker.DTO;
 using Unique.Shoes.Middleware.Database.DBO;
+using Unique.Shoes.Middleware.Database.DTO;
 using Unique.Shoes.Middleware.Services;
 using Unique.Shoes.PaymentAPI.Model.Services;
 
@@ -38,12 +39,41 @@ namespace Unique.Shoes.PaymentAPI.Model.Database
             return false;
         }
 
+        public List<Pay_Out> OutPay(string hashPay)
+        {
+            List<Pay_Out> payToPrint = new List<Pay_Out>();
+
+            using (DataContext db = new DataContext(_conf.GetConnectionString("ServerConn")))
+            {
+                var paymentOrder = db.payTableObj.Where(c => c.hashPay == hashPay).ToList();
+
+                if (paymentOrder != null) {
+                    for (int i = 0; i < paymentOrder.Count(); i++)
+                    {
+                        Pay_Out payFind = new Pay_Out()
+                        {
+                            payStatus = paymentOrder[i].payStatus,
+                            hashPay = hashPay,
+                            date = paymentOrder[i].date,
+                            cardNumber = paymentOrder[i].cardNumber
+                        };
+
+                        payToPrint.Add(payFind);
+                    }
+                   
+
+                    return payToPrint;
+                }   
+                else
+                {
+                    throw new Exception("Заказ не найден!");
+                }
+            }
+        }
+
+
         public async Task Pay(string cardNumber, string cvv, string hashPay)
         {
-            if (!CardCheck(cardNumber, cvv))
-            {
-                throw new Exception("Card invalid!");
-            }
 
             if (_cache.CheckExistKeysStorage<MarketToPaymentMQ>($"rabbit_{hashPay}"))
             {
@@ -55,7 +85,7 @@ namespace Unique.Shoes.PaymentAPI.Model.Database
                     {
                         var cardBank = db.bankCardTableObj.Where(c => c.cardNumber == cardNumber && c.cvv == cvv).FirstOrDefault();
 
-                        if (cardBank != null)
+                        if (cardBank != null && cardBank.moneyValue >= operationHash.price)
                         {
                             cardBank.moneyValue -= operationHash.price;
                             await db.SaveChangesAsync();
@@ -64,7 +94,8 @@ namespace Unique.Shoes.PaymentAPI.Model.Database
                             {
                                 hashPay = hashPay,
                                 payStatus = "success",
-                                date = DateTime.UtcNow
+                                date = DateTime.UtcNow,
+                                cardNumber = cardNumber
                             };
 
                             db.payTableObj.Add(payTable);
@@ -80,13 +111,36 @@ namespace Unique.Shoes.PaymentAPI.Model.Database
                             _cache.DeleteKeyFromStorage($"rabbit_{hashPay}");
 
                         }
+                        else if (cardBank != null && cardBank.moneyValue < operationHash.price)
+                        {
+                            PayTable payTable = new PayTable()
+                            {
+                                hashPay = hashPay,
+                                payStatus = "money_not_exist",
+                                date = DateTime.UtcNow,
+                                cardNumber = cardNumber
+                            };
+
+                            db.payTableObj.Add(payTable);
+                            await db.SaveChangesAsync();
+
+                            _logger.LogInformation($"Заказ {hashPay}, оплата не прошла! (Недостаточно средств)");
+
+                            _rabbit.SendMessage<PayTable>(
+                                payTable, "payment_queue_response");
+
+                            _logger.LogInformation($"Заказ {hashPay} был отправлен в очередь payment_queue_response");
+
+                            throw new Exception("Заказ не оплачен!");
+                        }
                         else
                         {
                             PayTable payTable = new PayTable()
                             {
                                 hashPay = hashPay,
                                 payStatus = "failed",
-                                date = DateTime.UtcNow
+                                date = DateTime.UtcNow,
+                                cardNumber = cardNumber
                             };
 
                             db.payTableObj.Add(payTable);
@@ -98,11 +152,12 @@ namespace Unique.Shoes.PaymentAPI.Model.Database
                                 payTable, "payment_queue_response");
 
                             _logger.LogInformation($"Заказ {hashPay} был отправлен в очередь payment_queue_response");
+
+                            throw new Exception("Заказ не оплачен!");
+                           
                         }
                     }
                 }
-
-          
             }
 
             //var requestMessage = _rabbit.GetMessage($"request_queue_{hashPay}");

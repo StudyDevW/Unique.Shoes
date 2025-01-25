@@ -7,6 +7,7 @@ using unique.shoes.middleware.Cache;
 using unique.shoes.middleware.JWT;
 using unique.shoes.middleware.Services;
 using Unique.Shoes.MarketAPI.Model.Database;
+using Unique.Shoes.MarketAPI.Model.RabbitMQ;
 using Unique.Shoes.MarketAPI.Model.Services;
 using Unique.Shoes.Middleware.Broker;
 using Unique.Shoes.Middleware.Services;
@@ -114,7 +115,7 @@ namespace Unique.Shoes.MarketAPI
 
             builder.Services.AddSingleton<IRabbitMQService, RabbitSDK>();
 
-            builder.Services.AddSingleton<IRabbitListenerService, RabbitListener>();
+            builder.Services.AddSingleton<IRabbitMQListenerService, IRabbitMQListener>();
 
             builder.Services.AddSingleton<IDatabaseService, DatabaseSDK>();
 
@@ -136,7 +137,7 @@ namespace Unique.Shoes.MarketAPI
 
             using (var scope = app.Services.CreateScope())
             {
-                var rabbitListener = scope.ServiceProvider.GetRequiredService<IRabbitListenerService>();
+                var rabbitListener = scope.ServiceProvider.GetRequiredService<IRabbitMQListenerService>();
                 rabbitListener.ListenMarket();
             }
 

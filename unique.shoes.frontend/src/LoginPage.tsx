@@ -15,20 +15,16 @@ const LoginPage: React.FC = () => {
   const [loginHandler, setloginHandler] = useState<boolean>(false)
 
   const ButtonClicked = () => {
-
-    profileloadingSet(true)
     setloginHandler(true)
   }
 
   const handlerChecker = async () => {
     if (await handleLogin(loginValue, passwordValue) === true) {
-      loginSuccessSet(true)
-      profileloadingSet(false)
-      loginPageOpenedSet(true)
+      loginSuccessSet(false)
+      loginPageOpenedSet(false)
     }
     else {
       loginSuccessSet(false)
-      profileloadingSet(false)
     }
   }
 

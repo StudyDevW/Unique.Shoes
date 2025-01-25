@@ -18,5 +18,7 @@ namespace Unique.Shoes.Middleware.Database.DBO
 
         public DateTime date { get; set; }
 
+        public string? cardNumber { get; set; }
+
     }
 }

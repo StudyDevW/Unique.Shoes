@@ -52,48 +52,17 @@ namespace Unique.Shoes.Middleware.Broker
 
                 if (jsonBack != null)
                 {
-                    _cache.WriteKeyInStorageObject<MarketToPaymentMQ>($"rabbit_{jsonBack.hashPay}", jsonBack, DateTime.UtcNow.AddHours(1));
+                    _cache.WriteKeyInStorageObject<MarketToPaymentMQ>($"rabbit_{jsonBack.hashPay}", jsonBack, DateTime.UtcNow.AddDays(7));
                     _logger.LogInformation($"payment_queue_request: сообщение записано в redis");
+              
+                    
                 }
             };
 
             _channel.BasicConsume("payment_queue_request", true, consumer);
         }
 
-        public void ListenMarket()
-        {
-            var rabbit = new ConnectionFactory()
-            {
-                HostName = "rabbitmq_broker",
-                Port = 5672
-            };
-            var _connection = rabbit.CreateConnection();
-            var _channel = _connection.CreateModel();
-
-            _channel.QueueDeclare(queue: "payment_queue_response",
-                       durable: true,
-                       exclusive: false,
-                       autoDelete: false,
-                       arguments: null);
-
-            var consumer = new EventingBasicConsumer(_channel);
-            consumer.Received += (ch, eventArgs) =>
-            {
-                var message = Encoding.UTF8.GetString(eventArgs.Body.ToArray());
-
-                _logger.LogInformation($"payment_queue_response: получен ответ {message}");
-
-                var jsonBack = JsonSerializer.Deserialize<PaymentToMarketMQ>(message);
-
-                if (jsonBack != null)
-                {
-                    _cache.WriteKeyInStorageObject<PaymentToMarketMQ>($"rabbit_response_{jsonBack.hashPay}", jsonBack, DateTime.UtcNow.AddDays(30));
-                    _logger.LogInformation($"payment_queue_response: ответ записан в redis");
-                }
-            };
-
-            _channel.BasicConsume("payment_queue_response", true, consumer);
-        }
+        
 
 
         //private void GetMessageFromAction(string queue_name)

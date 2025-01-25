@@ -43,6 +43,21 @@ namespace Unique.Shoes.PaymentAPI.Controllers
             return BadRequest();
         }
 
+        [HttpGet("{hashPay}")]
+        public async Task<IActionResult> PayCheck(string hashPay)
+        {
+            try
+            {
+
+                return Ok(_database.OutPay(hashPay));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+
+        }
+
         [HttpPost("CardPay")]
         public async Task<IActionResult> PayOrder([FromBody] Pay_Request dtoObj)
         {

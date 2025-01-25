@@ -427,7 +427,7 @@ namespace Unique.Shoes.MarketAPI.Model.Database
             return "ORDERKEY-" + key_ret;
         }
 
-        public async Task AddOrderUser(Pay_Order dtoObj)
+        public async Task<string> AddOrderUser(Pay_Order dtoObj)
         {
             using (DataContext db = new DataContext(_conf.GetConnectionString("ServerConn")))
             {
@@ -442,7 +442,8 @@ namespace Unique.Shoes.MarketAPI.Model.Database
                     deliveryAddress = dtoObj.deliveryAddress,
                     deliveryStatus = "wait_pay",
                     status = "waiting",
-                    price = dtoObj.price
+                    price = dtoObj.price,
+                    creationDate = DateTime.UtcNow
                 };
 
                 db.shopOrderTableObj.Add(orderTable);
@@ -473,7 +474,29 @@ namespace Unique.Shoes.MarketAPI.Model.Database
                     }, "payment_queue_request");
 
                 _logger.LogInformation($"Заказ {hashPayGenerated} был отправлен в очередь payment_queue_request");
+
+                return hashPayGenerated;
             }
+        }
+
+        public List<string> GetAllPaymentHashes(int userId)
+        {
+            List<string> hashes = new List<string>();   
+
+            using (DataContext db = new DataContext(_conf.GetConnectionString("ServerConn")))
+            {
+                var orderObj = db.shopOrderTableObj.Where(c => c.userId == userId).ToList();
+
+                if (orderObj != null)
+                {
+                    for (int i = 0; i < orderObj.Count(); i++)
+                    {
+                        hashes.Add(orderObj[i].hashPay);
+                    }
+                }
+            }
+
+            return hashes;
         }
 
         public async Task OrderFinal(string hashPay)
@@ -543,7 +566,8 @@ namespace Unique.Shoes.MarketAPI.Model.Database
                             deliveryStatus = ordersFind[i].deliveryStatus,
                             deliveryAddress = ordersFind[i].deliveryAddress,
                             price = ordersFind[i].price,
-                            items = items
+                            items = items,
+                            creationDate = ordersFind[i].creationDate
                         };
 
                         ordersFill.Add(orderInfo);

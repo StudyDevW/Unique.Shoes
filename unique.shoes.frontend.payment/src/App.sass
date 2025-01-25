@@ -1,0 +1,215 @@
+@font-face 
+  font-family: "MUSEOSANS"
+  src: url(../fonts/MuseoSansCyrl-900.woff) format("woff")
+
+body
+  margin: 0
+  padding: 0
+
+.area_payment
+  position: absolute
+  margin-left: calc(50% - 700px / 2)
+  margin-top: calc(50vh - 600px / 2)
+  width: 700px
+  height: 600px
+  background-color: white
+  border-radius: 20px
+  box-shadow: 0px 0px 10px -4px #000000
+
+.payment_title
+  margin-top: 5px
+  position: absolute
+  font-family: MUSEOSANS
+  align-content: center
+  text-align: center
+  font-size: 40px
+  width: 330px
+  height: 80px
+
+.payment_title_hash
+  margin-top: 65px
+  position: absolute
+  font-family: MUSEOSANS
+  align-content: center
+  text-align: left
+  font-size: 17px
+  padding-left: 27px
+  width: calc(100% - 27px)
+  height: 40px
+
+
+.payment_area_elements
+  position: absolute
+  margin-top: 17%
+  width: 100%
+  height: 80%
+
+.firstcardpay
+  position: absolute
+  margin-left: 90px
+  margin-top: 95px
+  width: 400px
+  height: 230px
+  border-radius: 20px
+  background-color: white
+  box-shadow: 0px 0px 10px -4px #000000
+  z-index: 3
+
+.input_text 
+  font-family: MUSEOSANS
+  font-size: 24px
+  margin-top: 70px
+  margin-left: 20px
+  position: absolute
+  padding: 0px 10px
+  width: calc(97% - 20px - 30px)
+  height: 45px
+  background-color: rgb(255, 255, 255)
+  border: solid black 1px
+  border-radius: 5px
+
+.input_text.small
+  font-size: 18px
+  text-align: center
+  margin-top: 120px
+  margin-left: 295px
+  width: calc(70px)
+  height: 30px
+
+.firstcardpay_title
+  position: absolute
+  align-content: center
+  font-family: MUSEOSANS
+  font-size: 25px
+  margin-top: 5px
+  padding-left: 20px
+  width: calc(100% - 20px)
+  height: 60px
+
+.firstcardpay_desc
+  position: absolute
+  align-content: center
+  font-family: MUSEOSANS
+  font-size: 17px
+  margin-top: 115px
+  padding-left: 20px
+  color: rgb(63, 63, 63)
+  width: calc(100% - 20px)
+  height: 40px    
+
+.image_desc
+  position: absolute
+  margin-top: 155px
+  margin-left: 40%
+  color: rgb(63, 63, 63)
+  width: calc(60%)
+  height: 70px    
+  background-image: url(../images/logo_main.png)
+  background-size: contain
+  background-repeat: no-repeat
+  background-position: bottom
+
+.buy_button
+  font-family: MUSEOSANS
+  font-size: 20px
+  color: white
+  border-radius: 10px
+  text-align: center
+  align-content: center
+  position: absolute
+  margin-left: calc(100% - 200px - 30px)
+  margin-top: 410px
+  width: 200px
+  height: 50px
+  background-color: black
+  user-select: none
+
+.secondcardpay_desc
+  position: absolute
+  align-content: center
+  font-family: MUSEOSANS
+  text-align: right
+  font-size: 14px
+  padding-right: 30px
+  margin-top: 150px
+  padding-left: 25px
+  color: rgb(63, 63, 63)
+  width: calc(100% - 55px)
+  height: 30px
+
+.secondcardpay
+  position: absolute
+  margin-left: 210px
+  margin-top: 60px
+  width: 400px
+  height: 230px
+  border-radius: 20px
+  background-color: white
+  box-shadow: 0px 0px 10px -4px #000000
+  z-index: 2
+
+
+
+.secondcardpay_line
+  position: absolute
+  margin-top: 40px
+  width: 100%
+  height: 60px
+  background-color: rgb(189, 189, 189)
+
+.payment_print_area
+  position: absolute
+  display: flex
+  flex-direction: column
+  margin-left: 25px
+  margin-top: 120px
+  width: calc(100% - 25px * 2)
+  height: 430px 
+
+.payment_print_item
+  position: relative
+  flex: none
+  width: 100%
+  height: 100px
+  background-color: white
+  border: solid black 1px
+  box-shadow: 0px 0px 10px -4px #000000
+  border-radius: 10px
+  margin-bottom: 20px
+   user-select: none
+
+.payment_print_item_cardn
+  position: relative
+  margin-left: 15px
+  margin-top: 5px
+  font-family: MUSEOSANS
+  font-size: 15px
+  user-select: none
+
+.payment_print_item_status
+  position: relative
+  top: -45px
+  text-align: right
+  margin-right: 20px
+  margin-top: 5px
+  font-family: MUSEOSANS
+  font-size: 15px
+  user-select: none
+  
+.payment_print_item_data
+  position: relative
+  top: -45px
+  text-align: right
+  margin-right: 20px
+  margin-top: 5px
+  font-family: MUSEOSANS
+  font-size: 15px
+  user-select: none
+
+.payment_print_item_title
+  position: relative
+  margin-left: 15px
+  margin-top: 15px
+  font-family: MUSEOSANS
+  font-size: 20px
+  user-select: none

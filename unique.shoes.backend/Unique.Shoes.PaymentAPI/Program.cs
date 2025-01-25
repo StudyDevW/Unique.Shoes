@@ -129,7 +129,7 @@ namespace Unique.Shoes.PaymentAPI
             builder.Services.AddCors(options =>
             {
                 options.AddPolicy("AllowOrigin",
-                    builder => builder.WithOrigins("http://localhost:8083", "http://localhost:4000", "http://localhost")
+                    builder => builder.WithOrigins("http://localhost:8083", "http://localhost:5173", "http://localhost")
                                       .AllowAnyMethod()
                                       .AllowAnyHeader());
             });

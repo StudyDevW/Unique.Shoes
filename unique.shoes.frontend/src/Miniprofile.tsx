@@ -3,7 +3,7 @@ import './preprocessor/App.sass'
 import useloginPageOpenedVariable from './components/Variables/OpenLoginPageVariable.ts';
 import {  LoginSignOut } from './components/API/LoginAuth.tsx';
 import useLoginSuccessVariable from './components/Variables/LoginSuccessVariable.ts';
-import { GetInfoUser_Name, GetInfoUser_FullName, GetInfoUser_Role } from './components/API/AccountInfo.tsx';
+import { GetInfoUser_Name, GetInfoUser_FullName, GetInfoUser_Role, GetInfoUser_Id } from './components/API/AccountInfo.tsx';
 import useLoadingProfile from './components/Variables/LoadingProfileVariable.ts';
 import useGetInfoUserVariable from './components/Variables/GetInfoUserVariable.ts';
 import useOpenProfileVariable from './components/Variables/OpenProfileVariable.ts';
@@ -15,9 +15,9 @@ const Miniprofile = (user_authed: boolean) => {
   const [closedAnim, setclosedAnim] = useState<boolean>();
   const { closeProfileGet, closeProfileSet } = useCloseProfileVariable();
   const { loginSuccessGet, loginSuccessSet } = useLoginSuccessVariable();
-  const { profileloadingGet } = useLoadingProfile();
+  const { profileloadingGet, profileloadingSet } = useLoadingProfile();
   const { userCheckGet } = useGetInfoUserVariable();
-  const { loginPageOpenedSet } = useloginPageOpenedVariable();
+  const { loginPageOpenedGet, loginPageOpenedSet } = useloginPageOpenedVariable();
   const { openProfileGet, openProfileSet } = useOpenProfileVariable();
 
 
@@ -32,6 +32,8 @@ const Miniprofile = (user_authed: boolean) => {
   const closed_wnd = () => {
     setclosedAnim(true)
     setminiProfile(false)
+    
+
   }
 
   const open_login_page = () => {
@@ -48,25 +50,27 @@ const Miniprofile = (user_authed: boolean) => {
     openProfileSet(true)
   }
 
+
   const close_login_page = () => {
     setclosedAnim(false)
+    loginPageOpenedSet(false)
+    
+  }
 
-    if (openProfileGet) {
-        openProfileSet(false);
-    }
-    else {
-        loginPageOpenedSet(false)
-    }
+  const close_profile_page = () => {
+    setclosedAnim(false)
+    openProfileSet(false);
   }
 
   useEffect(()=>{
     if (closeProfileGet) {
-        close_login_page();
+        close_profile_page();
         setminiProfile(false)
         LoginSignOut()
         loginSuccessSet(false)
         closeProfileSet(false);
     }
+
   }, [closeProfileGet])
 
 
@@ -115,7 +119,7 @@ const Miniprofile = (user_authed: boolean) => {
 
         return (
             <>
-                <div className="text_login" onClick={close_login_page}>Вернуться</div>
+                <div className="text_login" onClick={() => {openProfileGet ? close_profile_page() : close_login_page() }}>Вернуться</div>
             </>
         )
 
@@ -365,7 +369,15 @@ const Miniprofile = (user_authed: boolean) => {
   useEffect(() => {
     if (loginSuccessGet === true)
         close_login_page();
+
   }, [loginSuccessGet]);
+
+  useEffect(()=>{
+    if (openProfileGet && profileloadingGet && GetInfoUser_Id() !== -1) {
+        open_profile_page();
+    }
+
+  }, [loginSuccessGet || GetInfoUser_Id() || profileloadingGet])
 
 
   return (

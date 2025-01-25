@@ -62,7 +62,7 @@ const ChangeSectionPanel: React.FC = () => {
         const accessTokens: string = Cookies.get('AccessToken') as string;
         if (accessTokens !== undefined) {
   
-            const getInfo = await handleGetItemInfo(accessTokens)
+            const getInfo = await handleGetItemInfo()
         
             if (getInfo !== null) {
                 setInfoItem(getInfo);

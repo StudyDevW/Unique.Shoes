@@ -1,11 +1,17 @@
 import axios from 'axios';
+import { TokenNeedUpdate } from '../Observer/TokenObserver';
+import Cookies from 'js-cookie';
 
-let roleUser: string = "";
-let fullNameInternal: string = "";
-let firstNameInternal: string = "";
-let idUser: number = -1;
+interface infoOut {
+    id: number,
+    lastName: string,
+    firstName: string,
+    roles: string[]
+}
 
-const handleGetUserInfo = async (accessToken: string) => {
+let infoUser: infoOut = { id: -1, firstName: "", lastName: "", roles: [] };
+
+const handleGetUserInfo = async (accessToken: string, retry: boolean = true): Promise<any> => {
  
     try {
         const response = await axios.get('http://localhost:8081/api/Accounts/Me', {
@@ -14,42 +20,65 @@ const handleGetUserInfo = async (accessToken: string) => {
             },
         });
 
-        const { lastName, firstName, roles, id } = response.data;
+        if (response.status === 200) {
+            infoUser = response.data;
+            console.log(infoUser)
+            return true
+        }
 
-        fullNameInternal = `${lastName} ${firstName}`
-        firstNameInternal = firstName
-        roleUser = roles
-        idUser = id
-
-        return true
+        return false
 
     } catch (error) {
-        console.log("Внутренняя ошибка получения информации о пользователе!")
+        
+        if (axios.isAxiosError(error)) {
+
+            if (error.response) {
+                if (error.response.status === 401 && retry) {
+
+                    console.log("Повторный запрос!");
+
+                    if (await TokenNeedUpdate()) {
+
+                        const accessTokens: string = Cookies.get('AccessToken') as string;
+
+                        return handleGetUserInfo(accessTokens, false);
+                    }
+                }
+                else {
+                    console.log(`Ошибка: ${error.response.status}`);
+                }
+            }
+            else {
+                console.log("Неизвестная ошибка");
+                return false;
+            }
+
+        }
+
+
+    
         return false
-    } finally {
-    }
+    } 
 }
 
 const ResetInfoUser = () => {
-    firstNameInternal = ""
-    fullNameInternal = ""
-    roleUser = ""
+   
 }
 
 const GetInfoUser_Name = () => {
-    return firstNameInternal
+    return infoUser.firstName
 }
 
 const GetInfoUser_FullName = () => {
-    return fullNameInternal
+    return `${infoUser.firstName} ${infoUser.lastName}`
 }
 
 const GetInfoUser_Role = () => {
-    return roleUser
+    return infoUser.roles
 }
 
 const GetInfoUser_Id = () => {
-    return idUser;
+    return infoUser.id;
 }
 
 

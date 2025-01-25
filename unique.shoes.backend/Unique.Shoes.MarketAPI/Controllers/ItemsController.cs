@@ -53,32 +53,19 @@ namespace Unique.Shoes.MarketAPI.Controllers
             return BadRequest();
         }
 
-        [Authorize(AuthenticationSchemes = "Asymmetric")]
+   
         [HttpGet]
         public async Task<IActionResult> GetItems()
         {
-            string bearer_key = Request.Headers["Authorization"];
-
-            var validation = await _jwt.AccessTokenValidation(bearer_key);
-
-            if (validation.TokenHasError())
+            try
             {
-                return Unauthorized();
+                return Ok(_database.GetAllItems());
             }
-            else if (validation.TokenHasSuccess())
+            catch (Exception e)
             {
-                try
-                {
-                    return Ok(_database.GetAllItems());
-
-                }
-                catch (Exception e)
-                {
-                    return BadRequest(e);
-                }
+                return BadRequest(e);
             }
-
-            return BadRequest();
+       
         }
 
         [Authorize(AuthenticationSchemes = "Asymmetric")]

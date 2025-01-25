@@ -41,6 +41,8 @@ const TokenNeedUpdate = async () => {
     return upd;
 }
 
+
+
 const ObserverTokens = async () => {
     useEffect(()=>{
         const intervalId = setInterval(()=>{AccessCheckBackground()}, 2000);
@@ -49,4 +51,4 @@ const ObserverTokens = async () => {
     }, [])
 }
 
-export { ObserverTokens, TokenNeedUpdate }
+export { ObserverTokens, TokenNeedUpdate, AccessCheckBackground }

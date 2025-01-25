@@ -68,7 +68,8 @@ namespace Unique.Shoes.MarketAPI.Migrations
                     hashPay = table.Column<string>(type: "text", nullable: false),
                     hashName = table.Column<string>(type: "text", nullable: false),
                     size = table.Column<string>(type: "text", nullable: false),
-                    count = table.Column<int>(type: "integer", nullable: false)
+                    count = table.Column<int>(type: "integer", nullable: false),
+                    creationDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
                 },
                 constraints: table =>
                 {

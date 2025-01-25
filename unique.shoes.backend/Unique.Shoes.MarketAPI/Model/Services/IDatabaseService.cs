@@ -7,6 +7,8 @@ namespace Unique.Shoes.MarketAPI.Model.Services
     {
         public Task CreateItem(Item_Create dto);
 
+        public List<string> GetAllPaymentHashes(int userId);
+
         public List<Item_Get> GetAllItems();
 
         public Task AddImages(string[] imageLinks, string itemName);
@@ -25,7 +27,7 @@ namespace Unique.Shoes.MarketAPI.Model.Services
 
         public bool ExistItemShopCart(string hashName, int userId);
 
-        public Task AddOrderUser(Pay_Order dtoObj);
+        public Task<string> AddOrderUser(Pay_Order dtoObj);
 
         public Task OrderFinal(string hashPay);
 
