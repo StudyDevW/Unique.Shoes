@@ -99,11 +99,59 @@ const handleRefreshTokenUpdate = async (refreshTokenIn: string) => {
 
 }
 
-const LoginSignOut = () => {
+const handleLoginSignOut = async (accessToken: string, retry: boolean = true) : Promise<any> => {
+    try {
+        const response = await axios.put(`http://localhost:8081/api/Authentication/SignOut`, {},
+        {
+            headers: {
+                Authorization: `Bearer ${accessToken}`
+            },
+        });
 
-    
-    Cookies.remove('AccessToken');
-    Cookies.remove('RefreshToken');
+        if (response.status === 200) {
+            return true;
+        }
+
+        return false;
+    }
+    catch (error) {
+        if (axios.isAxiosError(error)) {
+
+            if (error.response) {
+                if (error.response.status === 401 && retry) {
+
+                    console.log("Повторный запрос!");
+
+                    if (await TokenNeedUpdate()) {
+
+                        const accessTokens: string = Cookies.get('AccessToken') as string;
+
+                        return handleLoginSignOut(accessTokens, false);
+                    }
+                }
+                else {
+                    console.log(`Ошибка: ${error.response.status}`);
+                }
+            }
+            else {
+                console.log("Неизвестная ошибка");
+                return false;
+            }
+
+        }
+
+        return false;
+    }
+}
+const LoginSignOut = async () => {
+
+    const accessTokens: string = Cookies.get('AccessToken') as string;
+    if (accessTokens !== undefined) {
+        if (await handleLoginSignOut(accessTokens)) {
+            Cookies.remove('AccessToken');
+            Cookies.remove('RefreshToken');
+        }
+    }
 
     ResetInfoUser();
 
@@ -115,5 +163,5 @@ export {
     handleAccessTokenCheck, 
     handleRefreshTokenUpdate, 
     LoginSignOut, 
-
+    handleLoginSignOut
 }

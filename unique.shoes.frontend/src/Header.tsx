@@ -2,7 +2,8 @@ import { useState, useRef, useEffect } from 'react'
 
 import Miniprofile from './Miniprofile.tsx'
 import useloginPageOpenedVariable from './components/Variables/OpenLoginPageVariable.ts';
-import LoginPage from './LoginPage.tsx'
+import useregisterPageOpenedVariable from './components/Variables/OpenRegisterPageVariable.ts';
+import LoginPage from './components/AuthPages/LoginPage.tsx'
 import useLoadingProfile from './components/Variables/LoadingProfileVariable.ts';
 let animClosedHeader: boolean = false;
 import useItemPreviewVariable from './components/Variables/ItemPreviewVariable.ts';
@@ -17,6 +18,7 @@ import useGetInfoUserVariable from './components/Variables/GetInfoUserVariable.t
 import CheckTokensValidate from './TokenCheckMain.tsx';
 import useLoginSuccessVariable from './components/Variables/LoginSuccessVariable.ts';
 import { GetInfoUser_Id } from './components/API/AccountInfo.tsx';
+import RegisterPage from './components/AuthPages/RegisterPage.tsx';
 
 
 const HeaderPreviewItem: React.FC = () => {
@@ -82,6 +84,8 @@ const HeaderPreviewItem: React.FC = () => {
 const Header: React.FC = () => {
     
     const { loginPageOpenedGet, loginPageOpenedSet } = useloginPageOpenedVariable();
+
+    const { registerPageOpenedGet, registerPageOpenedSet } = useregisterPageOpenedVariable();
 
     const { openProfileGet, openProfileSet } = useOpenProfileVariable();
 
@@ -174,6 +178,27 @@ const Header: React.FC = () => {
           <LoginPage/>
   
         </>)
+      } 
+      else if (registerPageOpenedGet) {
+        animClosedHeader = true
+  
+        document.body.style.overflow = "hidden";
+  
+        handleScrollUp();
+  
+        return (<>
+  
+          <div ref={refScrollUp}> </div>
+  
+          <div className="header small">
+                <div className="logo"> </div>
+  
+                {Miniprofile(true)}
+          </div>
+  
+          <RegisterPage/>
+  
+        </>)
       }
       else {
   
@@ -226,6 +251,27 @@ const Header: React.FC = () => {
             </div>
     
             <LoginPage/>
+    
+          </>)
+        }
+        else if (registerPageOpenedGet) {
+          animClosedHeader = true
+    
+          document.body.style.overflow = "hidden";
+    
+          handleScrollUp();
+    
+          return (<>
+    
+            <div ref={refScrollUp}> </div>
+    
+            <div className="header small">
+                  <div className="logo"> </div>
+    
+                  {Miniprofile(true)}
+            </div>
+    
+            <RegisterPage/>
     
           </>)
         }

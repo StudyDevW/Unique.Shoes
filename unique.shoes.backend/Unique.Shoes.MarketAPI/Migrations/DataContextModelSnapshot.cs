@@ -30,6 +30,9 @@ namespace Unique.Shoes.MarketAPI.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("id"));
 
+                    b.Property<int>("count")
+                        .HasColumnType("integer");
+
                     b.Property<string>("hashName")
                         .IsRequired()
                         .HasColumnType("text");
@@ -52,6 +55,9 @@ namespace Unique.Shoes.MarketAPI.Migrations
                     b.Property<string>("hashPay")
                         .HasColumnType("text");
 
+                    b.Property<DateTime?>("creationDate")
+                        .HasColumnType("timestamp with time zone");
+
                     b.Property<string>("deliveryAddress")
                         .IsRequired()
                         .HasColumnType("text");
@@ -59,6 +65,9 @@ namespace Unique.Shoes.MarketAPI.Migrations
                     b.Property<string>("deliveryStatus")
                         .IsRequired()
                         .HasColumnType("text");
+
+                    b.Property<int>("price")
+                        .HasColumnType("integer");
 
                     b.Property<string>("status")
                         .IsRequired()
@@ -116,6 +125,392 @@ namespace Unique.Shoes.MarketAPI.Migrations
                     b.HasKey("id");
 
                     b.ToTable("shopImagesTableObj");
+
+                    b.HasData(
+                        new
+                        {
+                            id = 1,
+                            imageLink = "/app/migrated_images/Nike Air Jordan 1 Retro Low OG SP Travis Scott Olive (W)/Nike Air Jordan 1 Retro Low OG SP Travis Scott Olive (W).png",
+                            itemId = 1
+                        },
+                        new
+                        {
+                            id = 2,
+                            imageLink = "/app/migrated_images/Nike Air Jordan 1 Retro Low OG SP Travis Scott Olive (W)/Nike Air Jordan 1 Retro Low OG SP Travis Scott Olive (W) (second).png",
+                            itemId = 1
+                        },
+                        new
+                        {
+                            id = 3,
+                            imageLink = "/app/migrated_images/Nike Air Jordan 1 Retro Low OG SP Travis Scott Olive (W)/Nike Air Jordan 1 Retro Low OG SP Travis Scott Olive (W) (third).png",
+                            itemId = 1
+                        },
+                        new
+                        {
+                            id = 4,
+                            imageLink = "/app/migrated_images/Nike Air Jordan 1 Retro Low OG SP Travis Scott Olive (W)/Nike Air Jordan 1 Retro Low OG SP Travis Scott Olive (W) (four).png",
+                            itemId = 1
+                        },
+                        new
+                        {
+                            id = 5,
+                            imageLink = "/app/migrated_images/Nike Air Jordan 1 Retro Low OG SP Travis Scott Olive (W)/Nike Air Jordan 1 Retro Low OG SP Travis Scott Olive (W) (five).png",
+                            itemId = 1
+                        },
+                        new
+                        {
+                            id = 6,
+                            imageLink = "/app/migrated_images/Yeezy 350 Zebra/Yeezy 350 Zebra.png",
+                            itemId = 2
+                        },
+                        new
+                        {
+                            id = 7,
+                            imageLink = "/app/migrated_images/Yeezy 350 Zebra/Yeezy 350 Zebra(second).jpg",
+                            itemId = 2
+                        },
+                        new
+                        {
+                            id = 8,
+                            imageLink = "/app/migrated_images/Yeezy 350 Zebra/Yeezy 350 Zebra(third).jpg",
+                            itemId = 2
+                        },
+                        new
+                        {
+                            id = 9,
+                            imageLink = "/app/migrated_images/Yeezy 350 Zebra/Yeezy 350 Zebra(four).jpg",
+                            itemId = 2
+                        },
+                        new
+                        {
+                            id = 10,
+                            imageLink = "/app/migrated_images/Yeezy 350 Black Red/Yeezy 350 Black Red.png",
+                            itemId = 3
+                        },
+                        new
+                        {
+                            id = 11,
+                            imageLink = "/app/migrated_images/Yeezy 350 Black Red/Yeezy 350 Black Red(second).jpg",
+                            itemId = 3
+                        },
+                        new
+                        {
+                            id = 12,
+                            imageLink = "/app/migrated_images/Yeezy 350 Black Red/Yeezy 350 Black Red(third).jpg",
+                            itemId = 3
+                        },
+                        new
+                        {
+                            id = 13,
+                            imageLink = "/app/migrated_images/Yeezy 350 Black Red/Yeezy 350 Black Red(four).jpg",
+                            itemId = 3
+                        },
+                        new
+                        {
+                            id = 14,
+                            imageLink = "/app/migrated_images/Yeezy 350 Slate/Yeezy 350 Slate.png",
+                            itemId = 4
+                        },
+                        new
+                        {
+                            id = 15,
+                            imageLink = "/app/migrated_images/Yeezy 350 Slate/Yeezy 350 Slate (second).png",
+                            itemId = 4
+                        },
+                        new
+                        {
+                            id = 16,
+                            imageLink = "/app/migrated_images/Yeezy 350 Slate/Yeezy 350 Slate (third).png",
+                            itemId = 4
+                        },
+                        new
+                        {
+                            id = 17,
+                            imageLink = "/app/migrated_images/Yeezy 350 Slate/Yeezy 350 Slate (four).png",
+                            itemId = 4
+                        },
+                        new
+                        {
+                            id = 18,
+                            imageLink = "/app/migrated_images/Nike Air Jordan 1 Retro Low OG Zion Williamson Voodoo/Nike Air Jordan 1 Retro Low OG Zion Williamson Voodoo transparent.png",
+                            itemId = 5
+                        },
+                        new
+                        {
+                            id = 19,
+                            imageLink = "/app/migrated_images/Nike Air Jordan 1 Retro Low OG Zion Williamson Voodoo/Nike Air Jordan 1 Retro Low OG Zion Williamson Voodoo(second).png",
+                            itemId = 5
+                        },
+                        new
+                        {
+                            id = 20,
+                            imageLink = "/app/migrated_images/Nike Air Jordan 1 Retro Low OG Zion Williamson Voodoo/Nike Air Jordan 1 Retro Low OG Zion Williamson Voodoo(third).png",
+                            itemId = 5
+                        },
+                        new
+                        {
+                            id = 21,
+                            imageLink = "/app/migrated_images/Nike Air Jordan 1 Retro Low OG SP Travis Scott Black Phantom/Nike Air Jordan 1 Retro Low OG SP Travis Scott Black Phantom.png",
+                            itemId = 6
+                        },
+                        new
+                        {
+                            id = 22,
+                            imageLink = "/app/migrated_images/Nike Air Jordan 1 Retro Low OG SP Travis Scott Black Phantom/Nike Air Jordan 1 Retro Low OG SP Travis Scott Black Phantom(second).png",
+                            itemId = 6
+                        },
+                        new
+                        {
+                            id = 23,
+                            imageLink = "/app/migrated_images/Nike Air Jordan 1 Retro Low OG SP Travis Scott Black Phantom/Nike Air Jordan 1 Retro Low OG SP Travis Scott Black Phantom(third).png",
+                            itemId = 6
+                        },
+                        new
+                        {
+                            id = 24,
+                            imageLink = "/app/migrated_images/Nike Air Jordan 1 Retro Low OG SP Travis Scott Black Phantom/Nike Air Jordan 1 Retro Low OG SP Travis Scott Black Phantom(four).png",
+                            itemId = 6
+                        },
+                        new
+                        {
+                            id = 25,
+                            imageLink = "/app/migrated_images/Nike Air Jordan 1 Low Fragment x Travis Scott/Nike Air Jordan 1 Low Fragment x Travis Scott.png",
+                            itemId = 7
+                        },
+                        new
+                        {
+                            id = 26,
+                            imageLink = "/app/migrated_images/Nike Air Jordan 1 Low Fragment x Travis Scott/Nike Air Jordan 1 Low Fragment x Travis Scott(second).jpg",
+                            itemId = 7
+                        },
+                        new
+                        {
+                            id = 27,
+                            imageLink = "/app/migrated_images/Nike Air Jordan 1 Low Fragment x Travis Scott/Nike Air Jordan 1 Low Fragment x Travis Scott(third).jpg",
+                            itemId = 7
+                        },
+                        new
+                        {
+                            id = 28,
+                            imageLink = "/app/migrated_images/Nike Air Jordan 1 Low Fragment x Travis Scott/Nike Air Jordan 1 Low Fragment x Travis Scott(four).jpg",
+                            itemId = 7
+                        },
+                        new
+                        {
+                            id = 29,
+                            imageLink = "/app/migrated_images/Nike Air Jordan 1 Retro Low OG SP Travis Scott Reverse Mocha/Nike Air Jordan 1 Retro Low OG SP Travis Scott Reverse Mocha (main).png",
+                            itemId = 8
+                        },
+                        new
+                        {
+                            id = 30,
+                            imageLink = "/app/migrated_images/Nike Air Jordan 1 Retro Low OG SP Travis Scott Reverse Mocha/Nike Air Jordan 1 Retro Low OG SP Travis Scott Reverse Mocha (second).png",
+                            itemId = 8
+                        },
+                        new
+                        {
+                            id = 31,
+                            imageLink = "/app/migrated_images/Nike Air Jordan 1 Retro Low OG SP Travis Scott Reverse Mocha/Nike Air Jordan 1 Retro Low OG SP Travis Scott Reverse Mocha (third).png",
+                            itemId = 8
+                        },
+                        new
+                        {
+                            id = 32,
+                            imageLink = "/app/migrated_images/Nike Air Jordan 1 Retro Low OG SP Travis Scott Reverse Mocha/Nike Air Jordan 1 Retro Low OG SP Travis Scott Reverse Mocha (four).png",
+                            itemId = 8
+                        },
+                        new
+                        {
+                            id = 33,
+                            imageLink = "/app/migrated_images/Nike Air Jordan 1 Low Dior/Nike Air Jordan 1 Low Dior.png",
+                            itemId = 9
+                        },
+                        new
+                        {
+                            id = 34,
+                            imageLink = "/app/migrated_images/Nike Air Jordan 1 Low Dior/Nike Air Jordan 1 Low Dior(second).jpg",
+                            itemId = 9
+                        },
+                        new
+                        {
+                            id = 35,
+                            imageLink = "/app/migrated_images/Nike Air Jordan 1 Low Dior/Nike Air Jordan 1 Low Dior(third).jpg",
+                            itemId = 9
+                        },
+                        new
+                        {
+                            id = 36,
+                            imageLink = "/app/migrated_images/Nike Air Jordan 1 Low Dior/Nike Air Jordan 1 Low Dior(four).jpg",
+                            itemId = 9
+                        },
+                        new
+                        {
+                            id = 37,
+                            imageLink = "/app/migrated_images/Nike Air Force 1 Low SP Tiffany And Co/Nike Air Force 1 Low SP Tiffany And Co..png",
+                            itemId = 10
+                        },
+                        new
+                        {
+                            id = 38,
+                            imageLink = "/app/migrated_images/Nike Air Force 1 Low SP Tiffany And Co/Nike Air Force 1 Low SP Tiffany And Co.(second).png",
+                            itemId = 10
+                        },
+                        new
+                        {
+                            id = 39,
+                            imageLink = "/app/migrated_images/Nike Air Force 1 Low SP Tiffany And Co/Nike Air Force 1 Low SP Tiffany And Co.(third).png",
+                            itemId = 10
+                        },
+                        new
+                        {
+                            id = 40,
+                            imageLink = "/app/migrated_images/Nike Air Force 1 Low SP Tiffany And Co/Nike Air Force 1 Low SP Tiffany And Co.(four).png",
+                            itemId = 10
+                        },
+                        new
+                        {
+                            id = 41,
+                            imageLink = "/app/migrated_images/Nike Air Force 1 Low SP Tiffany And Co/Nike Air Force 1 Low SP Tiffany And Co.(five).png",
+                            itemId = 10
+                        },
+                        new
+                        {
+                            id = 42,
+                            imageLink = "/app/migrated_images/The North Face Glenclyffe Low Vibram TNF Black/The North Face Glenclyffe Low Vibram TNF Black.jpg.png",
+                            itemId = 11
+                        },
+                        new
+                        {
+                            id = 43,
+                            imageLink = "/app/migrated_images/The North Face Glenclyffe Low Vibram TNF Black/The North Face Glenclyffe Low Vibram TNF Black(second).jpg",
+                            itemId = 11
+                        },
+                        new
+                        {
+                            id = 44,
+                            imageLink = "/app/migrated_images/The North Face Glenclyffe Low Vibram TNF Black/The North Face Glenclyffe Low Vibram TNF Black(third).jpg",
+                            itemId = 11
+                        },
+                        new
+                        {
+                            id = 45,
+                            imageLink = "/app/migrated_images/Yeezy 500 High Sumac/Yeezy 500 High Sumac.png",
+                            itemId = 12
+                        },
+                        new
+                        {
+                            id = 46,
+                            imageLink = "/app/migrated_images/Yeezy 500 High Sumac/Yeezy 500 High Sumac(second).png",
+                            itemId = 12
+                        },
+                        new
+                        {
+                            id = 47,
+                            imageLink = "/app/migrated_images/Yeezy 500 High Sumac/Yeezy 500 High Sumac(third).png",
+                            itemId = 12
+                        },
+                        new
+                        {
+                            id = 48,
+                            imageLink = "/app/migrated_images/Yeezy 500 High Sumac/Yeezy 500 High Sumac(four).png",
+                            itemId = 12
+                        },
+                        new
+                        {
+                            id = 49,
+                            imageLink = "/app/migrated_images/Nike Lunar Force 1 High Duckboot Ale Brown Black/Nike Lunar Force 1 High Duckboot Ale Brown Black.png",
+                            itemId = 13
+                        },
+                        new
+                        {
+                            id = 50,
+                            imageLink = "/app/migrated_images/Nike Lunar Force 1 High Duckboot Ale Brown Black/Nike Lunar Force 1 High Duckboot Ale Brown Black(second).png",
+                            itemId = 13
+                        },
+                        new
+                        {
+                            id = 51,
+                            imageLink = "/app/migrated_images/Nike Lunar Force 1 High Duckboot Ale Brown Black/Nike Lunar Force 1 High Duckboot Ale Brown Black(third).png",
+                            itemId = 13
+                        },
+                        new
+                        {
+                            id = 52,
+                            imageLink = "/app/migrated_images/Nike Lunar Force 1 High Duckboot Ale Brown Black/Nike Lunar Force 1 High Duckboot Ale Brown Black(four).png",
+                            itemId = 13
+                        },
+                        new
+                        {
+                            id = 53,
+                            imageLink = "/app/migrated_images/Nike Lunar Force 1 High Duckboot Ale Brown Black/Nike Lunar Force 1 High Duckboot Ale Brown Black(five).jpg",
+                            itemId = 13
+                        },
+                        new
+                        {
+                            id = 54,
+                            imageLink = "/app/migrated_images/Timberland 3-Eye Lug Handsewn Boat Shoe Brown/Timberland 3-Eye Lug Handsewn Boat Shoe Brown.jpg.png",
+                            itemId = 14
+                        },
+                        new
+                        {
+                            id = 55,
+                            imageLink = "/app/migrated_images/Timberland 3-Eye Lug Handsewn Boat Shoe Brown/Timberland 3-Eye Lug Handsewn Boat Shoe Brown(second).jpg",
+                            itemId = 14
+                        },
+                        new
+                        {
+                            id = 56,
+                            imageLink = "/app/migrated_images/Timberland Heritage LNY 6 Inch/Timberland Heritage LNY 6 Inch.png",
+                            itemId = 15
+                        },
+                        new
+                        {
+                            id = 57,
+                            imageLink = "/app/migrated_images/Timberland Heritage LNY 6 Inch/Timberland Heritage LNY 6 Inch(second).jpg",
+                            itemId = 15
+                        },
+                        new
+                        {
+                            id = 58,
+                            imageLink = "/app/migrated_images/Timberland Heritage LNY 6 Inch/Timberland Heritage LNY 6 Inch(third).jpg",
+                            itemId = 15
+                        },
+                        new
+                        {
+                            id = 59,
+                            imageLink = "/app/migrated_images/Timberland Heritage LNY 6 Inch/Timberland Heritage LNY 6 Inch(four).jpg",
+                            itemId = 15
+                        },
+                        new
+                        {
+                            id = 60,
+                            imageLink = "/app/migrated_images/Timberland x CLOT Future73 Timberloop 6-inch Boot Wheat/Timberland x CLOT Future73 Timberloop 6-inch Boot Wheat.png",
+                            itemId = 16
+                        },
+                        new
+                        {
+                            id = 61,
+                            imageLink = "/app/migrated_images/Timberland x CLOT Future73 Timberloop 6-inch Boot Wheat/Timberland x CLOT Future73 Timberloop 6-inch Boot Wheat(second).jpg",
+                            itemId = 16
+                        },
+                        new
+                        {
+                            id = 62,
+                            imageLink = "/app/migrated_images/Timberland x CLOT Future73 Timberloop 6-inch Boot Wheat/Timberland x CLOT Future73 Timberloop 6-inch Boot Wheat(third).jpg",
+                            itemId = 16
+                        },
+                        new
+                        {
+                            id = 63,
+                            imageLink = "/app/migrated_images/UGG Classic Ultra Mini Boot Black (W)/UGG Classic Ultra Mini Boot Black (W).png",
+                            itemId = 17
+                        },
+                        new
+                        {
+                            id = 64,
+                            imageLink = "/app/migrated_images/UGG Classic Ultra Mini Boot Chestnut (W)/UGG Classic Ultra Mini Boot Chestnut (W).png",
+                            itemId = 18
+                        });
                 });
 
             modelBuilder.Entity("Unique.Shoes.Middleware.Database.DBO.ShopItemsTable", b =>
@@ -160,11 +555,198 @@ namespace Unique.Shoes.MarketAPI.Migrations
                             id = 1,
                             count = true,
                             description = "Nike Air Jordan 1 Retro Low OG SP Travis Scott Olive (W) — это уникальная версия классической модели кроссовок Air Jordan 1, созданная в сотрудничестве с популярным рэпером Трэвисом Скоттом.",
-                            flags = new[] { "new" },
+                            flags = new[] { "new", "skate" },
                             hashName = "e694bbbcd87f95e8a052f7369ac49304",
                             name = "Nike Air Jordan 1 Retro Low OG SP Travis Scott Olive (W)",
                             price = 79990,
                             sizes = new[] { "36 RU", "41 RU" }
+                        },
+                        new
+                        {
+                            id = 2,
+                            count = true,
+                            description = "Yeezy 350 Zebra — легендарная модель Yeezy Boost 350 от Канье Уэста в новой расцветке. Основа кроссовок изготовлена по инновационной технологии Primeknit в черно-белой палитре. Белая полоса сбоку с красной надписью «SPLY-350», шнурки в тон пары. Подошва с использованием амортизирующей технологии Boost завершает дизайн. Релиз состоялся в феврале 2017 года.",
+                            flags = new[] { "new", "sneakers" },
+                            hashName = "1dd40325fdbf8b65d87f4b85c873dac3",
+                            name = "Yeezy 350 Zebra",
+                            price = 47490,
+                            sizes = new[] { "36 RU", "37 RU", "38 RU", "39 RU", "41 RU" }
+                        },
+                        new
+                        {
+                            id = 3,
+                            count = true,
+                            description = "Yeezy 350 Black Red — легендарная модель Yeezy Boost 350 от Канье Уэста в новой расцветке. Основа кроссовок изготовлена по инновационной технологии Primeknit в черном цвете. Сбоку ярко-красная надпись «SPLY-350», выполненная в обратном порядке. Подошва с использованием амортизирующей технологии Boost завершает дизайн. Релиз состоялся в ноябре 2016 года.",
+                            flags = new[] { "new", "sneakers" },
+                            hashName = "dd0f37389cea07c32aac4153041575c8",
+                            name = "Yeezy 350 Black Red",
+                            price = 52490,
+                            sizes = new[] { "36 RU", "37 RU", "38 RU", "39 RU", "41 RU", "43 RU" }
+                        },
+                        new
+                        {
+                            id = 4,
+                            count = true,
+                            description = "Представляем вам кроссовки Yeezy 350 Slate — идеальное сочетание стиля и комфорта, созданное для настоящих ценителей моды. Эта модель выделяется своей уникальной расцветкой Slate, которая легко впишется в любой гардероб. Изготовленные из премиальных материалов, Yeezy 350 обеспечивают непревзойденную легкость и удобство на каждом шагу. Инновационная технология подошвы гарантирует идеальную амортизацию и поддержку стопы. Позвольте себе быть в центре внимания и подчеркнуть свой образ с Yeezy 350 Slate — выбором, который говорит сам за себя.",
+                            flags = new[] { "new", "sneakers" },
+                            hashName = "e86692549ee9833b9775079255e5c007",
+                            name = "Yeezy 350 Slate",
+                            price = 57690,
+                            sizes = new[] { "36 RU", "37 RU", "39 RU", "41 RU", "43 RU" }
+                        },
+                        new
+                        {
+                            id = 5,
+                            count = true,
+                            description = "Nike Air Jordan 1 Retro Low OG Zion Williamson Voodoo - модель кроссовок, вдохновленная энергией и харизмой Зайона Уильямсона, сочетает в себе оригинальный дизайн и передовые технологии, что делает их идеальным выбором для настоящих ценителей. Уникальная цветовая палитра и детали, отражающие личность Зайона, делают эти кроссовки настоящим произведением искусства, которое выделит вас из толпы. Высококачественные материалы и продуманная конструкция обеспечивают отличную поддержку и комфорт при каждом движении, позволяя вам чувствовать себя уверенно в любой ситуации. Nike Air Jordan 1 Retro Low OG Zion Williamson Voodoo идеально подходят как для активного отдыха, так и для повседневной носки, добавляя вашему образу нотку спортивной элегантности.",
+                            flags = new[] { "demand", "skate" },
+                            hashName = "540d45d05a10887fce463570602c95c7",
+                            name = "Nike Air Jordan 1 Retro Low OG Zion Williamson Voodoo",
+                            price = 134990,
+                            sizes = new[] { "36 RU", "37 RU", "39 RU", "41 RU", "43 RU" }
+                        },
+                        new
+                        {
+                            id = 6,
+                            count = true,
+                            description = "Black Phantom выполнены в основном черном цвете, который придает им стильный и загадочный вид. Однако черный верх из кожаных и замшевых материалов дополнен контрастными акцентами, включая яркие детали, которые делают модель более заметной. Существует также элегантный логотип \"Cactus Jack\" на петле язычка. Верх кроссовок изготовлен из высококачественной кожи и замши, что обеспечивает долговечность и комфорт. Использование различных текстур материалов добавляет интересный визуальный эффект и делает обувь более привлекательной.",
+                            flags = new[] { "demand", "skate" },
+                            hashName = "959da7edcf47d920db135e258d4b5749",
+                            name = "Nike Air Jordan 1 Retro Low OG SP Travis Scott Black Phantom",
+                            price = 94990,
+                            sizes = new[] { "36 RU", "37 RU", "38 RU", "40 RU", "43 RU" }
+                        },
+                        new
+                        {
+                            id = 7,
+                            count = true,
+                            description = "Jordan 1 Low fragment design x Travis Scott – это новая пара в коллаборации японского дизайнера Хироши Фудживара и рэпера Трэвиса Скотта. Основа кроссовок из высококачественной белой кожи, на ее фоне выделяются черные детали, расположенные на носке и около шнурков. Главной особенностью дизайнов с участием Трэвиса Скотта является Swoosh в зеркальной ориентации, в данной модели в бежевом оттенке, как и шнурки и подошва. Акцентные элементы из синей кожи в области пятки. Релиз состоялся в августе 2021.",
+                            flags = new[] { "demand", "skate" },
+                            hashName = "a18efc63596ec33ccd28943c64e821e3",
+                            name = "Nike Air Jordan 1 Low Fragment x Travis Scott",
+                            price = 241900,
+                            sizes = new[] { "36 RU", "37 RU", "38 RU", "40 RU", "43 RU" }
+                        },
+                        new
+                        {
+                            id = 8,
+                            count = true,
+                            description = "Nike Air Jordan 1 Retro Low OG SP Travis Scott Reverse Mocha - уникальную модель, которая сочетает в себе элементы уличной культуры и высококачественный дизайн. Эти кроссовки идеально подойдут как для повседневной носки, так и для создания стильных образов.Уникальная цветовая схема в оттенках коричневого и бежевого, дополненная характерными деталями от Travis Scott, делает эту модель настоящим произведением искусства, которое привлечет внимание.Высококачественные материалы и продуманная конструкция обеспечивают отличную поддержку и комфорт, позволяя вам уверенно двигаться в любой ситуации. Nike Air Jordan 1 Retro Low OG SP Travis Scott Reverse Mocha идеально подходят для создания как спортивных, так и кэжуал-образов, добавляя вашему стилю нотку эксклюзивности.",
+                            flags = new[] { "demand", "skate" },
+                            hashName = "1e1d8f10e78ca8ca0d9835f1cdc6effb",
+                            name = "Nike Air Jordan 1 Retro Low OG SP Travis Scott Reverse Mocha",
+                            price = 251890,
+                            sizes = new[] { "36 RU", "37 RU", "38 RU", "40 RU", "43 RU" }
+                        },
+                        new
+                        {
+                            id = 9,
+                            count = true,
+                            description = "Nike Air Jordan 1 Low Dior - уникальную модель кроссовок, которая сочетает в себе элегантный дизайн и высокие технологии. Эти кроссовки станут идеальным дополнением вашего образа благодаря утонченному внешнему виду и качественным материалам.Выпущенные в ограниченном количестве, они выделяются из толпы благодаря эксклюзивным элементам, вдохновленным модой Dior.Премиальная кожа и подошва из ЭВА обеспечивают идеальную поддержку и мягкость при каждом шаге Nike Air Jordan 1 Low Dior идеально подходят как для повседневной носки, так и для особых случаев, придавая вашему наряду нотку роскоши",
+                            flags = new[] { "skate" },
+                            hashName = "afbcdd8defd959d8bd12188d9bea0a32",
+                            name = "Nike Air Jordan 1 Low Dior",
+                            price = 2345490,
+                            sizes = new[] { "40 RU", "42 RU" }
+                        },
+                        new
+                        {
+                            id = 10,
+                            count = true,
+                            description = "Nike Air Force 1 Low SP \"Tiffany & Co.\" — это специальная версия культовых кроссовок Air Force 1, созданная в сотрудничестве с известным ювелирным домом Tiffany & Co. Эта модель стала знаковой благодаря своим уникальным дизайнерским элементам и ограниченному выпуску, что сделало её одним из самых желанных предметов для коллекционеров и поклонников бренда. Nike Air Force 1 Low SP \"Tiffany & Co. — это не только стильное дополнение для гардероба, но и предмет коллекционирования, который олицетворяет как уличную культуру, так и элегантность, присущую ювелирному дому Tiffany. Эта модель быстро стала желанным объектом среди поклонников кроссовок и коллекционеров, благодаря своему эксклюзивному статусу и уникальному дизайну.",
+                            flags = new[] { "skate" },
+                            hashName = "56d1ef88ef8ba2ab91b2339e9cfb6f69",
+                            name = "Nike Air Force 1 Low SP Tiffany And Co.",
+                            price = 249990,
+                            sizes = new[] { "40 RU", "42 RU" }
+                        },
+                        new
+                        {
+                            id = 11,
+                            count = true,
+                            description = "The North Face Glenclyffe Low Vibram в цвете TNF Black — это стильная и функциональная обувь, предназначенная для активного отдыха и повседневного использования. Вот несколько ключевых характеристик и особенностей этой модели: Комфорт и поддержка, Подошва Vibram, Качественные материалы",
+                            flags = new[] { "sneakers" },
+                            hashName = "2effa9b53364d727786c20e1b601389a",
+                            name = "The North Face Glenclyffe Low Vibram TNF Black",
+                            price = 32990,
+                            sizes = new[] { "38 RU", "39 RU", "40 RU", "41 RU" }
+                        },
+                        new
+                        {
+                            id = 12,
+                            count = true,
+                            description = "Yeezy 500 High Sumac — легендарная модель Yeezy Boost 500 от Канье Уэста в новой расцветке. Основа кроссовок выполнена из сетчатого материала с вставками из кожи и замши различных оттенков коричневого и песочного. Акцентные ярко-красные шнурки, массивная подошва с технологией амортизации adiprene. Релиз состоялся в мае 2021 года.",
+                            flags = new[] { "sneakers" },
+                            hashName = "6e58c6390add21e2dc89c0427bada0aa",
+                            name = "Yeezy 500 High Sumac",
+                            price = 76990,
+                            sizes = new[] { "38 RU", "39 RU", "40 RU", "41 RU" }
+                        },
+                        new
+                        {
+                            id = 13,
+                            count = true,
+                            description = "Nike Lunar Force 1 High Duckboot Ale Brown Black - это мужская модель, изначально разработанная для игры в баскетбол. Модель Nike Lunar Force 1 High Duckboot в цветовом исполнении Ale Brown Black оснащена амортизирующей системой Air, обеспечивающей легкость и комфорт. От сырости и холода защищает высокий воротник, охватывающий щиколотку. Кроссовки имеют шнуровку, застежку-молнию и регулируемую ширину для плотной посадки. Верх выполнен из водостойкой кожи в области пятки и боковых накладок. На носке использована студированная синтетика. Эта модель сочетает в себе функциональность и стиль. Она одинаково подойдет как для активного отдыха, так и повседневной носки. Ее отличает универсальность и практичность в любую погоду.",
+                            flags = new[] { "sneakers" },
+                            hashName = "1585251a1776b6460b8d7c84fff951bd",
+                            name = "Nike Lunar Force 1 High Duckboot Ale Brown Black",
+                            price = 30790,
+                            sizes = new[] { "38 RU", "39 RU", "40 RU", "41 RU", "43 RU" }
+                        },
+                        new
+                        {
+                            id = 14,
+                            count = true,
+                            description = "",
+                            flags = new[] { "uggy" },
+                            hashName = "8083e87534bb6aa143ad597a2212cb82",
+                            name = "Timberland 3-Eye Lug Handsewn Boat Shoe Brown",
+                            price = 32490,
+                            sizes = new[] { "39 RU", "40 RU", "42 RU" }
+                        },
+                        new
+                        {
+                            id = 15,
+                            count = true,
+                            description = "",
+                            flags = new[] { "uggy" },
+                            hashName = "8070986a95e30ad15788e143eb5e7d56",
+                            name = "Timberland Heritage LNY 6 Inch",
+                            price = 19390,
+                            sizes = new[] { "39 RU", "40 RU", "42 RU" }
+                        },
+                        new
+                        {
+                            id = 16,
+                            count = true,
+                            description = "",
+                            flags = new[] { "uggy" },
+                            hashName = "912a187e12b2f3787e1cbe64e0f9decd",
+                            name = "Timberland x CLOT Future73 Timberloop 6-inch Boot Wheat",
+                            price = 90590,
+                            sizes = new[] { "39 RU", "40 RU", "43 RU" }
+                        },
+                        new
+                        {
+                            id = 17,
+                            count = true,
+                            description = "",
+                            flags = new[] { "uggy" },
+                            hashName = "1606f337e648c9a745562ea470c30be3",
+                            name = "UGG Classic Ultra Mini Boot Black (W)",
+                            price = 20190,
+                            sizes = new[] { "36 RU", "37 RU", "38 RU", "39 RU", "40 RU" }
+                        },
+                        new
+                        {
+                            id = 18,
+                            count = true,
+                            description = "",
+                            flags = new[] { "uggy" },
+                            hashName = "46317750139f5a30ed13626a9a22fec9",
+                            name = "UGG Classic Ultra Mini Boot Chestnut (W)",
+                            price = 20790,
+                            sizes = new[] { "36 RU", "37 RU", "38 RU", "39 RU", "40 RU" }
                         });
                 });
 #pragma warning restore 612, 618

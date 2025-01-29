@@ -6,6 +6,7 @@ using System.Security.Cryptography;
 using unique.shoes.middleware.Cache;
 using unique.shoes.middleware.JWT;
 using unique.shoes.middleware.Services;
+using Unique.Shoes.MarketAPI.Controllers;
 using Unique.Shoes.MarketAPI.Model.Database;
 using Unique.Shoes.MarketAPI.Model.RabbitMQ;
 using Unique.Shoes.MarketAPI.Model.Services;
@@ -112,6 +113,12 @@ namespace Unique.Shoes.MarketAPI
             {
                 options.UseNpgsql(builder.Configuration.GetConnectionString("ServerConn"));
             });
+
+            builder.Services.AddHttpClient<FeedbackController>(o =>
+            {
+                o.Timeout = TimeSpan.FromSeconds(30);
+            });
+
 
             builder.Services.AddSingleton<IRabbitMQService, RabbitSDK>();
 

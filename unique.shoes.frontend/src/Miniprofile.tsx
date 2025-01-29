@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import './preprocessor/App.sass'
 import useloginPageOpenedVariable from './components/Variables/OpenLoginPageVariable.ts';
+import useregisterPageOpenedVariable from './components/Variables/OpenRegisterPageVariable.ts';
 import {  LoginSignOut } from './components/API/LoginAuth.tsx';
 import useLoginSuccessVariable from './components/Variables/LoginSuccessVariable.ts';
 import { GetInfoUser_Name, GetInfoUser_FullName, GetInfoUser_Role, GetInfoUser_Id } from './components/API/AccountInfo.tsx';
@@ -18,6 +19,7 @@ const Miniprofile = (user_authed: boolean) => {
   const { profileloadingGet, profileloadingSet } = useLoadingProfile();
   const { userCheckGet } = useGetInfoUserVariable();
   const { loginPageOpenedGet, loginPageOpenedSet } = useloginPageOpenedVariable();
+  const { registerPageOpenedGet, registerPageOpenedSet } = useregisterPageOpenedVariable();
   const { openProfileGet, openProfileSet } = useOpenProfileVariable();
 
 
@@ -44,6 +46,13 @@ const Miniprofile = (user_authed: boolean) => {
 
   }
 
+  const open_register_page = () => {
+    setclosedAnim(true)
+    setminiProfile(false)
+    registerPageOpenedSet(true)
+
+  }
+
   const open_profile_page = () => {
     setclosedAnim(true)
     setminiProfile(false)
@@ -54,6 +63,12 @@ const Miniprofile = (user_authed: boolean) => {
   const close_login_page = () => {
     setclosedAnim(false)
     loginPageOpenedSet(false)
+    
+  }
+
+  const close_register_page = () => {
+    setclosedAnim(false)
+    registerPageOpenedSet(false)
     
   }
 
@@ -77,8 +92,9 @@ const Miniprofile = (user_authed: boolean) => {
   const leave_from_account = () => {
     setclosedAnim(true)
     setminiProfile(false)
+    loginSuccessSet(false);
     LoginSignOut()
-    loginSuccessSet(false)
+  
   }
 
 
@@ -119,7 +135,7 @@ const Miniprofile = (user_authed: boolean) => {
 
         return (
             <>
-                <div className="text_login" onClick={() => {openProfileGet ? close_profile_page() : close_login_page() }}>Вернуться</div>
+                <div className="text_login" onClick={() => {openProfileGet ? close_profile_page() : (registerPageOpenedGet ? close_register_page() : close_login_page()) }}>Вернуться</div>
             </>
         )
 
@@ -251,7 +267,7 @@ const Miniprofile = (user_authed: boolean) => {
                 </div>
 
                 <div className="button_profile">
-                    <div className="text_button_profile">
+                    <div className="text_button_profile" onClick={open_register_page}>
                         Регистрация
                     </div>
 

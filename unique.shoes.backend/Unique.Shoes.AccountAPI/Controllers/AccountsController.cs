@@ -97,6 +97,27 @@ namespace Unique.Shoes.AccountAPI.Controllers
             return BadRequest();
         }
 
+        [Authorize(AuthenticationSchemes = "Asymmetric")]
+        [HttpGet("ForManager")]
+        public async Task<IActionResult> GetAllForChat()
+        {
+            string bearer_key = Request.Headers["Authorization"];
+
+            var validation = await _jwt.AccessTokenValidation(bearer_key, "Manager");
+
+            if (validation.TokenHasError())
+            {
+                return Unauthorized(validation.token_error.errorLog);
+            }
+            else if (validation.TokenHasSuccess())
+            {
+                return Ok(_database.GetAllAccounts(0, 0).Content.Select(c => c.id).ToList());
+            }
+
+
+            return BadRequest();
+        }
+
         [HttpPost]
         public async Task<IActionResult> CreateUserWithAdmin([FromBody] Accounts_CreateUser dtoObj)
         {

@@ -1,4 +1,6 @@
 import axios from 'axios';
+import { TokenNeedUpdate } from '../Observer/TokenObserver';
+import Cookies from 'js-cookie';
 
 interface ItemProperties {
     id: number,
@@ -14,7 +16,7 @@ interface ItemProperties {
 
 let item_all_info: ItemProperties[];
 
-const handleGetItemInfo = async () => {
+const handleGetItemInfo = async (retry: boolean = true) : Promise<any> =>  {
     try {
         const response = await axios.get('http://localhost:8082/api/Items');
 
@@ -26,8 +28,7 @@ const handleGetItemInfo = async () => {
         return null;
 
     } catch (error) {
-        console.log("Внутренняя ошибка получения информации о товаре!");
-        return null;
+        return false;
     } 
 }
 

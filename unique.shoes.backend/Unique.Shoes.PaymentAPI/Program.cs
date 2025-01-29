@@ -140,8 +140,6 @@ namespace Unique.Shoes.PaymentAPI
             {
                 var rabbitListener = scope.ServiceProvider.GetRequiredService<IRabbitListenerService>();
                 rabbitListener.ListenPayment();
-
-              
             }
 
             await EnsureDatabaseInitializedAsync(app);

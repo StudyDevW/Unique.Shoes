@@ -1,13 +1,14 @@
 import { useState, useRef, useEffect } from 'react'
-import useLoadingProfile from './components/Variables/LoadingProfileVariable.ts';
-import './preprocessor/App.sass'
-import { handleLogin } from './components/API/LoginAuth.tsx';
-import useLoginSuccessVariable from './components/Variables/LoginSuccessVariable.ts';
-import useloginPageOpenedVariable from './components/Variables/OpenLoginPageVariable.ts';
+import useLoadingProfile from '../Variables/LoadingProfileVariable.ts';
+import '../../preprocessor/App.sass'
+import { handleLogin } from '../API/LoginAuth.tsx';
+import useLoginSuccessVariable from '../Variables/LoginSuccessVariable.ts';
+import useloginPageOpenedVariable from '../Variables/OpenLoginPageVariable.ts';
+import CheckTokensValidate from '../../TokenCheckMain.tsx';
 
 const LoginPage: React.FC = () => {
   const { profileloadingSet } = useLoadingProfile();
-  const { loginSuccessSet } = useLoginSuccessVariable();
+  const { loginSuccessGet, loginSuccessSet } = useLoginSuccessVariable();
   const { loginPageOpenedSet } = useloginPageOpenedVariable()
   const [loginValue, setLogin] = useState('');
   const [passwordValue, setPassword] = useState('');
@@ -20,8 +21,10 @@ const LoginPage: React.FC = () => {
 
   const handlerChecker = async () => {
     if (await handleLogin(loginValue, passwordValue) === true) {
-      loginSuccessSet(false)
-      loginPageOpenedSet(false)
+      if (await CheckTokensValidate()) {
+        loginSuccessSet(true)
+        loginPageOpenedSet(false)
+      }
     }
     else {
       loginSuccessSet(false)

@@ -113,6 +113,9 @@ namespace Unique.Shoes.MarketAPI.Model.Database
 
         private void DeleteImageFromPath(string filePath)
         {
+            if (filePath.Contains("migrated_images"))
+                return;
+
             if (File.Exists(filePath))
             {
                 File.Delete(filePath);

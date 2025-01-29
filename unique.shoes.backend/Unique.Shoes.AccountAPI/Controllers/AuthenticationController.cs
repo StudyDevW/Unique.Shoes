@@ -5,6 +5,7 @@ using unique.shoes.middleware.JWT.DTO.CheckUsers;
 using unique.shoes.middleware.Services;
 using Unique.Shoes.AccountAPI.Model.Services;
 using Unique.Shoes.Middleware.Database.DTO;
+using Unique.Shoes.Middleware.JWT.DTO;
 
 namespace Unique.Shoes.AccountAPI.Controllers
 {
@@ -31,7 +32,7 @@ namespace Unique.Shoes.AccountAPI.Controllers
             try
             {
                 await _database.RegisterUser(dtoObj);
-               
+
                 return Ok("account_created");
             }
             catch (Exception e)
@@ -39,6 +40,62 @@ namespace Unique.Shoes.AccountAPI.Controllers
                 return BadRequest();
             }
         }
+
+        [Authorize(AuthenticationSchemes = "Asymmetric")]
+        [HttpGet("Sessions")]
+        public async Task<IActionResult> CheckSessions()
+        {
+            string bearer_key = Request.Headers["Authorization"];
+
+            var validation = await _jwt.AccessTokenValidation(bearer_key);
+
+            if (validation.TokenHasError())
+            {
+                return Unauthorized();
+            }
+            else if (validation.TokenHasSuccess())
+            {
+
+                if (_cache.CheckExistKeysStorage<List<Session_Init>>(validation.token_success.Id, "session_storage"))
+                {
+                    var sessions = _cache.GetKeyFromStorage<List<Session_Init>>(validation.token_success.Id, "session_storage");
+
+                    return Ok(sessions);
+                }
+                    
+
+            }
+
+            return BadRequest();
+        }
+
+
+        [Authorize(AuthenticationSchemes = "Asymmetric")]
+        [HttpDelete("Sessions")]
+        public async Task<IActionResult> ClearSessions()
+        {
+            string bearer_key = Request.Headers["Authorization"];
+
+            var validation = await _jwt.AccessTokenValidation(bearer_key);
+
+            if (validation.TokenHasError())
+            {
+                return Unauthorized();
+            }
+            else if (validation.TokenHasSuccess())
+            {
+
+                if (_cache.CheckExistKeysStorage<List<Session_Init>>(validation.token_success.Id, "session_storage"))
+                {
+                    _cache.DeleteKeyFromStorage(validation.token_success.Id, "session_storage");
+
+                    return Ok("Успех");
+                }
+            }
+
+            return BadRequest();
+        }
+
 
         [HttpPost("SignIn")]
         public IActionResult SignIn([FromBody] Auth_SignIn dtoObj)
@@ -61,6 +118,41 @@ namespace Unique.Shoes.AccountAPI.Controllers
 
                 _cache.WriteKeyInStorage(check.check_success.Id, "accessTokens", accessToken, DateTime.UtcNow.AddMinutes(1));
                 _cache.WriteKeyInStorage(check.check_success.Id, "refreshTokens", refreshToken, DateTime.UtcNow.AddDays(7));
+
+                if (_cache.CheckExistKeysStorage<List<Session_Init>>(check.check_success.Id, "session_storage")) {
+                    
+                    var sessionList = _cache.GetKeyFromStorage<List<Session_Init>>(check.check_success.Id, "session_storage");
+
+                    foreach (var session in sessionList)
+                    {
+                        if (session.statusSession == "active")
+                        {
+                            session.timeDel = DateTime.UtcNow;
+                            session.statusSession = "expired";
+                        }
+                    }
+
+                    sessionList.Add(new Session_Init()
+                    {
+                        timeAdd = DateTime.UtcNow,
+                        statusSession = "active",
+                        tokenSession = accessToken
+                    });
+
+                    _cache.WriteKeyInStorage(check.check_success.Id, "session_storage", sessionList, DateTime.UtcNow.AddDays(7));
+                }
+                else
+                {
+                    _cache.WriteKeyInStorage(check.check_success.Id, "session_storage", new List<Session_Init>()
+                    {
+                        new Session_Init()
+                        {
+                            timeAdd = DateTime.UtcNow,
+                            statusSession = "active",
+                            tokenSession = accessToken
+                        }
+                    }, DateTime.UtcNow.AddDays(7));
+                }
 
                 Auth_PairTokens pair_tokens = new Auth_PairTokens()
                 {
@@ -115,6 +207,22 @@ namespace Unique.Shoes.AccountAPI.Controllers
             }
             else if (validation.TokenHasSuccess())
             {
+                if (_cache.CheckExistKeysStorage<List<Session_Init>>(validation.token_success.Id, "session_storage"))
+                {
+                    var sessionList = _cache.GetKeyFromStorage<List<Session_Init>>(validation.token_success.Id, "session_storage");
+
+                    foreach (var session in sessionList)
+                    {
+                        if (session.statusSession == "active")
+                        {
+                            session.timeDel = DateTime.UtcNow;
+                            session.statusSession = "expired";
+                        }
+                    }
+
+                    _cache.WriteKeyInStorage(validation.token_success.Id, "session_storage", sessionList, DateTime.UtcNow.AddDays(7));
+                }
+
 
                 _cache.DeleteKeyFromStorage(validation.token_success.Id, "accessTokens");
 
@@ -149,6 +257,23 @@ namespace Unique.Shoes.AccountAPI.Controllers
                 var accessToken = _jwt.JwtTokenCreation(authsuccess);
                 var refreshToken = _jwt.RefreshTokenCreation(authsuccess);
 
+                if (_cache.CheckExistKeysStorage<List<Session_Init>>(authsuccess.Id, "session_storage"))
+                {
+                    var sessionList = _cache.GetKeyFromStorage<List<Session_Init>>(authsuccess.Id, "session_storage");
+
+                    foreach (var session in sessionList)
+                    {
+                        if (session.statusSession == "active")
+                        {
+                            session.timeUpd = DateTime.UtcNow;
+                            session.tokenSession = accessToken;
+                        }
+                    }
+
+                    _cache.WriteKeyInStorage(authsuccess.Id, "session_storage", sessionList, DateTime.UtcNow.AddDays(7));
+                }
+
+
                 if (_cache.CheckExistKeysStorage(authsuccess.Id, "accessTokens"))
                     _cache.DeleteKeyFromStorage(authsuccess.Id, "accessTokens");
 
@@ -159,6 +284,7 @@ namespace Unique.Shoes.AccountAPI.Controllers
                 _cache.WriteKeyInStorage(authsuccess.Id, "accessTokens", accessToken, DateTime.UtcNow.AddMinutes(1));
                 _cache.WriteKeyInStorage(authsuccess.Id, "refreshTokens", refreshToken, DateTime.UtcNow.AddDays(7));
 
+             
 
                 Auth_PairTokens pair_tokens = new Auth_PairTokens()
                 {

@@ -173,6 +173,7 @@ BVVGSvbFKDiaJqprAgMBAAE=
 
         public async Task<Token_ValidProperties> AccessTokenValidation(string? bearerKey, string checkrole)
         {
+
             if (bearerKey == null)
                 return new Token_ValidProperties() { token_error = new Token_ValidError { errorLog = "token_empty" } };
 

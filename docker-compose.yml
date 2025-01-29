@@ -52,6 +52,7 @@ services:
       - ASPNETCORE_URLS=http://+:80;http://+:443
     volumes:
       - uploads:/app/Uploads
+      - ./migrate_images:/app/migrated_images
     ports:
        - "8082:80"
     restart: unless-stopped

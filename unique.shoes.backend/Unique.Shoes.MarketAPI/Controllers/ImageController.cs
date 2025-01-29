@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using System.Linq;
 using unique.shoes.middleware.Services;
 using Unique.Shoes.MarketAPI.Model.Services;
 
@@ -74,8 +75,11 @@ namespace Unique.Shoes.MarketAPI.Controllers
         [HttpGet("GetImage")]
         public async Task<IActionResult> GetImage([FromHeader] string filePath)
         {
+        
             try
             {
+         
+
                 var file = new FileStream(filePath, FileMode.Open, FileAccess.Read);
 
                 return File(file, "image/jpeg");

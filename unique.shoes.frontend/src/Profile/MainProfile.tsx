@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from 'react'
 import { GetInfoUser_FullName, GetInfoUser_Id, GetInfoUser_Role  } from '../components/API/AccountInfo.tsx'
 import { handleOrderCheck, handleOrdersInfo } from '../components/API/OrdersInfo.tsx'
+import { handleSessionsGet } from '../components/API/SessionInfo.tsx'
 import useButtonActiveProfile from '../components/Variables/ProfileMenuVariable.ts'
 import useCloseProfileVariable from '../components/Variables/CloseProfileVariable.ts'
 import Cookies from 'js-cookie';
@@ -8,6 +9,7 @@ import { handleLoadImage } from "../components/API/ItemInfo.tsx";
 import useOpenProfileVariable from '../components/Variables/OpenProfileVariable.ts'
 import { loadingComponent } from "../components/Loading/LoadingComponent.ts";
 import useLoginSuccessVariable from '../components/Variables/LoginSuccessVariable.ts'
+import { handleMessageGet, handleMessageSend } from '../components/API/Feedback.tsx'
 
 var loadingOrder = new loadingComponent();
 
@@ -40,6 +42,21 @@ interface OrdersItem {
     size: string,
     imageLink: string
 }
+
+interface SessionGetProperties {
+    timeAdd: string,
+    timeUpd: string,
+    timeDel: string,
+    statusSession: string
+}
+
+interface MessagePrintFeed {
+    sendTime: string,
+    userName: string,
+    message: string,
+    user_role: string
+}
+
 
 const LeftMainProfileButtons: React.FC<{type_button: string, name_button: string}> = ({type_button, name_button}) => {
 
@@ -361,10 +378,215 @@ const MyOrders: React.FC = () => {
     </>)
 }
 
+var sessions: SessionGetProperties[] = [];
+
+const MySessions: React.FC = () => {
+
+    const GetSessions = async () => {
+        const accessTokens: string = Cookies.get('AccessToken') as string;
+        if (accessTokens !== undefined) {
+            sessions = await handleSessionsGet(accessTokens);
+        }
+    }
+
+    useEffect(()=>{
+        GetSessions();
+    }, []);
+
+    const DatePrint = (dateFrom: string) => {
+        const date = new Date(dateFrom);
+
+        const day = date.getDate();
+        const month = date.toLocaleString('russian', { month: 'short' }); // Получаем название месяца
+
+        const formattedHours = String(date.getHours()).padStart(2, '0');
+        const formattedMinutes = String(date.getMinutes()).padStart(2, '0');
+
+        return `${day} ${month} в ${formattedHours}:${formattedMinutes} `;
+    }
+
+    const sortedSessions = sessions.sort((a, b) => {
+        return new Date(b.timeAdd).getTime() - new Date(a.timeAdd).getTime();
+    });
+
+    return (
+        <>
+            <div className="title_main_profile_content">История активности</div>
+
+    
+            <div className="content_main_profile_area without_buttons">
+
+                {sortedSessions.map((session, index) => 
+                    <div key={index} className={`sessions_content_main_profile ${
+                        session.timeDel === null ? "" : "inactive"
+                    }`}>
+                        <div className="sessions_content_main_profile_title">{
+                            session.timeDel !== null ? `Сессия истекла ${DatePrint(session.timeDel)}` : `Сессия создана ${DatePrint(session.timeAdd)}`
+                        }</div>
+
+                        {(session.timeUpd !== null && session.timeDel === null) 
+                        && <div className="sessions_content_main_profile_desc">{`Обновлена ${DatePrint(session.timeUpd)}`}
+                        </div>}
+
+                        {(session.timeDel !== null) 
+                        && <div className="sessions_content_main_profile_desc">{`Была создана ${DatePrint(session.timeAdd)}`}
+                        </div>}
+
+                        <div className={`sessions_content_main_profile_status ${
+                            session.statusSession === "active" ? "active" : ""
+                        }`}>{
+                            session.statusSession === "active" ? "Активна" : "Истекла"
+                        }</div>
+                    </div>
+                )}
+
+               
+            </div>
+    
+        </>)
+}
+
+
+const SupportPage: React.FC = () => {
+
+    const [messageSendClick, setMessageSendClick] = useState<boolean>(false);
+
+    const [messageSendUpd, setMessageSendUpd] = useState<boolean>(false);
+
+    const [messageInput, setMessageInput] = useState<string>("");
+
+    const [messagesOut, setMessagesOut] = useState<MessagePrintFeed[]>();
+
+    const SendMessage = async (messageSend: string) =>{
+        const accessTokens: string = Cookies.get('AccessToken') as string;
+        if (accessTokens !== undefined) {
+            if (await handleMessageSend(messageSend, accessTokens)) {
+                console.log("Cообщение отправлено!");
+                setMessageSendUpd(true);
+             
+            }
+        }
+    }
+
+    const GetMessages = async () => {
+        const accessTokens: string = Cookies.get('AccessToken') as string;
+        if (accessTokens !== undefined) {
+            var messagesGet = await handleMessageGet(GetInfoUser_Id(), accessTokens);
+
+            if (messagesGet !== null) {
+                setMessagesOut(messagesGet);
+            }
+        }
+    }
+
+    useEffect(()=>{
+        GetMessages();
+        
+    }, [])
+
+    useEffect(()=>{
+        if (messagesOut !== undefined)
+            console.log(messagesOut)
+    },[messagesOut])
+
+    useEffect(()=>{
+        if (messageSendClick && messageInput !== "") {
+            SendMessage(messageInput);
+            setMessageSendClick(false);
+        }
+    }, [messageSendClick])
+
+    useEffect(()=>{
+        if (messageSendUpd) {
+            setMessageInput("");
+            setMessageSendUpd(false);
+            GetMessages();
+        }
+    }, [messageSendUpd])
+
+    const handleKeyDownBack = (e: React.KeyboardEvent<HTMLInputElement>) => {
+        if (e.key === 'Enter') {
+            if (!messageSendClick)
+                setMessageSendClick(true);
+        }
+          
+    };
+
+    const DatePrint = (dateFrom: string) => {
+        const date = new Date(dateFrom);
+
+        const day = date.getDate();
+        const month = date.toLocaleString('russian', { month: 'short' }); // Получаем название месяца
+
+        const formattedHours = String(date.getHours()).padStart(2, '0');
+        const formattedMinutes = String(date.getMinutes()).padStart(2, '0');
+
+        return `${formattedHours}:${formattedMinutes} `;
+    }
+
+    const sortedMessages = messagesOut?.sort((a, b) => {
+        return new Date(b.sendTime).getTime() - new Date(a.sendTime).getTime();
+    });
+
+    return (<>   
+        <div className="title_main_profile_content">Задать вопрос</div>
+
+        
+        <div className="content_main_profile_area without_buttons chat">
+            
+            {(sortedMessages !== undefined) && sortedMessages.map((message, index) =>
+                <div key={index}>
+                    
+                {(message.user_role === "User") && 
+                    <div className="message_content_support">
+                        <div className="message_content_support_user">
+                            <div className="message_content_support_user_title">{`${DatePrint(message.sendTime)} | Вы`}</div>
+                            <div className="message_content_support_user_message">{message.message}</div>
+                        </div>
+                    </div>
+                }
+
+                {(message.user_role === "Manager") && 
+                    <div className="message_content_support">
+                      <div className="message_content_support_manager">
+                          <div className="message_content_support_manager_title">{`Ответ менеджера | ${DatePrint(message.sendTime)}`}</div>
+                          <div className="message_content_support_manager_message">{message.message}</div>
+                      </div>
+                    </div>
+                }
+
+                </div>
+            )}
+{/* 
+            <div className="message_content_support">
+                <div className="message_content_support_user">
+                    <div className="message_content_support_user_title">Вы</div>
+                    <div className="message_content_support_user_message">Ваше сообщение</div>
+                </div>
+            </div> */}
+
+          
+        </div>
+
+        <input  className="input_text whitefull" 
+                type="text"
+                value={messageInput}
+                onChange={(e) => setMessageInput(e.target.value)}
+                style={{width: '540px', marginTop: "550px", marginLeft: "20px", textAlign: 'right'}}
+                onKeyDown={(e) => handleKeyDownBack(e)}>
+
+        </input>
+    </>)
+}
+
 const MainProfile: React.FC = () => {
 
     const { openProfileGet } = useOpenProfileVariable();
     const { MPButtonActiveGet, MPButtonActiveSet } = useButtonActiveProfile();
+
+    useEffect(()=>{
+        MPButtonActiveSet("MyOrders");
+    }, [])
 
     const { loginSuccessGet } = useLoginSuccessVariable();
 
@@ -412,14 +634,19 @@ const MainProfile: React.FC = () => {
                         
                             <LeftMainProfileButtons name_button='Мои заказы' type_button='MyOrders'/>
 
-                            <LeftMainProfileButtons name_button='Мои отзывы' type_button='MyFeedback'/>
+                            <LeftMainProfileButtons name_button='Сессии' type_button='MySessions'/>
 
-                            <LeftMainProfileButtons name_button='Способы оплаты' type_button='MyPayment'/>
+                            {(!GetInfoUser_Role().includes("Manager")) &&
+                            <LeftMainProfileButtons name_button='Поддержка' type_button='Support'/>}
                         </div>
 
-                        <div className="shopcart_finalprice_separator margined" style={{top: '-5px'}}></div>
-
+                        {(!GetInfoUser_Role().includes("Manager")) && 
+                            <div className="shopcart_finalprice_separator margined" style={{top: '-5px'}}></div>
+                        }
                         <div className="main_profile_buttons_area small">
+
+                       
+
                             <div className="main_profile_button exit" onClick={()=>closeProfileSet(true)}>
                                 Выход из профиля
                             </div>
@@ -431,6 +658,10 @@ const MainProfile: React.FC = () => {
 
 
                         {(MPButtonActiveGet === "MyOrders") && (<MyOrders/>)}
+
+                        {(MPButtonActiveGet === "MySessions") && (<MySessions/>)}
+
+                        {(MPButtonActiveGet === "Support") && (<SupportPage/>)}
                     </div>
 
                 </div>

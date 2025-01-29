@@ -181,7 +181,7 @@ function App() {
                 image_paths={item.imagePaths}
                 size_item={item.sizes}
                 hash_item={item.hashName}
-                type_item={"new_mark"} 
+                type_item={category === "demand" ? "demand_mark" : "new_mark"} 
                 animation_style={2} 
                 image_prevew_link={item.imagePaths.length > 0 ? item.imagePaths[0] : ''}
                 onContext={() => {}}
@@ -267,14 +267,7 @@ function App() {
             }
           }>
 
-          <ItemShoes name_item='item_shoes_name' type_item='demand_mark' animation_style={1} image_prevew_link='' price={0} id_item={0} description_item='' image_paths={[]} size_item={[]} onContext={()=>{}}/>
-
-          <ItemShoes name_item='item_shoes_name' type_item='demand_mark' animation_style={2} image_prevew_link='' price={0} id_item={0} description_item='' image_paths={[]} size_item={[]} onContext={()=>{}}/>
-
-          <ItemShoes name_item='item_shoes_name' type_item='demand_mark' animation_style={1} image_prevew_link='' price={0} id_item={0} description_item='' image_paths={[]} size_item={[]} onContext={()=>{}}/>
-
-          <ItemShoes name_item='item_shoes_name' type_item='demand_mark' animation_style={0} image_prevew_link='' price={0} id_item={0} description_item='' image_paths={[]} size_item={[]} onContext={()=>{}}/>
-
+          {(infoItem !== null) && ItemPrint('demand')}
 
           {/* <p style={{position: 'absolute', marginTop: '-3px'}}>Width: {size.width}px</p>
           <p style={{position: 'absolute', marginTop: '-3px', marginLeft: '100px'}}>Height: {size.height}px</p> */}
