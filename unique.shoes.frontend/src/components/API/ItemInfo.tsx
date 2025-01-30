@@ -16,6 +16,8 @@ interface ItemProperties {
 
 let item_all_info: ItemProperties[];
 
+let item_info: ItemProperties;
+
 const handleGetItemInfo = async (retry: boolean = true) : Promise<any> =>  {
     try {
         const response = await axios.get('http://localhost:8082/api/Items');
@@ -28,7 +30,24 @@ const handleGetItemInfo = async (retry: boolean = true) : Promise<any> =>  {
         return null;
 
     } catch (error) {
-        return false;
+        return null;
+    } 
+}
+
+
+const handleGetOneItemInfo = async (itemId: number, retry: boolean = true) : Promise<any> =>  {
+    try {
+        const response = await axios.get(`http://localhost:8082/api/Items/${itemId}`);
+
+        if (response.status === 200)  {
+            item_info = response.data;
+            return item_info;
+        }
+            
+        return null;
+
+    } catch (error) {
+        return null;
     } 
 }
 
@@ -72,4 +91,4 @@ const handleLoadImagesArray = async (filePaths: string[]) => {
     } 
 }
 
-export { handleGetItemInfo, handleLoadImage, handleLoadImagesArray }
+export { handleGetItemInfo, handleLoadImage, handleLoadImagesArray, handleGetOneItemInfo }

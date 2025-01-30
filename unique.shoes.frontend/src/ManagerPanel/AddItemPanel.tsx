@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react"
+import { useState, useEffect, useRef } from "react"
 import { handleItemAdd } from "../components/API/CreateItem.tsx"; 
 import { handleImageUpload } from "../components/API/AddImage.tsx";
 import useGetInfoUserVariable from "../components/Variables/GetInfoUserVariable.ts";
@@ -24,6 +24,332 @@ let buttonMapper = new Map<string, boolean>([
 let arrayFile: File[] = [];
 
 let compiledImagesPreview: string[] = [];
+
+
+const ImagePreviewMain: React.FC<{imageLink: string[], price: number}> = ({imageLink, price}) => {
+
+    const [activeIndex, setActiveIndex] = useState<number>(0);
+  
+    const [lastActiveIndex, setLastActiveIndex] = useState<number>(-1);
+  
+    const [stopCaruselAuto, setStopCaruselAuto] = useState<boolean>(false);
+  
+    const [stopCaruselAutoTimer, setStopCaruselAutoTimer] = useState<number>(20);
+  
+    const [startCaruselAuto, setStartCaruselAuto] = useState<boolean>(false);
+  
+    
+  
+    const handleClickIndexed = (index: number) => {
+      if (activeIndex !== index) {
+        setActiveIndex(index)
+      }
+    }
+  
+    const CaruselImages = () => {
+      if (imageLink.length > 1) {
+        return (
+        <>
+          <div className="header_item_preview_images_carusel" style={{marginLeft: '600px', marginTop: '125px'}}>
+            {imageLink.map((image, index) => 
+              <div key={index} className="header_item_preview_images_item"
+                onClick={() => handleClickIndexed(index)}
+                style={
+                  { backgroundImage: `url(${image})`}
+                }>
+  
+                {index === activeIndex && 
+                (<div className="image_selected_preview_carusel"></div>)}
+  
+              </div>
+            )}     
+          </div>
+        </>
+        );
+      }
+      else {
+        return (<></>)
+      }
+    }
+  
+   
+    return (<>
+      <div className={price > 500000 ? "header_item_preview_area_image rich" : "header_item_preview_area_image"}
+      style=
+      {
+        {
+          backgroundImage: imageLink[activeIndex] !== undefined ? `url(${imageLink[activeIndex]})` : 'url(../images/missing_image.png)',
+          backgroundSize: imageLink[activeIndex] !== undefined ? 'cover' : '250px',
+          backgroundPosition: 'center',
+          backgroundRepeat: 'no-repeat',
+          marginTop: '135px',
+          marginLeft: '25px'
+        }
+      }>
+  
+          {price > 500000 && ( 
+            <div className="left_corner_decor_rich_header"></div>
+          )}
+  
+          {price > 500000 && ( 
+            <div className="left_corner_decor_rich_header study"></div>
+          )}
+      </div>
+
+      {CaruselImages()}
+      </>)
+  
+}
+  
+const AnimatedDescription: React.FC<{description: string}> = ({description}) => {
+  
+    const scrollContainerRef = useRef<HTMLDivElement>(null);
+  
+    const [timerAnim, setTimerAnim] = useState<boolean>(false);
+  
+    const [downAnim, setdownAnim] = useState<boolean>(true);
+  
+    const [upAnim, setupAnim] = useState<boolean>(false);
+  
+    useEffect(()=>{
+
+    }, [description])
+
+    useEffect(() => {
+     
+  
+        const intervalId = setInterval(()=>{setTimerAnim(true)}, 2000); // Частота обновления
+  
+        return () => clearInterval(intervalId); // Очистка при размонтировании
+    
+    }, []);
+  
+    useEffect(() => {
+  
+        if (timerAnim && downAnim) {
+    
+            const scrollContainer = scrollContainerRef.current;
+            if (scrollContainer) {
+                const scrollHeight = scrollContainer.scrollHeight;
+                const clientHeight = scrollContainer.clientHeight;
+    
+                let scrollTop = 0;
+                let direction = 1; 
+    
+                const scroll = () => {
+                    scrollTop += direction * 0.5; // Скорость скролла
+                    if (scrollTop >= scrollHeight - clientHeight || scrollTop <= 0) {
+                    setupAnim(true);
+                    setdownAnim(false);
+                    return;
+                    }
+                    scrollContainer.scrollTo(0, scrollTop);
+                };
+    
+                const intervalId = setInterval(scroll, 50); 
+    
+                return () => clearInterval(intervalId);
+            }
+        }
+        
+        
+    
+    }, [timerAnim]);
+  
+    useEffect(()=>{
+        if (timerAnim && upAnim) {
+            const scrollContainer = scrollContainerRef.current;
+            if (scrollContainer) {
+                const scrollHeight = scrollContainer.scrollHeight;
+                const clientHeight = scrollContainer.clientHeight;
+        
+                let scrollTop = 0;
+                let direction = 1; 
+        
+                const scroll = () => {
+                    scrollTop += direction * 3.5; // Скорость скролла
+        
+                    if (((scrollHeight - clientHeight) - scrollTop) <= 0) {
+                        setTimerAnim(false);
+                        return;
+                    }
+        
+                    scrollContainer.scrollTo(0, (scrollHeight - clientHeight) - scrollTop);
+                };
+        
+                const intervalId = setInterval(scroll, 50); 
+        
+                return () => clearInterval(intervalId);
+            }
+        }
+    },[upAnim])
+  
+  
+    return (<>
+      <div className="header_item_preview_area_description" ref={scrollContainerRef} style={{color: 'black', maxHeight: '125px'}}>
+          {description !== "" ? description : 'Введите описание товара'}
+      </div>
+    </>)
+}
+  
+
+const PreviewItemAdd: React.FC<{price: number, name: string, description: string, images: string[], sizes: string[]}> = ({price, name, description, images, sizes}) => {
+
+    //Сделать глобальную переменную, если удаляется товар из корзины, то нужно перепроверять
+
+    // const { itemPrevewGet, itemPrevewSet } = useItemPreviewVariable();
+    // const { tabIndexGet, tabIndexSet } = useTabIndexVariable();
+    const [imageSrc, setImageSrc] = useState<string[]>([]);
+    const [selectedClick, setSelectedClick] = useState<boolean>(false);
+  
+    const formatPrice = (price: number): string => {
+      return price.toLocaleString('ru-RU').replace(/,/g, '.');  // Заменяем запятые на точки
+    };
+  
+    const ImagePreload = () => {
+
+        setImageSrc(images);
+        
+      
+    }
+  
+    const GetSizeSelected = () => {
+      const arraySizes: string[] = ['36 RU', '37 RU', '38 RU', '39 RU', '40 RU', '41 RU', '42 RU', '43 RU'];
+  
+      for (var i = 0; i < arraySizes.length; i++) {
+        if (sizeMapper.get(arraySizes[i]) === true)
+            return arraySizes[i];
+      }
+  
+      return '';
+    }
+  
+  
+    useEffect(() => {
+      setSelectedClick(false)
+    },[selectedClick || sizeMapper])
+  
+    const OutputButtonStateSize = (size_string: string) => {
+        return 'item_sizeopt preview'
+    } 
+
+    const [cartExist, setCartExist] = useState<boolean>(false);
+
+    const [cartAdded, setCartAdded] = useState<boolean>(false);
+  
+    const CartName = async () => {
+  
+    //   if (itemPrevewGet !== null) {
+    //     const accessTokens: string = Cookies.get('AccessToken') as string;  
+  
+    //     if (accessTokens !== undefined) {
+    //       try {
+    //         if (await handleShopCartItemExist(GetInfoUser_Id(), itemPrevewGet.hashName, accessTokens)) {
+    //           setCartExist(true)
+    //         }
+    //       }
+    //       catch {
+    //         setCartExist(false)
+    //       }
+          
+         
+          
+    //     }
+    //   }
+    }
+  
+  
+    //при вызове данного элемента рендерю изображения из массива
+    useEffect(()=>{
+    //   if (itemPrevewGet !== null) {
+    //     ClearSelectedSize();
+    //     ImagePreload(itemPrevewGet.imagePaths);
+    //   }
+
+        ImagePreload();
+    },[images])
+  
+    useEffect(()=>{
+      CartName();
+      setCartAdded(false);
+    },[cartAdded])
+
+    const AddToCart = async () => {
+        // if (itemPrevewGet !== null) {
+        //     const accessTokens: string = Cookies.get('AccessToken') as string;  
+
+        //     const sizeSelected =  GetSizeSelected();
+
+        //     if (!cartExist) {
+
+        //         console.log(GetInfoUser_Id());
+
+        //         if (accessTokens !== undefined && sizeSelected !== undefined) {
+        //         await handleShopCardAddItem(GetInfoUser_Id(), itemPrevewGet.hashName, sizeSelected, accessTokens);
+        //         setCartAdded(true);
+        //         }
+        //     }
+        //     else {
+        //         setCartAdded(false);
+        //         tabIndexSet(2);
+        //     }
+        // }
+    }
+
+    const CartOutName = () => {
+        return "В корзину"
+    }
+
+    // if (itemPrevewGet === null) 
+    // return (<></>)
+
+    return (<>
+   
+            <div className={price > 500000 ? "header_item_preview_area_title rich" : "header_item_preview_area_title" } style={{color: 'black', marginTop: '20px', marginLeft: '25px'}}>
+            {name !== "" ? name : "Введите имя товара"}
+            </div>
+
+
+            <div className="header_item_preview_area_rightitems" style={{marginTop: '20px'}} >
+            
+                <div className={price > 500000 ? "header_item_preview_area_price rich" : "header_item_preview_area_price"} style={{color: 'black' }}>
+                {`${formatPrice(price)}Р`}
+                </div>
+
+                <div className="header_item_preview_area_cartbutton" onClick={AddToCart}>
+                    {CartOutName()}
+                </div>
+
+                <div className="header_item_preview_area_buybutton">
+                    <div className="header_item_preview_area_buybutton_text">
+                        Купить
+                    </div>
+
+                    <div className="header_item_preview_area_buybutton_separator"></div>
+
+                    <div className="header_item_preview_area_buybutton_size">
+                        {GetSizeSelected()}
+                    </div>
+                </div>
+
+                {(sizes.length > 0) && 
+                    <div className="header_item_preview_area_sizes">  
+                        {sizes.map((size, index) => 
+                            <div key={index}>
+                                {size !== '' && (<div key={index} className={OutputButtonStateSize(size)}>{size}</div>)}
+                            </div>
+                        )}      
+                    </div>
+                }
+
+                <AnimatedDescription description={description}/>
+
+            </div>
+
+            <ImagePreviewMain imageLink={imageSrc} price={price}/>
+    </>)
+}
+
 
 function sortStringsAndExtractNumbers(arr: string[]): { sortedStrings: string[], numbers: number[] } {
 
@@ -551,7 +877,7 @@ const AddSectionPanel: React.FC = () => {
 
     
         <div className="add_section_panel_secondblock">
-
+            <PreviewItemAdd name={nameItem} description={descItem} price={priceItem} images={compiledImagesPreview} sizes={selectedSizes}/>
         </div>
 
         <div className="title_thirdblock_panel">Изображения</div>

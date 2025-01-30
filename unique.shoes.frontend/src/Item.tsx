@@ -4,6 +4,8 @@ import { handleLoadImage } from './components/API/ItemInfo.tsx';
 import useItemPreviewVariable from './components/Variables/ItemPreviewVariable.ts';
 import useTabIndexVariable from "./components/Variables/TabIndexVariable.ts";
 
+import { useNavigate, useLocation } from 'react-router-dom';
+
 const ItemShoes: React.FC<{
   name_item: string,
   hash_item: string,
@@ -29,6 +31,8 @@ const ItemShoes: React.FC<{
   price, 
   onContext
 }) => {
+
+
 
   const [backgroundImages, setBackgroundImages] = useState<string[]>([]);
 
@@ -136,7 +140,8 @@ const ItemShoes: React.FC<{
   // }
 
   const infoStart = () => {
-    setOpeninfoOfItems(true);
+    if (location.pathname !== "/manager_panel") 
+      setOpeninfoOfItems(true);
     
   }
 
@@ -208,6 +213,10 @@ const ItemShoes: React.FC<{
   }
 
   const handleOnClick = () => {
+    if (location.pathname === "/manager_panel") {
+      return;
+    }
+
     interface ItemProperties {
       id: number,
       hashName: string,

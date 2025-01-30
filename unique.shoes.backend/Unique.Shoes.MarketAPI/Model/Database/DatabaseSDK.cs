@@ -161,6 +161,38 @@ namespace Unique.Shoes.MarketAPI.Model.Database
             }
         }
 
+
+        public Item_Get GetItem(int id)
+        {
+
+            using (DataContext db = new DataContext(_conf.GetConnectionString("ServerConn")))
+            {
+                var item = db.shopItemsTableObj.Where(c => c.id == id).FirstOrDefault();
+
+                if (item != null)
+                {
+                    Item_Get itemGet = new Item_Get()
+                    {
+                        id = item.id,
+                        hashName = item.hashName,
+                        name = item.name,
+                        description = item.description,
+                        price = item.price,
+                        count = item.count,
+                        flags = item.flags,
+                        sizes = item.sizes,
+                        imagePaths = GetImagesFromPath(item.id, db).ToArray()
+                     };
+
+                    return itemGet;
+                }
+
+                _logger.LogInformation($"GetItem: товар {id} запрошен успешно");
+
+                return new Item_Get() {  };
+            }
+        }
+
         public List<Item_Get> GetAllItems()
         {
 
