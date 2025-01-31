@@ -1,3 +1,6 @@
+# Запуск:
+- (PowerShell) Запускать командой в директории проекта "docker-compose up -d --build", либо "docker-compose up -d"
+
 # Сервисы: 
 1. AccountAPI URL: http://localhost:8081/ui-swagger 
 2. MarketAPI URL: http://localhost:8082/ui-swagger 
