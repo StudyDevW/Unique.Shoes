@@ -446,21 +446,28 @@ const PreviewItemHeader: React.FC = () => {
                 {`${formatPrice(itemPrevewGet.price)}Р`}
                 </div>
 
-                <div className="header_item_preview_area_cartbutton" onClick={AddToCart}>
-                    {CartOutName()}
-                </div>
 
-                <div className="header_item_preview_area_buybutton">
-                    <div className="header_item_preview_area_buybutton_text">
-                        Купить
+                {cartExist && 
+                  <div className="header_item_preview_area_cartbutton" onClick={AddToCart}>
+                      {CartOutName()}
+                  </div>
+                }
+
+                {!cartExist && 
+                    <div className="header_item_preview_area_buybutton" onClick={AddToCart}>
+                      <div className="header_item_preview_area_buybutton_text">
+                        {CartOutName()}
+                      </div>
+
+                      <div className="header_item_preview_area_buybutton_separator"></div>
+
+                      <div className="header_item_preview_area_buybutton_size">
+                          {GetSizeSelected()}
+                      </div>
                     </div>
+                }
 
-                    <div className="header_item_preview_area_buybutton_separator"></div>
-
-                    <div className="header_item_preview_area_buybutton_size">
-                        {GetSizeSelected()}
-                    </div>
-                </div>
+            
 
                 <div className="header_item_preview_area_sizes">
                     {itemPrevewGet.sizes.map((size, index) => 

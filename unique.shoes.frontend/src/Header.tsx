@@ -9,7 +9,7 @@ let animClosedHeader: boolean = false;
 import useItemPreviewVariable from './components/Variables/ItemPreviewVariable.ts';
 import MainProfile from './Profile/MainProfile.tsx';
 import { BrowserRouter as Router, Route } from 'react-router-dom';
-
+import { useNavigate } from 'react-router-dom';
 import LoadShopCart from './components/DynamicHeader/ShopCart.tsx';
 import useTabIndexVariable from './components/Variables/TabIndexVariable.ts';
 import useOpenProfileVariable from './components/Variables/OpenProfileVariable.ts';
@@ -63,8 +63,7 @@ const HeaderPreviewItem: React.FC = () => {
 
         <div className="header_item_preview_title_area">
           <div className={TabSection(0)}        onClick={()=>tabIndexSet(0)}>Превью товара</div>
-          <div className={TabSection(1)}        onClick={()=>tabIndexSet(1)}>Отзывы</div>
-          <div className={TabSection(2, true)}  onClick={()=>tabIndexSet(2)}>Корзина</div>
+          <div className={TabSection(2, false)}  onClick={()=>tabIndexSet(2)}>Корзина</div>
         </div>
 
 
@@ -83,6 +82,8 @@ const HeaderPreviewItem: React.FC = () => {
 
 const Header: React.FC = () => {
     
+    const navigate = useNavigate();
+
     const { loginPageOpenedGet, loginPageOpenedSet } = useloginPageOpenedVariable();
 
     const { registerPageOpenedGet, registerPageOpenedSet } = useregisterPageOpenedVariable();
@@ -170,7 +171,7 @@ const Header: React.FC = () => {
           <div ref={refScrollUp}> </div>
   
           <div className="header small">
-                <div className="logo"> </div>
+                <div className="logo" onClick={()=>navigate("/")}> </div>
   
                 {Miniprofile(true)}
           </div>
@@ -191,7 +192,7 @@ const Header: React.FC = () => {
           <div ref={refScrollUp}> </div>
   
           <div className="header small">
-                <div className="logo"> </div>
+                <div className="logo" onClick={()=>navigate("/")}> </div>
   
                 {Miniprofile(true)}
           </div>
@@ -208,7 +209,7 @@ const Header: React.FC = () => {
         if (animClosedHeader === true) {
           return (<>
             <div className="header fullsize">
-                  <div className="logo"> </div>
+                  <div className="logo" onClick={()=>navigate("/")}> </div>
     
                   {Miniprofile(false)}
     
@@ -219,7 +220,7 @@ const Header: React.FC = () => {
         else {
           return (<>
             <div className="header fullsize">
-                <div className="logo"> </div>
+                <div className="logo" onClick={()=>navigate("/")}> </div>
         
                 {Miniprofile(false)}
 
@@ -245,7 +246,7 @@ const Header: React.FC = () => {
             <div ref={refScrollUp}> </div>
     
             <div className="header small">
-                  <div className="logo"> </div>
+                  <div className="logo" onClick={()=>navigate("/")}> </div>
     
                   {Miniprofile(true)}
             </div>
@@ -266,7 +267,7 @@ const Header: React.FC = () => {
             <div ref={refScrollUp}> </div>
     
             <div className="header small">
-                  <div className="logo"> </div>
+                  <div className="logo" onClick={()=>navigate("/")}> </div>
     
                   {Miniprofile(true)}
             </div>
@@ -287,7 +288,7 @@ const Header: React.FC = () => {
             <div ref={refScrollUp}> </div>
     
             <div className="header small">
-                  <div className="logo"> </div>
+                  <div className="logo" onClick={()=>navigate("/")}> </div>
     
                   {Miniprofile(true)}
             </div>
@@ -305,7 +306,7 @@ const Header: React.FC = () => {
           if (animClosedHeader === true) {
             return (<>
               <div className="header normal">
-                    <div className="logo"> </div>
+                    <div className="logo" onClick={()=>navigate("/")}> </div>
       
                     {Miniprofile(false)}
       
@@ -315,7 +316,7 @@ const Header: React.FC = () => {
           else {
             return (<>
               <div className="header">
-                    <div className="logo"> </div>
+                    <div className="logo" onClick={()=>navigate("/")}> </div>
       
                     {Miniprofile(false)}
       

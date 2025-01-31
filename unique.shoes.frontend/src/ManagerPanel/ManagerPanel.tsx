@@ -383,7 +383,6 @@ const ManagerPanel: React.FC = () => {
                         <div className="title_group_panel">Товар</div>
                         <ButtonElementForPanel name_button="Добавить" type_button="add_button"/>
                         <ButtonElementForPanel name_button="Изменить" type_button="change_button"/>
-                        <ButtonElementForPanel name_button="Скидки" type_button="sale_button"/>
                         
 
                         <div className="title_group_panel">Пользователи</div>

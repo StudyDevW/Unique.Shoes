@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System.Collections.Immutable;
+using System.ComponentModel;
 using System.Security.Cryptography;
 using System.Text;
 using unique.shoes.middleware.Database.DBO;
@@ -70,6 +71,81 @@ namespace Unique.Shoes.MarketAPI.Model.Database
                 await db.SaveChangesAsync();
 
                 _logger.LogInformation($"CreateItem: {shopItemsTable.hashName}, создан");
+            }
+        }
+
+
+        public async Task ChangeItem(int id, Item_Change dto)
+        {   
+            if (dto == null)
+            {
+                _logger.LogError("ChangeItem: dto==null");
+                return;
+            }
+
+            using (DataContext db = new DataContext(_conf.GetConnectionString("ServerConn")))
+            {
+                var itemToChange = db.shopItemsTableObj.Where(c => c.id == id).FirstOrDefault();
+
+                if (itemToChange != null)
+                {
+
+                    if (itemToChange.name != dto.name)
+                    {
+                        itemToChange.name = dto.name;
+                        await db.SaveChangesAsync();
+                    }
+
+                    if (itemToChange.count != dto.count)
+                    {
+                        itemToChange.count = dto.count;
+                        await db.SaveChangesAsync();
+                    }
+
+                    if (itemToChange.description != dto.description)
+                    {
+                        itemToChange.description = dto.description;
+                        await db.SaveChangesAsync();
+                    }
+
+                    if (itemToChange.price != dto.price)
+                    {
+                        itemToChange.price = dto.price;
+                        await db.SaveChangesAsync();
+                    }
+
+                    if (itemToChange.sizes != dto.sizes)
+                    {
+                        itemToChange.sizes = dto.sizes;
+                        await db.SaveChangesAsync();
+                    }
+
+                    if (itemToChange.flags != dto.flags)
+                    {
+                        itemToChange.flags = dto.flags;
+                        await db.SaveChangesAsync();
+                    }
+                }
+
+                //var imagesToDelete = db.shopImagesTableObj.Where(c => c.itemId == id);
+
+                //if (imagesToDelete != null && dto.images != null)
+                //{
+
+                //    while (imagesToDelete.Count() > 0)
+                //    {
+                //        DeleteImageFromPath(imagesToDelete.FirstOrDefault().imageLink);
+
+                //        var idImageLog = imagesToDelete.FirstOrDefault().id;
+
+                //        db.shopImagesTableObj.Remove(imagesToDelete.FirstOrDefault());
+                //        await db.SaveChangesAsync();
+                //        _logger.LogInformation($"ChangeItem: {id}, изображение id: {idImageLog} удалено");
+                //    }
+
+
+                //}
+            
             }
         }
 
@@ -265,6 +341,28 @@ namespace Unique.Shoes.MarketAPI.Model.Database
 
             return 0;
         }
+
+        private async Task AddImageToId(string[] imageLinks, int id)
+        {
+            using (DataContext db = new DataContext(_conf.GetConnectionString("ServerConn")))
+            {
+      
+                for (int i = 0; i < imageLinks.Count(); i++)
+                {
+                    ShopImagesTable shopImagesTable = new ShopImagesTable()
+                    {
+                        itemId = id,
+                        imageLink = imageLinks[i]
+                    };
+
+                    db.shopImagesTableObj.Add(shopImagesTable);
+                    await db.SaveChangesAsync();
+
+                    _logger.LogInformation($"AddImageToId: Изображение для товара id: {shopImagesTable.itemId}, загружено; Path: {imageLinks[i]}");
+                }
+            }
+        }
+
 
         public async Task AddImages(string[] imageLinks, string itemName)
         {

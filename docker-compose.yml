@@ -7,6 +7,14 @@ services:
       dockerfile: Dockerfile
     ports:
       - "4000:4000"
+  unique.shoes.frontend.payment:
+    image: ${DOCKER_REGISTRY-}uniqueshoes_frontendpayment:1.0
+    container_name: Unique.Shoes.Frontend.Payment
+    build:
+      context: ./unique.shoes.frontend.payment
+      dockerfile: Dockerfile
+    ports:
+      - "5173:5173"
   unique.shoes.backend.accountapi:
     image: ${DOCKER_REGISTRY-}uniqueshoes_accountservice:1.0
     container_name: Unique.Shoes.Backend.AccountAPI

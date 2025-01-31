@@ -11,7 +11,26 @@
   font-family: "MUSEOSANS"
   src: url(../fonts/MuseoSansCyrl-900.woff) format("woff")
 
+    
+@keyframes marquee 
+  0% 
+    transform: translateX(100%)
+  
+  100% 
+    transform: translateX(-100%)
 
+.marquee 
+  flex: none
+  overflow: hidden
+  white-space: nowrap
+  position: relative
+  width: 100%
+
+.marquee-content 
+  display: inline-block
+  animation: marquee 10s linear infinite
+
+      
 .context_menu_area
   animation: blur_exchange_open_context 0.5s forwards
   position: absolute

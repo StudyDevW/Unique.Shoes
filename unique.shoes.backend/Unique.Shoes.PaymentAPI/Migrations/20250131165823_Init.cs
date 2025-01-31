@@ -33,7 +33,8 @@ namespace Unique.Shoes.PaymentAPI.Migrations
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     hashPay = table.Column<string>(type: "text", nullable: false),
                     payStatus = table.Column<string>(type: "text", nullable: false),
-                    date = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
+                    date = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    cardNumber = table.Column<string>(type: "text", nullable: true)
                 },
                 constraints: table =>
                 {

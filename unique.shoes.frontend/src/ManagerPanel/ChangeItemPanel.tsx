@@ -4,6 +4,7 @@ import Cookies from 'js-cookie';
 import ItemShoes from "../Item.tsx";
 import { handleItemDelete } from "../components/API/CreateItem.tsx";
 import useMItemPreviewVariable from "../components/Variables/ManagerItemPreviewVariable.ts";
+import { handleItemChange } from "../components/API/ChangeItem.tsx";
 
 interface ItemProperties {
     id: number,
@@ -18,6 +19,37 @@ interface ItemProperties {
 }
 
 var changeItemSelected: boolean = false;
+
+let sizeMapper = new Map<string, boolean>([
+    ['36 RU', false],
+    ['37 RU', false],
+    ['38 RU', false],
+    ['39 RU', false],
+    ['40 RU', false],
+    ['41 RU', false],
+    ['42 RU', false],
+    ['43 RU', false],
+]);
+
+let sizeMapperP = new Map<string, boolean>([
+    ['36 RU', false],
+    ['37 RU', false],
+    ['38 RU', false],
+    ['39 RU', false],
+    ['40 RU', false],
+    ['41 RU', false],
+    ['42 RU', false],
+    ['43 RU', false],
+]);
+
+let buttonMapper = new Map<string, boolean>([
+    ['firstButton', false],
+    ['secondButton', false]
+]);
+
+let arrayFile: File[] = [];
+
+let compiledImagesPreview: string[] = [];
 
 function sortStringsAndExtractNumbers(arr: string[]): { sortedStrings: string[], numbers: number[] } {
 
@@ -234,33 +266,33 @@ const PreviewItemChangeItem: React.FC<{price: number, name: string, description:
       const arraySizes: string[] = ['36 RU', '37 RU', '38 RU', '39 RU', '40 RU', '41 RU', '42 RU', '43 RU'];
   
       for (var i = 0; i < arraySizes.length; i++) {
-        if (sizeMapper.get(arraySizes[i]) === true)
-          sizeMapper.set(arraySizes[i], false)
+        if (sizeMapperP.get(arraySizes[i]) === true)
+            sizeMapperP.set(arraySizes[i], false)
   
-        if (arraySizes[i] === MitemPrevewGet?.sizes[0]) {
-          if (sizeMapper.get(arraySizes[i]) === false) {
-            sizeMapper.set(arraySizes[i], true)
-          }
-        }
+        // if (arraySizes[i] === MitemPrevewGet?.sizes[0]) {
+        //   if (sizeMapper.get(arraySizes[i]) === false) {
+        //     sizeMapper.set(arraySizes[i], true)
+        //   }
+        // }
       }
     }
   
     const SetSelectedSize = (item: string) => {
       const arraySizes: string[] = ['36 RU', '37 RU', '38 RU', '39 RU', '40 RU', '41 RU', '42 RU', '43 RU'];
   
-      if (sizeMapper.get(item) === false) {
-          sizeMapper.set(item, true)
+      if (sizeMapperP.get(item) === false) {
+          sizeMapperP.set(item, true)
       }
       
       for (var i = 0; i < arraySizes.length; i++) {
         if (arraySizes[i] !== item) {
-          if (sizeMapper.get(arraySizes[i]) === true) {
-            sizeMapper.set(arraySizes[i], false);
+          if (sizeMapperP.get(arraySizes[i]) === true) {
+            sizeMapperP.set(arraySizes[i], false);
           }
         }
       }
   
-      console.log(sizeMapper);
+      console.log(sizeMapperP);
   
       setSelectedClick(true)
     }
@@ -269,7 +301,7 @@ const PreviewItemChangeItem: React.FC<{price: number, name: string, description:
       const arraySizes: string[] = ['36 RU', '37 RU', '38 RU', '39 RU', '40 RU', '41 RU', '42 RU', '43 RU'];
   
       for (var i = 0; i < arraySizes.length; i++) {
-        if (sizeMapper.get(arraySizes[i]) === true)
+        if (sizeMapperP.get(arraySizes[i]) === true)
             return arraySizes[i];
       }
   
@@ -282,12 +314,8 @@ const PreviewItemChangeItem: React.FC<{price: number, name: string, description:
     },[selectedClick || sizeMapper])
   
     const OutputButtonStateSize = (size_string: string) => {
-      if (sizeMapper.get(size_string) === true) {
-          return 'item_sizeopt preview clicked'
-      }
-      else {
         return 'item_sizeopt preview'
-      }
+
     } 
 
     const [cartExist, setCartExist] = useState<boolean>(false);
@@ -320,6 +348,7 @@ const PreviewItemChangeItem: React.FC<{price: number, name: string, description:
     useEffect(()=>{
       if (MitemPrevewGet !== null) {
         ClearSelectedSize();
+  
         ImagePreload();
       }
     },[MitemPrevewGet])
@@ -355,6 +384,12 @@ const PreviewItemChangeItem: React.FC<{price: number, name: string, description:
         return cartExist ? "Уже в корзине" : "В корзину"
     }
 
+    const isArrayEqualToEmptyStrings = (arr: string[]): boolean => {
+        // Проверяем, равен ли массив длиной 8 и все элементы пустые строки
+        return arr.length === 8 && arr.every(item => item === '');
+    }
+    
+
     if (MitemPrevewGet === null) 
     return (<></>)
 
@@ -387,9 +422,19 @@ const PreviewItemChangeItem: React.FC<{price: number, name: string, description:
             </div>
 
             <div className="header_item_preview_area_sizes">
-                {MitemPrevewGet.sizes.map((size, index) => 
+
+                {!isArrayEqualToEmptyStrings(sizes) && sizes.map((size, index) => 
+                     <div key={index}>
+                        {size !== '' && (<div key={index} className={OutputButtonStateSize(size)}>
+                        {size}
+                        </div>)}
+                     </div>
+                )}
+
+
+                {isArrayEqualToEmptyStrings(sizes) && MitemPrevewGet.sizes.map((size, index) => 
                     <div key={index}>
-                        {size !== '' && (<div key={index} className={OutputButtonStateSize(size)} onClick={()=>SetSelectedSize(size)}>
+                        {size !== '' && (<div key={index} className={OutputButtonStateSize(size)}>
                         {size}
                         </div>)}
                     </div>
@@ -463,25 +508,6 @@ const ContextMenu: React.FC<{ x: number; y: number; itemId: number; onClose: () 
     );
 };
 
-let sizeMapper = new Map<string, boolean>([
-    ['36 RU', false],
-    ['37 RU', false],
-    ['38 RU', false],
-    ['39 RU', false],
-    ['40 RU', false],
-    ['41 RU', false],
-    ['42 RU', false],
-    ['43 RU', false],
-]);
-
-let buttonMapper = new Map<string, boolean>([
-    ['firstButton', false],
-    ['secondButton', false]
-]);
-
-let arrayFile: File[] = [];
-
-let compiledImagesPreview: string[] = [];
 
 const ChangeItem: React.FC = () => {
 
@@ -705,12 +731,37 @@ const ChangeItem: React.FC = () => {
 
     }
 
-    const OnClickedAddItem = async () => {
+    const isArrayEqualToEmptyStrings = (arr: string[]): boolean => {
+        // Проверяем, равен ли массив длиной 8 и все элементы пустые строки
+        return arr.length === 8 && arr.every(item => item === '');
+    }
 
-        //Решить проблему с плавным обновлением токена 
-        //Скорее всего ловить ошибку Axios, обновлять токены и заново
-        //делать запрос в микросервис
+    const OnClickedChangeItem = async () => {
+
+        if (MitemPrevewGet !== null) {
+            var CompletedName = nameItem !== "" ? nameItem : MitemPrevewGet.name;
+
+            var CompletedDesc = descItem !== "" ? descItem : MitemPrevewGet.description;
+
+            var CompletedPrice = priceItem !== 0 ? priceItem : MitemPrevewGet.price;
         
+            var CompletedSizes = !isArrayEqualToEmptyStrings(finalSizeSort) ? finalSizeSort : MitemPrevewGet.sizes;
+
+            const accessTokens: string = Cookies.get('AccessToken') as string;
+            if (accessTokens !== undefined) {
+                if (await handleItemChange(MitemPrevewGet.id, CompletedName, CompletedPrice, CompletedDesc, CompletedSizes, accessTokens)) {
+                    
+                    MitemPrevewSet(null);
+
+                    changeItemSelected = false;
+
+
+                    alert("Товар успешно изменен!");
+                
+                }
+            }
+
+        }
         // CheckTokensValidate();
 
         if (priceItem === undefined) {
@@ -993,7 +1044,7 @@ const ChangeItem: React.FC = () => {
                 </div>
             </div>
 
-            <div className="buttonarea_sideline">
+            <div className="buttonarea_sideline" style={{opacity: '0'}}>
                 <div className="buttonarea_sideline_text">
                     Пометить как ''хит''
                 </div>
@@ -1001,7 +1052,7 @@ const ChangeItem: React.FC = () => {
                 <div className={OutputButtonState('firstButton')} onClick={() => SetSelectedButton('firstButton')}></div>
             </div>
 
-            <div className="buttonarea_sideline">
+            <div className="buttonarea_sideline" style={{opacity: '0'}}>
                 <div className="buttonarea_sideline_text">
                     Пометить как ''новое''
                 </div>
@@ -1009,7 +1060,7 @@ const ChangeItem: React.FC = () => {
                 <div className={OutputButtonState('secondButton')} onClick={() => SetSelectedButton('secondButton')}></div>
             </div>
             
-            <div className="buttonarea_complete" onClick={OnClickedAddItem}>
+            <div className="buttonarea_complete" onClick={OnClickedChangeItem}>
                 Изменить товар
             </div>
 
@@ -1017,7 +1068,7 @@ const ChangeItem: React.FC = () => {
 
     
         <div className="add_section_panel_secondblock">
-            <PreviewItemChangeItem name={nameItem} description={descItem} price={priceItem} images={compiledImagesPreview} />
+            <PreviewItemChangeItem name={nameItem} description={descItem} price={priceItem} images={compiledImagesPreview} sizes={finalSizeSort} />
         </div>
 
         <div className="title_thirdblock_panel">Изображения</div>
@@ -1101,6 +1152,7 @@ const ChangeSectionPanel: React.FC = () => {
     useEffect(()=>{
         if (!changeItemSelected) {
             MitemPrevewSet(null);
+            ItemGetInfo();
         }
     }, [changeItemSelected])
 

@@ -28,6 +28,8 @@ interface ItemProperties {
 
 function App() {
 
+  const navigate = useNavigate();
+
   const { itemPrevewGet } = useItemPreviewVariable();
   const location = useLocation();
   const { loginSuccessGet, loginSuccessSet } = useLoginSuccessVariable();
@@ -212,7 +214,7 @@ function App() {
         <div className="new_assortment">
           <div className="left_title_assortment">Новинки<br></br>Ассортимента</div>
 
-          <div className="button_for_more">
+          <div className="button_for_more" onClick={()=>navigate("/new")}>
             <div className="upper_text_more_button">
               Показать
             </div>
@@ -249,7 +251,7 @@ function App() {
         <div className="new_assortment">
           <div className="right_title_assortment">Хит<br></br>Продаж</div>
 
-          <div className="button_for_more right">
+          <div className="button_for_more right" onClick={()=>navigate("/demand")}>
             <div className="upper_text_more_button">
               Показать
             </div>
@@ -278,9 +280,6 @@ function App() {
 
       </div>
 
-      <div className="info_items">
-        
-      </div>
 
     </>
   )

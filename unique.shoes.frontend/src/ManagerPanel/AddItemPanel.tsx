@@ -853,15 +853,15 @@ const AddSectionPanel: React.FC = () => {
                 </div>
             </div>
 
-            <div className="buttonarea_sideline">
-                <div className="buttonarea_sideline_text">
+            <div className="buttonarea_sideline" style={{opacity: '0'}}>
+                <div className="buttonarea_sideline_text"> 
                     Пометить как ''хит''
                 </div>
 
                 <div className={OutputButtonState('firstButton')} onClick={() => SetSelectedButton('firstButton')}></div>
             </div>
 
-            <div className="buttonarea_sideline">
+            <div className="buttonarea_sideline" style={{opacity: '0'}}>
                 <div className="buttonarea_sideline_text">
                     Пометить как ''новое''
                 </div>

@@ -63,6 +63,9 @@ namespace Unique.Shoes.PaymentAPI.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("id"));
 
+                    b.Property<string>("cardNumber")
+                        .HasColumnType("text");
+
                     b.Property<DateTime>("date")
                         .HasColumnType("timestamp with time zone");
 

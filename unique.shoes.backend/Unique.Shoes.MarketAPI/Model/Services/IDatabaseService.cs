@@ -5,6 +5,8 @@ namespace Unique.Shoes.MarketAPI.Model.Services
 {
     public interface IDatabaseService
     {
+        public Task ChangeItem(int id, Item_Change dto);
+
         public Task CreateItem(Item_Create dto);
 
         public List<string> GetAllPaymentHashes(int userId);

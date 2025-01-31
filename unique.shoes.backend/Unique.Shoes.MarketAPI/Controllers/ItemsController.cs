@@ -55,7 +55,7 @@ namespace Unique.Shoes.MarketAPI.Controllers
 
         [Authorize(AuthenticationSchemes = "Asymmetric")]
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateItem([FromBody] Item_Create dtoObj)
+        public async Task<IActionResult> UpdateItem(int id, [FromBody] Item_Change dtoObj)
         {
             string bearer_key = Request.Headers["Authorization"];
 
@@ -69,12 +69,12 @@ namespace Unique.Shoes.MarketAPI.Controllers
             {
                 try
                 {
-                 
+                    await _database.ChangeItem(id, dtoObj);
                     return Ok("item_updated");
                 }
                 catch (Exception e)
                 {
-                    return BadRequest();
+                    return BadRequest(e.Message);
                 }
             }
 

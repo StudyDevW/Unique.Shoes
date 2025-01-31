@@ -12,7 +12,7 @@ using Unique.Shoes.PaymentAPI.Model.Database;
 namespace Unique.Shoes.PaymentAPI.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20250122150459_Init")]
+    [Migration("20250131165823_Init")]
     partial class Init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -64,6 +64,9 @@ namespace Unique.Shoes.PaymentAPI.Migrations
                         .HasColumnType("integer");
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("id"));
+
+                    b.Property<string>("cardNumber")
+                        .HasColumnType("text");
 
                     b.Property<DateTime>("date")
                         .HasColumnType("timestamp with time zone");
